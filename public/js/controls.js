@@ -20,11 +20,14 @@ function keyDown(event){
   if(inArray(code, keys["left"])){
     console.log("Left!")
     left = true
+    localPlayer.startMove(true)
+
   }
 
   if(inArray(code, keys["right"])){
     console.log("Right!")
     right = true
+    localPlayer.startMove(false)
   }
 
   if(inArray(code, keys["shootleft"])){
@@ -49,11 +52,13 @@ function keyUp(event){
   if(inArray(code, keys["left"])){
     console.log("Left!")
     left = false
+    localPlayer.liftMove(true)
   }
 
   if(inArray(code, keys["right"])){
     console.log("Right!")
     right = false
+    localPlayer.liftMove(false)
   }
 
   if(inArray(code, keys["shootleft"])){

@@ -19,7 +19,9 @@ function loadProgress(loader, resource){
 function loadFiles(){
   id = PIXI.loader.resources["textures/data.json"].textures;
 
-  setupLocalPlayer()
+  // setupLocalPlayer()
+
+  initConnection()
 
   // if(id){
   //   let sprite = new Sprite(id["tile_edge.png"])

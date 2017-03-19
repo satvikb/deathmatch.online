@@ -1,6 +1,7 @@
 var b = new Bump(PIXI);
 var renderer;
 var stage;
+var basicText;
 
 function init(){
   PIXI.SCALE_MODES.DEFAULT = PIXI.SCALE_MODES.NEAREST;
@@ -21,16 +22,31 @@ function init(){
   //Tell the `renderer` to `render` the `stage`
   renderer.render(stage);
 
+  basicText = new PIXI.Text('Basic text in pixi', {fill:0xffffff});
+  basicText.text = "Test"
+  basicText.x = 100;
+  basicText.y = 300;
+  stage.addChild(basicText)
+
   loader.add(files).on("progress", loadProgress).load(loadFiles)
-  initConnection()
 }
 
+var time = Date.now()
+
 function gameLoop(){
+  var d = (Date.now()-time)/1000
+
   requestAnimationFrame(gameLoop);
 
-  localPlayer.update()
+  if(localPlayer){
+    localPlayer.update(d)
+    socket.emit("input", {left:left, right: right})
+  }
+
+  updatePhysics(d)
 
   renderer.render(stage)
+  time = Date.now()
 }
 
 

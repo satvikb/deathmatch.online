@@ -1,24 +1,29 @@
-function Player(){
+function Player(id, x, y){
+  this.id = id
+  this.localPlayer = false
+
   this.position = new PIXI.Point();
-  this.movespeed = 400
+  this.movespeed = 130
+  this.maxVelocityX = 5
 
   this.animationFrames = [
-    id["player_0.png"],
-    id["player_1.png"],
-    id["player_2.png"],
-    id["player_3.png"]
+    PIXI.Texture.fromImage("player_0.png"),
+    PIXI.Texture.fromImage("player_1.png"),
+    PIXI.Texture.fromFrame("player_2.png"),
+    PIXI.Texture.fromFrame("player_3.png")
   ]
 
-  this.view = new PIXI.MovieClip(this.animationFrames)
+  this.view = new PIXI.extras.AnimatedSprite(this.animationFrames)
+  this.view.tint = '0x'+Math.floor(Math.random()*16777215).toString(16);
   this.view.animationSpeed = 0
   this.view.anchor.x = 0.5
   this.view.anchor.y = 0.5
-  this.view.scale.x = 30
-  this.view.scale.y = 30
+  // this.view.scale.x =
+  // this.view.scale.y =
 
 
-  this.position.y = 300
-  this.position.x = 300
+  this.position.x = x
+  this.position.y = y
 
   this.view.play()
 
@@ -30,35 +35,51 @@ function Player(){
   this.inputVelocity.x = this.inputVelocity.y = 0
 }
 
-var time = Date.now()
+Player.prototype.liftMove = function(left){
+  if(!left){
+    this.view.scale.x = -1
+  }else{
+    this.view.scale.x = 1
+  }
+  this.view.gotoAndPlay(0)
+}
 
-Player.prototype.update = function(){
-  var d = (Date.now()-time)/1000
-  d *= 0.1
+Player.prototype.startMove = function(left){
+  if(!left){
+    this.view.scale.x = -1
+  }else{
+    this.view.scale.x = 1
+  }
+  // this.view.gotoAndPlay(0)
+  // this.view.loop = true
+}
+
+Player.prototype.update = function(d){
   //TODO Update collisions
   this.inputVelocity.x = this.inputVelocity.y = 0
-  this.velocity.x = 0
-  this.velocity.y += 9*d
 
-  //controls
-  if(left == true){
-    this.inputVelocity.x = -this.movespeed*d
+  //controls client interploration
+  if(this.localPlayer){
+    if(left == true){
+      this.inputVelocity.x = -this.movespeed*d
+    }
+
+    if(right == true){
+      this.inputVelocity.x = this.movespeed*d
+    }
+
+    this.velocity.x += this.inputVelocity.x
+
+    if(this.velocity.x >= this.maxVelocityX){
+      this.velocity.x = this.maxVelocityX
+    }
   }
 
-  if(right == true){
-    this.inputVelocity.x = this.movespeed*d
-  }
-  this.velocity.x += this.inputVelocity.x
+  // this.view.scale.x = this.velocity.x < 0 ? 1 : (this.velocity.x > 0 ? -1 : 1)
+  // console.log(this.velocity.x)
+  this.view.animationSpeed = (Math.abs(this.velocity.x) / this.maxVelocityX)*0.3
 
   this.position.x += this.velocity.x
   this.position.y += this.velocity.y
 
-
-  this.view.position = this.position
-  if(this.view.position.y > 700){
-    this.view.position.y = 700
-  }
-
-
-  time = Date.now()
 }
