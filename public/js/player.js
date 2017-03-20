@@ -4,7 +4,7 @@ function Player(id, x, y){
 
   this.position = new PIXI.Point();
   this.movespeed = 130
-  this.maxVelocityX = 5
+  this.maxVelocityX = 3
 
   this.animationFrames = [
     PIXI.Texture.fromImage("player_0.png"),
@@ -25,6 +25,9 @@ function Player(id, x, y){
   this.position.x = x
   this.position.y = y
 
+  this.previousPosition = new PIXI.Point()//this.position.x, this.position.y)
+  this.previousPosition.copy(this.position)
+
   this.view.play()
 
   this.velocity = new PIXI.Point()
@@ -36,22 +39,23 @@ function Player(id, x, y){
 }
 
 Player.prototype.liftMove = function(left){
-  if(!left){
-    this.view.scale.x = -1
-  }else{
-    this.view.scale.x = 1
-  }
+  // if(!left){
+  //   this.view.scale.x = -1
+  // }else{
+  //   this.view.scale.x = 1
+  // }
   this.view.gotoAndPlay(0)
 }
 
 Player.prototype.startMove = function(left){
-  if(!left){
-    this.view.scale.x = -1
-  }else{
-    this.view.scale.x = 1
-  }
+  // if(!left){
+  //   this.view.scale.x = -1
+  // }else{
+  //   this.view.scale.x = 1
+  // }
   // this.view.gotoAndPlay(0)
   // this.view.loop = true
+  this.previousPosition.copy(this.position)
 }
 
 Player.prototype.update = function(d){
@@ -77,9 +81,17 @@ Player.prototype.update = function(d){
 
   // this.view.scale.x = this.velocity.x < 0 ? 1 : (this.velocity.x > 0 ? -1 : 1)
   // console.log(this.velocity.x)
-  this.view.animationSpeed = (Math.abs(this.velocity.x) / this.maxVelocityX)*0.3
+  this.view.animationSpeed = (Math.abs(this.velocity.x) / this.maxVelocityX)
 
   this.position.x += this.velocity.x
   this.position.y += this.velocity.y
 
+  basicText.text = this.previousPosition.x+" "+this.position.x
+
+  var deltaX = this.previousPosition.x-this.position.x
+  if(deltaX > 0){
+    this.view.scale.x = 1
+  }else if(deltaX < 0){
+    this.view.scale.x = -1
+  }
 }

@@ -8,3 +8,14 @@ canvas {
   image-rendering: -webkit-crisp-edges;
   image-rendering: pixelated;
 }
+
+#game {
+  position: absolute;
+  left:     50%;
+  top:      50%;
+}
+
+#gamecanvas {
+  width: 100%;
+  height: 100%;
+}

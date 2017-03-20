@@ -10,6 +10,7 @@ var fs = require('fs')
 var util = require("util")
 var io = require("socket.io").listen(server, {origins:'localhost:8000:*'})
 
+var p2 = require('p2')
 
 var rooms = [new Room("test")]
 
@@ -96,7 +97,7 @@ function update(){
   updatePhysics(delta/1000)
 
   sendUpdate()
-  setTimeout(update, delta/1000)
+  setTimeout(update, 1/30)//delta/1000)
 
   time = Date.now()
 }

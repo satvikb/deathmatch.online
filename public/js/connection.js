@@ -40,7 +40,7 @@ function update(data){
     var player = getPlayerById(playerData.id)
     if(player){
       if(player.id == localPlayer.id){
-        basicText.text = player.position.x+" "+player.position.y+"\n"+playerData.position.x+" "+playerData.position.y
+        // basicText.text = player.position.x+" "+player.position.y+"\n"+playerData.position.x+" "+playerData.position.y
       }
       // console.log("U"+player.id+" "+playerData.position.x+" "+playerData.position.y)
       player.position.x = playerData.position.x
