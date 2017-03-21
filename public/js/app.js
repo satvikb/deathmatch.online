@@ -1,5 +1,5 @@
 var renderer;
-var mainStage;
+var stage;
 var basicText;
 
 function init(){
@@ -7,100 +7,43 @@ function init(){
 
   var canvas = document.getElementById("gamecanvas")
   console.log(canvas)
-  renderer = PIXI.autoDetectRenderer(1080, 720)//, {view: canvas});
-  // renderer.view.style.position = "absolute";
-  // renderer.view.style.display = "block";
-  // renderer.autoResize = true;
-  // renderer.renderSession.roundPixels = true
-  renderer.resize(1080, 720);
-
-  // Add the canvas to the HTML document
-  document.body.appendChild(renderer.view);
-
-
-
-
-
-
+  renderer = PIXI.autoDetectRenderer(size[0], size[1], {view: canvas});
 
   // Create a container object called the `stage`
-  mainStage = new Container();
-  stage = new PIXI.DisplayObjectContainer()
-  console.log(stage.width+" "+stage.scale.x)
-  mainStage.addChild(stage)
-
+  stage = new Container();
+  stage.scale.y = -1
+  stage.position.y = size[1]
   basicText = new PIXI.Text('Basic text in pixi', {fill:0xffffff});
   basicText.text = "Test"
-  basicText.x = 100;
-  basicText.y = 300;
-  stage.addChild(basicText)
+  basicText.x = 0;
+  basicText.y = 1040;
+  basicText.scale.y = -1
 
+  stage.addChild(basicText)
 
   loader.add(files).on("progress", loadProgress).load(loadFiles)
 
   resize()
 }
 
-var appWidth = 1080
-var appHeight = 720
-
+var ratio = size[0] / size[1];
+var scaleBy;
 function resize() {
-  // var isPortrait = window.innerHeight > window.innerWidth;
-  // var gameWidth, gameHeight, gameScale;
-  // if (isPortrait) {
-  //   // Portrait scaling
-  //   var aspect = appHeight/appWidth
-  //   var curAspect = window.innerHeight/window.innerWidth
-  //
-  //
-  //   gameWidth = appWidth;
-  //   gameHeight = window.innerHeight * (appWidth / window.innerWidth);
-  //   gameScale = window.innerWidth / appWidth;
-  // } else {
-  //   var aspect = appWidth/appHeight
-  //   var curAspect = window.innerWidth/window.innerHeight
-  //   var mul = aspect/curAspect
-  //   var newWidth = appWidth*mul
-  //
-  //   // Landscape scaling
-  //   gameWidth = window.innerWidth * (appHeight / window.innerHeight);
-  //   gameHeight = appHeight;
-  //   gameScale = window.innerHeight / appHeight;
-  // }
-  // console.log(newWidth+" "+window.innerWidth+" "+window.innerWidth/newWidth)
-  // stage.scale.set(window.innerWidth/newWidth, 1)//(gameScale, gameScale);
-
-
-  var aspect = 16/9;
-  var w = window.innerWidth;
-  var h = window.innerHeight;
-  var nw = w, nh = h;
-  if(w > h * aspect)
-  {
-  	//Height is the limiting factor
-  	nw = h*aspect;
-    console.log("sesad"+h+" "+nh)
-    // stage.scale.set(nw/w, nw/w)
+  if (window.innerWidth / window.innerHeight >= ratio) {
+    var w = window.innerHeight * ratio;
+    var h = window.innerHeight;
+  } else {
+    var w = window.innerWidth;
+    var h = window.innerWidth / ratio;
   }
-  else
-  {
-  	//Width is the limiting factor
-  	nh = w*1/aspect;
-    console.log("Decrease by: "+nh/h)
-    // console.log("se"+h+" "+nh+" "+w+" "+nw)
-
-    stage.scale.set(nh/h, nh/h) //TODO EX. Closing Inpect tab does not change scale
-  }
-  console.log(h+" "+nh+"______"+stage.width+" "+stage.height)
-  renderer.resize(nw, nh);
-  // stage.scale.set(1, 1)
-  // stage.height = nh
-  // stage.width = nw
+  renderer.view.style.width = w + 'px';
+  renderer.view.style.height = h + 'px';
+  scaleBy = h/size[1]
 }
 
-
-
-window.addEventListener("resize", resize, false)
+window.onresize = function(event) {
+    resize();
+};
 
 var time = Date.now()
 
@@ -111,13 +54,19 @@ function gameLoop(){
 
   if(localPlayer){
     localPlayer.update(d)
-    socket.emit("input", {left:left, right: right})
   }
 
   updatePhysics(d)
 
   renderer.render(stage)
   time = Date.now()
+}
+
+function inputLoop(){
+  if(localPlayer){
+    socket.emit("input", {left:left, right: right})
+  }
+  setTimeout(inputLoop, 1/30)
 }
 
 

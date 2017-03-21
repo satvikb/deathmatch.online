@@ -6,6 +6,8 @@ var Sprite = PIXI.Sprite;
 var loader = PIXI.loader;
 var resources = PIXI.loader.resources;
 
+var size = [1920, 1080];
+
 var spritesheet = "textures/data.json"
 
 var files = [spritesheet]
@@ -18,16 +20,8 @@ function loadProgress(loader, resource){
 
 function loadFiles(){
   id = PIXI.loader.resources["textures/data.json"].textures;
-
-  // setupLocalPlayer()
-
   initConnection()
 
-  // if(id){
-  //   let sprite = new Sprite(id["tile_edge.png"])
-  //   stage.addChild(sprite)
-  //   sprite.x = sprite.y = 10
-  // }
-
   gameLoop()
+  inputLoop()
 }

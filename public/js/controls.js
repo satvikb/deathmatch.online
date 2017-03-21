@@ -72,8 +72,15 @@ function keyUp(event){
   }
 }
 
+function mouseMove(event){
+  if(localPlayer){
+    localPlayer.mouseMove(event.clientX, event.clientY)
+  }
+}
+
 window.addEventListener("keydown", keyDown, false)
 window.addEventListener("keyup", keyUp, false)
+window.addEventListener("mousemove", mouseMove, false)
 
 // function key(code){
 //   var k = {}

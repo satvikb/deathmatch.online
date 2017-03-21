@@ -2,9 +2,9 @@ function Player(id, x, y){
   this.id = id
   this.localPlayer = false
 
-  this.position = new PIXI.Point();
-  this.movespeed = 130
-  this.maxVelocityX = 3
+  // this.position = new PIXI.Point();
+  this.movespeed = 30
+  // this.maxVelocityX = 3
 
   this.animationFrames = [
     PIXI.Texture.fromImage("player_0.png"),
@@ -14,84 +14,56 @@ function Player(id, x, y){
   ]
 
   this.view = new PIXI.extras.AnimatedSprite(this.animationFrames)
-  this.view.tint = '0x'+Math.floor(Math.random()*16777215).toString(16);
+  this.view.tint = '0xffffff'//+Math.floor(Math.random()*16777215).toString(16); // Random Tint
   this.view.animationSpeed = 0
   this.view.anchor.x = 0.5
   this.view.anchor.y = 0.5
-  // this.view.scale.x =
-  // this.view.scale.y =
-
-
-  this.position.x = x
-  this.position.y = y
-
-  this.previousPosition = new PIXI.Point()//this.position.x, this.position.y)
-  this.previousPosition.copy(this.position)
+  this.view.scale.y = -1
+  this.previousPosition = [x, y]//this.position.x, this.position.y)
+  // this.previousPosition.copy(this.position)
 
   this.view.play()
 
-  this.velocity = new PIXI.Point()
-  this.velocity.x = 0
-  this.velocity.y = 0
+  this.body
+  this.shape
 
-  this.inputVelocity = new PIXI.Point()
-  this.inputVelocity.x = this.inputVelocity.y = 0
-}
-
-Player.prototype.liftMove = function(left){
-  // if(!left){
-  //   this.view.scale.x = -1
-  // }else{
-  //   this.view.scale.x = 1
-  // }
-  this.view.gotoAndPlay(0)
-}
-
-Player.prototype.startMove = function(left){
-  // if(!left){
-  //   this.view.scale.x = -1
-  // }else{
-  //   this.view.scale.x = 1
-  // }
-  // this.view.gotoAndPlay(0)
-  // this.view.loop = true
-  this.previousPosition.copy(this.position)
-}
-
-Player.prototype.update = function(d){
-  //TODO Update collisions
-  this.inputVelocity.x = this.inputVelocity.y = 0
-
-  //controls client interploration
-  if(this.localPlayer){
-    if(left == true){
-      this.inputVelocity.x = -this.movespeed*d
+  this.getPos = function(){
+    if(this.body){
+      return this.body.position
     }
-
-    if(right == true){
-      this.inputVelocity.x = this.movespeed*d
-    }
-
-    this.velocity.x += this.inputVelocity.x
-
-    if(this.velocity.x >= this.maxVelocityX){
-      this.velocity.x = this.maxVelocityX
-    }
+    return [0, 0]
   }
 
-  // this.view.scale.x = this.velocity.x < 0 ? 1 : (this.velocity.x > 0 ? -1 : 1)
-  // console.log(this.velocity.x)
-  this.view.animationSpeed = (Math.abs(this.velocity.x) / this.maxVelocityX)
-
-  this.position.x += this.velocity.x
-  this.position.y += this.velocity.y
-
-  basicText.text = this.previousPosition.x+" "+this.position.x
-
-  var deltaX = this.previousPosition.x-this.position.x
-  if(deltaX > 0){
-    this.view.scale.x = 1
-  }else if(deltaX < 0){
-    this.view.scale.x = -1
+  this.createBody = function(mass, x, y, width, height){
+    this.body = new p2.Body({mass: mass, position: [x, y], fixedRotation: true, damping: 0.5})
+    this.shape = new p2.Box({width: width, height: height})
+    this.body.addShape(this.shape)
+    world.addBody(this.body)
+    console.log("New body")
   }
+
+  this.liftMove = function(left){
+    this.view.gotoAndPlay(0)
+  }
+
+  this.startMove = function(left){
+    
+  }
+
+  this.mouseMove = function(x, y){
+    var sx = this.view.position.x*scaleBy
+    if(x > sx+this.view.width/2){
+      this.view.scale.x = -1
+    }else if(x < sx+this.view.width/2){
+      this.view.scale.x = 1
+    }
+    basicText.text = x+" "+this.view.x+" "+sx
+  }
+
+  this.update = function(d){
+    this.view.animationSpeed = (Math.abs(this.body.velocity[0]) / this.movespeed)
+  }
+
+  this.createBody(1, x, y, 5, 5)
+  console.log(this.body)
 }

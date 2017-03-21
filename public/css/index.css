@@ -9,10 +9,15 @@ canvas {
   image-rendering: pixelated;
 }
 
+html, body {
+  overflow: hidden;
+  margin: 0
+}
+
 #game {
   position: absolute;
-  left:     50%;
-  top:      50%;
+  left:     0%;
+  top:      0%;
 }
 
 #gamecanvas {
