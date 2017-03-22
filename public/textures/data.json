@@ -1,8 +1,16 @@
 {"frames": {
 
+"arm.png":
+{
+	"frame": {"x":1,"y":1,"w":36,"h":95},
+	"rotated": false,
+	"trimmed": false,
+	"spriteSourceSize": {"x":0,"y":0,"w":36,"h":95},
+	"sourceSize": {"w":36,"h":95}
+},
 "player_0.png":
 {
-	"frame": {"x":1,"y":1,"w":16,"h":64},
+	"frame": {"x":38,"y":1,"w":16,"h":64},
 	"rotated": false,
 	"trimmed": false,
 	"spriteSourceSize": {"x":0,"y":0,"w":16,"h":64},
@@ -10,7 +18,7 @@
 },
 "player_1.png":
 {
-	"frame": {"x":18,"y":1,"w":16,"h":64},
+	"frame": {"x":1,"y":97,"w":16,"h":64},
 	"rotated": false,
 	"trimmed": false,
 	"spriteSourceSize": {"x":0,"y":0,"w":16,"h":64},
@@ -18,7 +26,7 @@
 },
 "player_2.png":
 {
-	"frame": {"x":35,"y":1,"w":16,"h":64},
+	"frame": {"x":18,"y":97,"w":16,"h":64},
 	"rotated": false,
 	"trimmed": false,
 	"spriteSourceSize": {"x":0,"y":0,"w":16,"h":64},
@@ -26,7 +34,7 @@
 },
 "player_3.png":
 {
-	"frame": {"x":52,"y":1,"w":16,"h":64},
+	"frame": {"x":35,"y":97,"w":16,"h":64},
 	"rotated": false,
 	"trimmed": false,
 	"spriteSourceSize": {"x":0,"y":0,"w":16,"h":64},
@@ -34,7 +42,7 @@
 },
 "tile_center.png":
 {
-	"frame": {"x":69,"y":1,"w":8,"h":8},
+	"frame": {"x":1,"y":162,"w":8,"h":8},
 	"rotated": false,
 	"trimmed": false,
 	"spriteSourceSize": {"x":0,"y":0,"w":8,"h":8},
@@ -42,7 +50,7 @@
 },
 "tile_corner.png":
 {
-	"frame": {"x":78,"y":1,"w":8,"h":8},
+	"frame": {"x":10,"y":162,"w":8,"h":8},
 	"rotated": false,
 	"trimmed": false,
 	"spriteSourceSize": {"x":0,"y":0,"w":8,"h":8},
@@ -50,7 +58,7 @@
 },
 "tile_edge.png":
 {
-	"frame": {"x":87,"y":1,"w":8,"h":8},
+	"frame": {"x":19,"y":162,"w":8,"h":8},
 	"rotated": false,
 	"trimmed": false,
 	"spriteSourceSize": {"x":0,"y":0,"w":8,"h":8},
@@ -61,8 +69,8 @@
 	"version": "1.0",
 	"image": "data.png",
 	"format": "RGBA8888",
-	"size": {"w":96,"h":66},
+	"size": {"w":55,"h":171},
 	"scale": "1",
-	"smartupdate": "$TexturePacker:SmartUpdate:ae1a5251905c5da4027e2342d7bcd37d:cd1c0169770b15b42bda04a5b4922b81:188fa90ea8d99ef04ad566f057518186$"
+	"smartupdate": "$TexturePacker:SmartUpdate:f066dc6d603061a091cbf297bb5744fe:92db3e0459d599f9b64f4247b65d2ba9:188fa90ea8d99ef04ad566f057518186$"
 }
 }

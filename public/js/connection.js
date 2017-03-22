@@ -1,7 +1,7 @@
 var socket;
 
 function initConnection(){
-  socket = io.connect("http://192.168.1.8:8000")
+  // socket = io.connect("http://192.168.1.8:8000")
   socketEventHandlers()
 }
 
@@ -13,7 +13,7 @@ function socketEventHandlers(){
 
   socket.on("newplayer", newplayer)
   socket.on("removeplayer", removeplayer)
-  // setupLocalPlayer({id:"awawe", x:300, y:300})
+  // setupLocalPlayer({id: "awewe", x: 300, y: 300})
 }
 
 function joingame(data){
@@ -38,7 +38,6 @@ function removeplayer(data){
 }
 
 function update(data){
-  // console.log("Update Data: "+data.d.length)
   var d = data.d
   for(var i = 0; i < d.length; i++){
     var playerData = d[i]
@@ -49,8 +48,6 @@ function update(data){
       }
       player.body.position[0] = playerData.position.x
       player.body.position[1] = playerData.position.y
-      // console.log("M "+player.body.position[0]+" "+player.body.position[1]+" "+playerData.position.x+" "+playerData.position.y)
-
     }
   }
 }

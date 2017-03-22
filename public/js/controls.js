@@ -81,34 +81,3 @@ function mouseMove(event){
 window.addEventListener("keydown", keyDown, false)
 window.addEventListener("keyup", keyUp, false)
 window.addEventListener("mousemove", mouseMove, false)
-
-// function key(code){
-//   var k = {}
-//   k.code = code
-//   k.isDown = false
-//   k.isUp = false
-//   k.press = undefined
-//   k.release = undefined
-//
-//   k.downHandler = function(e){
-//     if(e.keyCode == k.code){
-//       if(k.isUp && k.press) key.press();
-//       k.isDown = true;
-//       k.isUp = false;
-//     }
-//     e.preventDefault()
-//   }
-//
-//   k.upHandler = function(e){
-//     if(e.keyCode == k.code){
-//       if(k.isDown && k.release) key.release();
-//       k.isDown = false;
-//       k.isUp = true;
-//     }
-//     e.preventDefault()
-//   }
-//
-//   window.addEventListener("keydown", k.downHandler.bind(k), false);
-//   window.addEventListener("keyup", k.upHandler.bind(k), false);
-//   return k;
-// }

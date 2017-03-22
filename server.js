@@ -58,11 +58,7 @@ function onSocketConnection(client) {
 
     //TODO Optimize
     client.on('input', function(data){
-      // if(data.left){
-      //   player.velocity += this.movespeed*
-      // }
       player.inputs = data
-      // updateControls(delta)
     })
 
     client.on("disconnect", function(){
@@ -105,7 +101,7 @@ function update(){
   updatePhysics(delta)
 
   sendUpdate()
-  setTimeout(update, 1/30)//delta/1000)
+  setTimeout(update, 1/60)//delta/1000)
 
   // lastTime = time
   time = Date.now()
@@ -132,7 +128,6 @@ function sendUpdate(){
       var player = room.players[i]
       var playerData = {}
       playerData.id = player.id
-      // console.log(""+player.position.x+" "+player.position.y)
       playerData.position = {x: player.getPos()[0], y: player.getPos()[1]}
       // playerData.velocity = {x: player.velocity.x, y: player.velocity.y}
       playerData.mouseDirection = {x: player.mouseDirection.x, y: player.mouseDirection.y}
@@ -144,43 +139,25 @@ function sendUpdate(){
 }
 
 function updatePhysics(d){
-  // for(var r = 0; r < rooms.length; r++){
-  //   var room = rooms[r]
-  //   console.log(room)
-  //   room.addPlayer(new Player("3", room, 2, 2))
-  //   room.updatePhysics(d)
-  // }
-  // new Player("sdf", new Room("fds"), 13 , 3).createBody()
-  // new Room("fs").updatePhysics(d)
 
   for(var i = 0; i < rooms.length; i++){
-    // var room = io.sockets.adapter.rooms[rooms[i].name];
-    // console.log("Room: "+room.length)
-    // if(room.length < MAX_PER_ROOM){
-      var room = rooms[i];
-      room.updatePhysics(d)
-    // }
+    var room = rooms[i];
+    room.updatePhysics(d)
   }
 }
 
-
-
 init();
-
 update();
-
 
 function Player(id, room, x, y){
   this.id = id
   this.room = room
-  // console.log("Creating New player "+id+" "+x+" "+y)
-  // this.position = new Vector2(x, y)
-  this.movespeed = 30
 
-  this.velocity = new Vector2(0, 0)
+  this.width = 16
+  this.height = 64
 
+  this.movespeed = 8
   this.mouseDirection = new Vector2(0, 0)
-
   this.inputs = {left: false, right: false}
 
   this.getPos = function(){
@@ -192,7 +169,7 @@ function Player(id, room, x, y){
   }
 
   this.createBody = function(mass, posX, posY, width, height){
-    this.body = new p2.Body({mass: mass, position: [posX, posY], fixedRotation: true, damping: 0.5})
+    this.body = new p2.Body({mass: mass, position: [posX, posY], fixedRotation: true, damping: 0})
     this.shape = new p2.Box({width: width, height: height})
     this.body.addShape(this.shape)
     this.room.world.addBody(this.body)
@@ -211,7 +188,7 @@ function Player(id, room, x, y){
     return false;
   }
 
-  this.createBody(1, x, y, 5, 5)
+  this.createBody(150, x+this.width/2, y-this.height/2, this.width, this.height)
 }
 
 function Vector2(x = 0, y = 0){
@@ -225,15 +202,19 @@ function Room(name){
   this.name = name
   this.players = []
 
-  this.world = new p2.World({gravity: [0, -9.82]})
+  this.world = new p2.World({gravity: [0, -19.82]})
+
+  this.groundSize = [size[0], 1]
+  this.groundPos = [this.groundSize[0]/2, this.groundSize[1]/2]
 
   // Create an infinite ground plane body
   this.groundBody = new p2.Body({
-    mass: 0, position: [0, 5] // Setting mass to 0 makes it static
+    mass: 0, position: this.groundPos // Setting mass to 0 makes it static
   });
-  this.groundShape = new p2.Box({width: size[0], height:1});
+  this.groundShape = new p2.Box({width: this.groundSize[0], height: this.groundSize[1]});
   this.groundBody.addShape(this.groundShape);
   this.world.addBody(this.groundBody);
+  console.log(this.groundShape.width+" "+this.groundBody.position[0])
 
 
   this.world.on('postStep', function(event){
@@ -244,28 +225,22 @@ function Room(name){
       var rightMove = player.inputs.right == true ? 1 : 0
       var totalMove = rightMove + leftMove
 
-      player.body.velocity[0] = player.movespeed*totalMove
-      // if(player.inputs.left){
-      //   player.body.velocity[0] = -player.movespeed*delta
-      //   console.log("move left "+delta)
-      // }
-      //
-      // if(player.inputs.right){
-      //   player.body.velocity[0] = player.movespeed*delta
-      // }
+      player.body.velocity[0] += player.movespeed*totalMove
+
+      if(player.body.velocity[0] > 5){
+        player.body.velocity[0] = 5
+      }
     }
   })
 
   // To animate the bodies, we must step the world forward in time, using a fixed time step size.
   // The World will run substeps and interpolate automatically for us, to get smooth animation.
-  this.fixedTimeStep = 1 / 30; // seconds
+  this.fixedTimeStep = 1/60; // seconds
   this.maxSubSteps = 10; // Max sub steps to catch up with the wall clock
 
 
   this.updatePhysics = function(d){
     this.world.step(this.fixedTimeStep, d, this.maxSubSteps)
-
-
   }
 
   this.addPlayer = function(player){
