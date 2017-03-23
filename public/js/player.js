@@ -66,16 +66,16 @@ function Player(id, x, y){
     var sx = this.display.position.x*scaleBy
     var sy = this.display.position.y*scaleBy
 
-    // var sub = 0
     if(x > sx+this.display.width/2){
       this.view.scale.x = -1
-      // sub = Math.PI
+      this.arm.scale.x = -1
     }else if(x < sx+this.display.width/2){
       this.view.scale.x = 1
+      this.arm.scale.x = 1
     }
 
     var dirX = x-sx
-    var dirY = sh-(y-(sy-this.height/4))
+    var dirY = sh-(y-(sy-this.height/4)) //center y
     var uV = normDir([dirX, dirY])
     var rot = Math.atan2(uV[1], uV[0])
     this.arm.rotation = rot+Math.PI/2
@@ -87,7 +87,6 @@ function Player(id, x, y){
   }
 
   this.createBody(150, x+this.width/2, y-this.height/2, this.width, this.height)
-  console.log(this.body)
 }
 
 function normDir(dir){

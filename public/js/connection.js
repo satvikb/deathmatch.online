@@ -1,7 +1,7 @@
 var socket;
 
 function initConnection(){
-  // socket = io.connect("http://192.168.1.8:8000")
+  socket = io.connect("http://192.168.1.8:8000")
   socketEventHandlers()
 }
 
@@ -43,9 +43,6 @@ function update(data){
     var playerData = d[i]
     var player = getPlayerById(playerData.id)
     if(player){
-      if(player.id == localPlayer.id){
-        // basicText.text = player.position.x+" "+player.position.y+"\n"+playerData.position.x+" "+playerData.position.y
-      }
       player.body.position[0] = playerData.position.x
       player.body.position[1] = playerData.position.y
     }

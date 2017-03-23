@@ -23,5 +23,5 @@ function loadFiles(){
   initConnection()
 
   gameLoop()
-  inputLoop()
+  // inputLoop()
 }

@@ -63,28 +63,22 @@ function gameLoop(){
 
   if(localPlayer){
     localPlayer.update(d)
-    // socket.emit("input", {left:left, right: right})
+    socket.emit("input", {left:left, right: right})
   }
 
   updatePhysics(d)
 
   renderer.render(stage)
 
-  // if(graphics){
-  //   graphics.position.x = localPlayer.body.position[0];//-localPlayer.width/2;
-  //   graphics.position.y = localPlayer.body.position[1];
-  //   graphics.rotation =   localPlayer.body.angle;
-  // }
-
   time = Date.now()
 }
 
-function inputLoop(){
-  if(localPlayer){
-    // socket.emit("input", {left:left, right: right})
-  }
-  // setTimeout(inputLoop, 1/30)
-}
+// function inputLoop(){
+//   if(localPlayer){
+//     // socket.emit("input", {left:left, right: right})
+//   }
+//   // setTimeout(inputLoop, 1/30)
+// }
 
 
 init()

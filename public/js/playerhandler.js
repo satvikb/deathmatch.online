@@ -4,13 +4,6 @@ var allplayers = []
 function setupLocalPlayer(data){
   localPlayer = new Player(data.id, data.x, data.y)
   localPlayer.localPlayer = true
-
-  // graphics = new PIXI.Graphics();
-  // graphics.beginFill(0xff0000);
-  // graphics.drawRect(-localPlayer.shape.width/2, -localPlayer.shape.height/2, localPlayer.shape.width, localPlayer.shape.height);
-  // stage.addChild(graphics);
-  //
-
   stage.addChild(localPlayer.display)
   allplayers.push(localPlayer)
 }
