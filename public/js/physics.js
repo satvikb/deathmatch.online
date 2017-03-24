@@ -6,11 +6,11 @@ world.on('postStep', function(event){
   var totalMove = rightMove + leftMove
 
   if(localPlayer){
-    localPlayer.body.velocity[0] += localPlayer.movespeed*totalMove
+    localPlayer.body.velocity[0] = localPlayer.movespeed*totalMove
 
-    if(localPlayer.body.velocity[0] > 5){
-      localPlayer.body.velocity[0] = 5
-    }
+    // if(localPlayer.body.velocity[0] > 5){
+    //   localPlayer.body.velocity[0] = 5
+    // }
     // console.log("total "+totalMove+" "+world.time)
   }
 })
@@ -40,8 +40,8 @@ function updatePhysics(d){
     var player = allplayers[i]
     if(player.body){
       // console.log(JSON.stringify(player.body.interpolatedPosition))
-      player.display.position.x = player.body.position[0]
-      player.display.position.y = player.body.position[1]-player.height/2
+      player.display.position.x = player.body.interpolatedPosition[0]//player.body.position[0]
+      player.display.position.y = player.body.interpolatedPosition[1]-player.height/2//player.body.position[1]-player.height/2
       // basicText.text = player.display.position.x+" "+player.view.position.x//player.body.position[0]+" "+player.body.position[1]
     }
   }

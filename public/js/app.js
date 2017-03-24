@@ -55,18 +55,18 @@ window.onresize = function(event) {
 };
 
 var time = Date.now()
-
+var delta;
 function gameLoop(){
-  var d = (Date.now()-time)/1000
+  delta = (Date.now()-time)/1000
 
   requestAnimationFrame(gameLoop);
 
   if(localPlayer){
-    localPlayer.update(d)
-    socket.emit("input", {left:left, right: right})
+    localPlayer.update(delta)
+    socket.emit("input", {left:left, right: right, shootLeft: shootLeft, shootRight, shootRight, direction: localPlayer.direction})
   }
 
-  updatePhysics(d)
+  updatePhysics(delta)
 
   renderer.render(stage)
 
@@ -80,5 +80,30 @@ function gameLoop(){
 //   // setTimeout(inputLoop, 1/30)
 // }
 
+function music(){
+  soundEffect(
+    getRandomInt(10, 1000),
+    0,
+    0.1,
+    "sine",
+    1,
+    getRandomInt(0, 100) < 50 ? -1 : 1,
+    0,
+    0,
+    false,
+    50,
+    2,
+    undefined,
+    undefined
+  );
+
+  setTimeout(music, getRandomInt(100, 1000))
+}
+
+function getRandomInt(min, max) {
+    return Math.floor(Math.random() * (max - min + 1)) + min;
+}
+
 
 init()
+// music()

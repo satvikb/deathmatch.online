@@ -45,6 +45,8 @@ function update(data){
     if(player){
       player.body.position[0] = playerData.position.x
       player.body.position[1] = playerData.position.y
+      player.body.previousPosition[0] = playerData.position.x
+      player.body.previousPosition[1] = playerData.position.y
     }
   }
 }

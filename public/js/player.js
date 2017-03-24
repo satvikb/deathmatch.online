@@ -3,7 +3,7 @@ function Player(id, x, y){
   this.localPlayer = false
 
   // this.position = new PIXI.Point();
-  this.movespeed = 8
+  this.movespeed = 80
   // this.maxVelocityX = 3
 
   this.width = 16
@@ -38,6 +38,7 @@ function Player(id, x, y){
 
   this.body
   this.shape
+  this.direction
 
   this.getPos = function(){
     if(this.body){
@@ -68,22 +69,26 @@ function Player(id, x, y){
 
     if(x > sx+this.display.width/2){
       this.view.scale.x = -1
-      this.arm.scale.x = -1
+      this.arm.scale.x = -(8/36)
     }else if(x < sx+this.display.width/2){
       this.view.scale.x = 1
-      this.arm.scale.x = 1
+      this.arm.scale.x = (8/36)
     }
 
     var dirX = x-sx
     var dirY = sh-(y-(sy-this.height/4)) //center y
     var uV = normDir([dirX, dirY])
+
+    this.direction = uV
+
     var rot = Math.atan2(uV[1], uV[0])
     this.arm.rotation = rot+Math.PI/2
     basicText.text = dirX+" "+dirY+" "+uV[0]+" "+uV[1]
   }
 
   this.update = function(d){
-    this.view.animationSpeed = (Math.abs(this.body.velocity[0]) / this.movespeed*3)
+    // console.log('V '+this.body.velocity[0])
+    this.view.animationSpeed = (Math.abs(this.body.velocity[0]) / (this.movespeed*10))
   }
 
   this.createBody(150, x+this.width/2, y-this.height/2, this.width, this.height)

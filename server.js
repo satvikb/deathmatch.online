@@ -32,7 +32,6 @@ function onSocketConnection(client) {
   client.on("joingame", function(data){
     //create player
 
-
     var room = findOpenRoom()
     if(room){
       var player = new Player(client.id, room, getRandomInt(0, 1000), 300)
@@ -59,6 +58,9 @@ function onSocketConnection(client) {
     //TODO Optimize
     client.on('input', function(data){
       player.inputs = data
+      // if(data.shootLeft){
+      //   console.log("shoot left input")
+      // }
     })
 
     client.on("disconnect", function(){
@@ -107,17 +109,17 @@ function update(){
   time = Date.now()
 }
 
-function updateControls(d){
-  for(var r = 0; r < rooms.length; r++){
-    var room = rooms[r];
-    var roomUpdateData = {}
-
-    for(var i = 0; i < room.players.length; i++){
-      var player = room.players[i]
-      player.applyInputs(d)
-    }
-  }
-}
+// function updateControls(d){
+//   for(var r = 0; r < rooms.length; r++){
+//     var room = rooms[r];
+//     var roomUpdateData = {}
+//
+//     for(var i = 0; i < room.players.length; i++){
+//       var player = room.players[i]
+//       player.applyInputs(d)
+//     }
+//   }
+// }
 
 function sendUpdate(){
   for(var r = 0; r < rooms.length; r++){
@@ -156,9 +158,13 @@ function Player(id, room, x, y){
   this.width = 16
   this.height = 64
 
-  this.movespeed = 8
+  //test   function Gun(id, laserLength, shootSpeed, travelSpeed, thickness){
+  this.gunLeft = new Gun(0, 10, 10, 4, 1)
+  this.gunRight = null
+
+  this.movespeed = 80
   this.mouseDirection = new Vector2(0, 0)
-  this.inputs = {left: false, right: false}
+  this.inputs = {left: false, right: false, shootLeft: false, shootRight: false, direction: [-1, 0]}
 
   this.getPos = function(){
     if(this.body){
@@ -194,6 +200,19 @@ function Player(id, room, x, y){
 function Vector2(x = 0, y = 0){
   this.x = x
   this.y = y
+
+  // this.mul = function(v2){
+  //   return new Vector2(this.x*v2.x, this.y*v2.y)
+  // }
+  //
+  // // Multiply vector with just one value
+  // this.scale = function(scale){
+  //   return new Vector2(this.x*scale, this.y*scale)
+  // }
+  //
+  // this.add = function(v2){
+  //   return new Vector2(this.x+v2.x, this.y+v2.y)
+  // }
 }
 
 
@@ -225,11 +244,40 @@ function Room(name){
       var rightMove = player.inputs.right == true ? 1 : 0
       var totalMove = rightMove + leftMove
 
-      player.body.velocity[0] += player.movespeed*totalMove
+      player.body.velocity[0] = player.movespeed*totalMove
 
-      if(player.body.velocity[0] > 5){
-        player.body.velocity[0] = 5
+      var shootLeft = player.inputs.shootLeft
+      var shootRight = player.inputs.shootRight
+      var dir = player.inputs.direction
+
+      //TODO Check if guns exist
+      if(dir){
+        // console.log("1")
+        if(shootLeft){
+          // console.log("2")
+          if(shootLeft == true){
+            // console.log("3")
+            if(player.gunLeft){
+              // console.log("4")
+              player.gunLeft.shoot(player.body.position, dir)
+              console.log("shot left "+JSON.stringify(dir))
+            }
+          }
+        }
+
+        if(shootRight){
+          if(shootRight == true){
+            if(player.gunRight){
+              player.gunRight.shoot(player.body.position, dir)
+              console.log("shot right "+JSON.stringify(dir))
+            }
+          }
+        }
       }
+      // console.log(delta*1000)
+      // if(player.body.velocity[0] > 5){
+      //   player.body.velocity[0] = 5
+      // }
     }
   })
 
@@ -250,6 +298,72 @@ function Room(name){
 
   this.removePlayer = function(player){
     this.players.splice(this.players.indexOf(player), 1);
+  }
+}
+
+function Gun(id, laserLength, shootSpeed, travelSpeed, thickness){
+  this.id = id
+  this.laserLength = laserLength
+  this.shootSpeed = shootSpeed
+  this.travelSpeed = travelSpeed
+  this.thickness = thickness
+
+  this.shootHandler = new ShootHandler(this)
+
+  this.shoot = function(start, direction){
+    this.shootHandler.addBullet(start, direction)
+  }
+}
+
+function ShootHandler(gun){
+  this.gun = gun
+  this.bulletData = []
+
+  this.addBullet = function(startPos, direction){
+    var endOffset = p2.vec2.create();
+    p2.vec2.scale(endOffset, direction, this.gun.laserLength)
+    var endPos = p2.vec2.create();
+    p2.vec2.add(endPos, startPos, endOffset)
+
+    var bullet = new BulletData(this.gun, startPos, endPos, direction)
+    this.bulletData.push(bullet)
+  }
+
+  this.step = function(){
+    for(var b = 0; b < this.bulletData.length; b++){
+      this.bulletData[b].step()
+      // Handle collisions
+
+    }
+  }
+}
+
+function BulletData(gun, from, to, direction){
+  this.gun = gun
+
+  this.ray = new p2.Ray({
+    mode: p2.Ray.ANY
+  })
+
+  this.ray.from = from
+  this.ray.to = to
+
+  this.direction = direction
+
+  this.step = function(){
+    var newFrom = p2.vec2.create()
+    var newTo = p2.vec2.create()
+    var newOffset = p2.vec2.create()
+    p2.vec2.scale(newOffset, this.direction, this.gun.travelSpeed)
+
+    p2.vec2.add(newFrom, this.ray.from, newOffset)
+    p2.vec2.add(newTo, this.ray.to, newOffset)
+
+    this.ray.from = newFrom
+    this.ray.to = newTo
+    this.ray.update()
+    // this.ray.from += this.direction*this.gun.travelSpeed
+    // this.ray.to += this.direction*this.gun.travelSpeed
   }
 }
 

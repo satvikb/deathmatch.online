@@ -9,7 +9,7 @@ function inArray(value, array){
   return array.indexOf(value) !== -1;
 }
 
-function keyDown(event){
+function keydown(event){
   var code = event.keyCode
 
   if(inArray(code, keys["jump"])){
@@ -41,7 +41,7 @@ function keyDown(event){
   }
 }
 
-function keyUp(event){
+function keyup(event){
   var code = event.keyCode
 
   if(inArray(code, keys["jump"])){
@@ -72,12 +72,38 @@ function keyUp(event){
   }
 }
 
-function mouseMove(event){
+function mousemove(event){
   if(localPlayer){
     localPlayer.mouseMove(event.clientX, event.clientY)
   }
 }
 
-window.addEventListener("keydown", keyDown, false)
-window.addEventListener("keyup", keyUp, false)
-window.addEventListener("mousemove", mouseMove, false)
+function mousedown(event){
+  if(event.button == 0){
+    shootLeft = true
+  }
+
+  if(event.button == 2){
+    shootRight = true
+  }
+
+  event.preventDefault()
+}
+
+function mouseup(event){
+  if(event.button == 0){
+    shootLeft = false
+  }
+
+  if(event.button == 2){
+    shootRight = false
+  }
+  event.preventDefault()
+}
+
+window.addEventListener("keydown", keydown, false)
+window.addEventListener("keyup", keyup, false)
+window.addEventListener("mousemove", mousemove, false)
+
+window.addEventListener("mousedown", mousedown, false)
+window.addEventListener("mouseup", mouseup, false)
