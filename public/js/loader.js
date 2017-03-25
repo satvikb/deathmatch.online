@@ -23,5 +23,7 @@ function loadFiles(){
   initConnection()
 
   gameLoop()
+  // animate()
+  
   // inputLoop()
 }

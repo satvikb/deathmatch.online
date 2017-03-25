@@ -16,7 +16,8 @@ function createNewPlayer(data){
 
 function removePlayerFromScene(data){
   var player = getPlayerById(data.id)
-  allplayers.remove(player)
+  allPlayers.splice(allPlayers.indexOf(player), 1);
+  // allplayers.remove(player)
   stage.removeChild(player.display)
   world.removeBody(player.body)
 }

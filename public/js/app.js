@@ -16,6 +16,9 @@ function init(){
   stage.scale.y = -1
   stage.position.y = size[1]
 
+  graphics = new PIXI.Graphics()
+  stage.addChild(graphics)
+
   basicText = new PIXI.Text('Basic text in pixi', {fill:0xffffff});
   basicText.text = "Test"
   basicText.x = 0;
@@ -24,11 +27,7 @@ function init(){
 
   stage.addChild(basicText)
 
-
-
-
   loader.add(files).on("progress", loadProgress).load(loadFiles)
-
   resize()
 }
 
@@ -63,14 +62,18 @@ function gameLoop(){
 
   if(localPlayer){
     localPlayer.update(delta)
-    socket.emit("input", {left:left, right: right, shootLeft: shootLeft, shootRight, shootRight, direction: localPlayer.direction})
+    socket.emit("input", {left:left, right: right, jump: jump, shootLeft: shootLeft, shootRight, shootRight, direction: localPlayer.direction})
   }
 
   updatePhysics(delta)
 
   renderer.render(stage)
+  // setTimeout(gameLoop, 1/60)
 
   time = Date.now()
+}
+
+function animate(){
 }
 
 // function inputLoop(){

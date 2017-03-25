@@ -39,6 +39,8 @@ function removeplayer(data){
 
 function update(data){
   var d = data.d
+  graphics.clear()
+
   for(var i = 0; i < d.length; i++){
     var playerData = d[i]
     var player = getPlayerById(playerData.id)
@@ -47,6 +49,16 @@ function update(data){
       player.body.position[1] = playerData.position.y
       player.body.previousPosition[0] = playerData.position.x
       player.body.previousPosition[1] = playerData.position.y
+    }
+
+    var bullets = playerData.testBullet
+
+    for(var b = 0; b < bullets.length; b++){
+      var bullet = bullets[b]
+      var from = [bullet[0], bullet[1]]
+      var to = [bullet[2], bullet[3]]
+      // graphics.position.set()
+      graphics.lineStyle(bullet[4], bullet[5]).moveTo(from[0], from[1]).lineTo(to[0], to[1])
     }
   }
 }

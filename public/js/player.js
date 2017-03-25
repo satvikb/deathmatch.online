@@ -2,9 +2,8 @@ function Player(id, x, y){
   this.id = id
   this.localPlayer = false
 
-  // this.position = new PIXI.Point();
   this.movespeed = 80
-  // this.maxVelocityX = 3
+  this.jumpheight = 250
 
   this.width = 16
   this.height = 64
@@ -49,7 +48,7 @@ function Player(id, x, y){
 
   this.createBody = function(mass, posX, posY, width, height){
     this.body = new p2.Body({mass: mass, position: [posX, posY], fixedRotation: true, damping: 0})
-    this.shape = new p2.Box({width: width, height: height})
+    this.shape = new p2.Box({width: width, height: height, material: playerMaterial})
     this.body.addShape(this.shape)
     world.addBody(this.body)
     console.log("New body")
@@ -65,7 +64,6 @@ function Player(id, x, y){
 
   this.mouseMove = function(x, y){
     var sx = this.display.position.x*scaleBy
-    var sy = this.display.position.y*scaleBy
 
     if(x > sx+this.display.width/2){
       this.view.scale.x = -1
@@ -75,15 +73,17 @@ function Player(id, x, y){
       this.arm.scale.x = (8/36)
     }
 
+    var sy = (this.display.position.y*scaleBy)+(this.arm.position.y*scaleBy)
+
+    //TODO Move into update function? Only updating direction if mouse moves for now...
     var dirX = x-sx
-    var dirY = sh-(y-(sy-this.height/4)) //center y
+    var dirY = (sh-y)-sy
     var uV = normDir([dirX, dirY])
 
     this.direction = uV
 
     var rot = Math.atan2(uV[1], uV[0])
     this.arm.rotation = rot+Math.PI/2
-    basicText.text = dirX+" "+dirY+" "+uV[0]+" "+uV[1]
   }
 
   this.update = function(d){
@@ -91,7 +91,19 @@ function Player(id, x, y){
     this.view.animationSpeed = (Math.abs(this.body.velocity[0]) / (this.movespeed*10))
   }
 
-  this.createBody(150, x+this.width/2, y-this.height/2, this.width, this.height)
+  this.canJump = function(){
+    for(var i = 0; i < world.narrowphase.contactEquations.length; i++){
+      var c = world.narrowphase.contactEquations[i];
+      if(c.bodyA === this.body || c.bodyB === this.body){
+        var d = c.normalA[1];
+        if(c.bodyA === this.body) d *= -1;
+        if(d > 0.5) return true;
+      }
+    }
+    return false;
+  }
+
+  this.createBody(51, x+this.width/2, y-this.height/2, this.width, this.height)
 }
 
 function normDir(dir){
