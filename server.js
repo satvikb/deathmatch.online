@@ -13,6 +13,7 @@ var io = require("socket.io").listen(server, {origins:'192.168.1.8:8000:*'})
 var p2 = require('p2')
 
 var size = [1920, 1080]
+var mapSize = [32, 18]
 
 var rooms = [new Room("test")]
 
@@ -42,7 +43,7 @@ function onSocketConnection(client) {
       console.log("Joining to "+room.name )
       client.join(room.name)
 
-      var playerData = {id: player.id, x: player.getPos()[0], y: player.getPos()[1]}
+      var playerData = {id: player.id, x: player.getPos()[0], y: player.getPos()[1], map: room.map}
       client.emit("joingame", playerData)
 
       //Tell everyone else in the room of the new player
@@ -152,7 +153,7 @@ function Player(id, room, x, y){
   this.gunRight = null
 
   this.movespeed = 80
-  this.jumpheight = 250
+  this.jumpheight = 350
 
   this.inputs = {left: false, right: false, jump: false, shootLeft: false, shootRight: false, direction: [-1, 0]}
 
@@ -191,10 +192,14 @@ function constants(){
   if ( typeof constants.setup == undefined ) {
     constants.setup = true
     constants.groundMaterial = new p2.Material();
+    constants.tileMaterial = new p2.Material();
     constants.playerMaterial = new p2.Material();
-    constants.groundCharacterCM = new p2.ContactMaterial(constants.groundMaterial, constants.playerMaterial,{
+    constants.groundPlayerCM = new p2.ContactMaterial(constants.groundMaterial, constants.playerMaterial, {
      friction : 0,
     });
+    constants.tilePlayerCM = new p2.ContactMaterial(constants.tileMaterial, constants.playerMaterial, {
+      friction: 0,
+    })
   }
 }
 
@@ -202,6 +207,8 @@ function Room(name){
   var that = this
   this.name = name
   this.players = []
+
+  this.map = []
 
   this.world = new p2.World({gravity: [0, -500]})
   this.world.defaultContactMaterial.friction = 0.5
@@ -220,8 +227,39 @@ function Room(name){
   this.world.addBody(this.groundBody);
   console.log(this.groundShape.width+" "+this.groundBody.position[0])
 
-  this.world.addContactMaterial(constants.groundCharacterCM);
+  this.world.addContactMaterial(constants.groundPlayerCM);
+  this.world.addContactMaterial(constants.tilePlayerCM);
 
+  this.createMap = function(){
+    for(var x = 0; x < mapSize[0]; x++){
+      this.map.push([])
+      for(var y = 0; y < mapSize[1]; y++){
+        this.map[x][y] = getRandomInt(0, 100) < 30 ? 1 : 0
+      }
+    }
+  }
+
+  this.createTileBodies = function(){
+    var tileWidth = size[0]/mapSize[0]
+    var tileHeight = size[1]/mapSize[1]
+
+    for(var x = 0; x < this.map.length; x++){
+      for(var y = 0; y < this.map[x].length; y++){
+        var tile = this.map[x][y]
+        var pos = [x*tileWidth, y*tileHeight]
+
+        if(tile == 1){
+          var tileShape = new p2.Box({width: tileWidth, height: tileHeight, material: constants.tileMaterial})
+          var tileBody = new p2.Body({mass: 0, position: pos})
+          tileBody.addShape(tileShape)
+          this.world.addBody(tileBody)
+        }
+      }
+    }
+  }
+
+  this.createMap()
+  this.createTileBodies()
 
   this.world.on('postStep', function(event){
     for(var i = 0; i < that.players.length; i++){

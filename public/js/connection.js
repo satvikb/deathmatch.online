@@ -18,6 +18,8 @@ function socketEventHandlers(){
 
 function joingame(data){
   console.log("joined game "+data.id)
+  map = data.map
+  setupWorld()
   setupLocalPlayer(data)
 }
 

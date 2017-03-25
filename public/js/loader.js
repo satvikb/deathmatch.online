@@ -7,6 +7,7 @@ var loader = PIXI.loader;
 var resources = PIXI.loader.resources;
 
 var size = [1920, 1080];
+var mapSize = [32, 18]
 
 var spritesheet = "textures/data.json"
 
@@ -24,6 +25,6 @@ function loadFiles(){
 
   gameLoop()
   // animate()
-  
+
   // inputLoop()
 }

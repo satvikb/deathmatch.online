@@ -1,11 +1,13 @@
 var renderer;
 var stage;
+var tileMap;
 var basicText;
 var graphics;
 
 function init(){
   PIXI.SCALE_MODES.DEFAULT = PIXI.SCALE_MODES.NEAREST;
-
+  PIXI.settings.SCALE_MODE = PIXI.SCALE_MODES.NEAREST
+  
   var canvas = document.getElementById("gamecanvas")
 
   console.log(canvas)
@@ -15,17 +17,21 @@ function init(){
   stage = new Container();
   stage.scale.y = -1
   stage.position.y = size[1]
+  stage.displayList = new PIXI.DisplayList()
+
+  tileMap = new Container()
+  stage.addChild(tileMap)
 
   graphics = new PIXI.Graphics()
   stage.addChild(graphics)
 
   basicText = new PIXI.Text('Basic text in pixi', {fill:0xffffff});
-  basicText.text = "Test"
+  basicText.text = "test"
   basicText.x = 0;
   basicText.y = 1040;
   basicText.scale.y = -1
 
-  stage.addChild(basicText)
+  tileMap.addChild(basicText)
 
   loader.add(files).on("progress", loadProgress).load(loadFiles)
   resize()
@@ -34,6 +40,7 @@ function init(){
 var ratio = size[0] / size[1];
 var scaleBy;
 var sw,sh; //scaled width and height
+
 function resize() {
   if (window.innerWidth / window.innerHeight >= ratio) {
     var w = window.innerHeight * ratio;

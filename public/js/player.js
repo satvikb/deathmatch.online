@@ -3,7 +3,7 @@ function Player(id, x, y){
   this.localPlayer = false
 
   this.movespeed = 80
-  this.jumpheight = 250
+  this.jumpheight = 350
 
   this.width = 16
   this.height = 64
@@ -17,21 +17,45 @@ function Player(id, x, y){
 
   this.display = new PIXI.Container()
 
+  this.bodyLayer = new PIXI.DisplayGroup(0, false)
+  this.armRightLayer = new PIXI.DisplayGroup(1, true)
+  this.armLeftLayer = new PIXI.DisplayGroup(-1, true)
+
   this.view = new PIXI.extras.AnimatedSprite(this.animationFrames)
   this.view.tint = '0xffffff'//+Math.floor(Math.random()*16777215).toString(16); // Random Tint
   this.view.animationSpeed = 0
   this.view.anchor.x = 0.5
   this.view.anchor.y = 1
   this.view.scale.y = -1
+  this.view.zOrder = 0
+  this.view.displayGroup = this.bodyLayer
+  console.log("di "+this.view.zOrder)
   this.display.addChild(this.view)
 
-  this.arm = PIXI.Sprite.fromImage("arm.png")
-  this.arm.anchor.x = 0.5
-  this.arm.anchor.y = 0
-  this.arm.scale.y = -(8/36)
-  this.arm.scale.x = (8/36)
-  this.arm.position.y = 39
-  this.display.addChild(this.arm)
+  this.armY = 39
+  this.armYBack = 36
+
+  this.armLeft = new PIXI.Sprite(PIXI.Texture.fromImage("arm.png"))//.fromImage("arm.png")
+  // this.armLeft.texture.baseTexture.scaleMode = PIXI.SCALE_MODES.LINEAR;
+  this.armLeft.anchor.x = 0.5
+  this.armLeft.anchor.y = 0
+  this.armLeft.scale.y = -(8/36)
+  this.armLeft.scale.x = (8/36)
+  this.armLeft.position.y = this.armY
+  this.armLeft.displayGroup = this.armLeftLayer
+  this.armLeftLayer.zOrder = -1
+  this.display.addChild(this.armLeft)
+
+  this.armRight = new PIXI.Sprite(PIXI.Texture.fromImage("arm.png"))
+  // this.armRight.texture.baseTexture.scaleMode = PIXI.SCALE_MODES.LINEAR;
+  this.armRight.anchor.x = 0.5
+  this.armRight.anchor.y = 0
+  this.armRight.scale.y = -(8/36)
+  this.armRight.scale.x = (8/36)
+  this.armRight.position.y = this.armY
+  this.armRight.displayGroup = this.armRightLayer
+  this.armRightLayer.zOrder = 100
+  this.display.addChild(this.armRight)
 
   this.view.play()
 
@@ -65,15 +89,27 @@ function Player(id, x, y){
   this.mouseMove = function(x, y){
     var sx = this.display.position.x*scaleBy
 
-    if(x > sx+this.display.width/2){
+    if(x > sx){
       this.view.scale.x = -1
-      this.arm.scale.x = -(8/36)
-    }else if(x < sx+this.display.width/2){
+      this.armLeft.scale.x = -(8/36)
+      this.armLeftLayer.zOrder = -4
+      this.armLeft.position.y = this.armYBack
+
+      this.armRight.scale.x = -(8/36)
+      this.armRightLayer.zOrder = 4
+      this.armRight.position.y = this.armY
+    }else if(x < sx){
       this.view.scale.x = 1
-      this.arm.scale.x = (8/36)
+      this.armLeft.scale.x = (8/36)
+      this.armLeftLayer.zOrder = 4
+      this.armLeft.position.y = this.armYBack
+
+      this.armRight.scale.x = (8/36)
+      this.armRightLayer.zOrder = -4
+      this.armRight.position.y = this.armY
     }
 
-    var sy = (this.display.position.y*scaleBy)+(this.arm.position.y*scaleBy)
+    var sy = (this.display.position.y*scaleBy)+(this.armY*scaleBy)
 
     //TODO Move into update function? Only updating direction if mouse moves for now...
     var dirX = x-sx
@@ -83,7 +119,8 @@ function Player(id, x, y){
     this.direction = uV
 
     var rot = Math.atan2(uV[1], uV[0])
-    this.arm.rotation = rot+Math.PI/2
+    this.armLeft.rotation = rot+Math.PI/2
+    this.armRight.rotation = rot+Math.PI/2
   }
 
   this.update = function(d){
