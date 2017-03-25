@@ -1,13 +1,17 @@
 var renderer;
 var stage;
+
 var tileMap;
-var basicText;
+
+var hud;
+var ammoCounter;
+
 var graphics;
 
 function init(){
   PIXI.SCALE_MODES.DEFAULT = PIXI.SCALE_MODES.NEAREST;
   PIXI.settings.SCALE_MODE = PIXI.SCALE_MODES.NEAREST
-  
+
   var canvas = document.getElementById("gamecanvas")
 
   console.log(canvas)
@@ -22,16 +26,18 @@ function init(){
   tileMap = new Container()
   stage.addChild(tileMap)
 
+  hud = new Container()
+  stage.addChild(hud)
+
   graphics = new PIXI.Graphics()
   stage.addChild(graphics)
 
-  basicText = new PIXI.Text('Basic text in pixi', {fill:0xffffff});
-  basicText.text = "test"
-  basicText.x = 0;
-  basicText.y = 1040;
-  basicText.scale.y = -1
-
-  tileMap.addChild(basicText)
+  ammoCounter = new PIXI.Text('', {fill:0xffffff});
+  ammoCounter.text = ""
+  ammoCounter.x = 0;
+  ammoCounter.y = 1040;
+  ammoCounter.scale.y = -1
+  hud.addChild(ammoCounter)
 
   loader.add(files).on("progress", loadProgress).load(loadFiles)
   resize()

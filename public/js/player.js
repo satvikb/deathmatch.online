@@ -61,7 +61,7 @@ function Player(id, x, y){
 
   this.body
   this.shape
-  this.direction
+  this.direction = [-1, 0]
 
   this.getPos = function(){
     if(this.body){
@@ -118,8 +118,13 @@ function Player(id, x, y){
 
     this.direction = uV
 
-    var rot = Math.atan2(uV[1], uV[0])
-    this.armLeft.rotation = rot+Math.PI/2
+    this.setArmRotation(uV[0], uV[1])
+  }
+
+  this.setArmRotation = function(dirX, dirY){
+    var rot = Math.atan2(dirY, dirX)
+
+    this.armLeft.rotation = rot+Math.PI/2 //TODO Figure out why we need to add pi/2
     this.armRight.rotation = rot+Math.PI/2
   }
 

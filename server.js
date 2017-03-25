@@ -120,8 +120,20 @@ function sendUpdate(){
       var playerData = {}
       playerData.id = player.id
       playerData.position = {x: player.getPos()[0], y: player.getPos()[1]}
+      // console.log("dir "+JSON.stringify(player.inputs.direction)+" "+player.inputs.direction.length)
+      playerData.direction = {x: player.inputs.direction[0], y: player.inputs.direction[1]}
       // playerData.velocity = {x: player.velocity.x, y: player.velocity.y}
       // playerData.mouseDirection = {x: player.mouseDirection.x, y: player.mouseDirection.y}
+
+      var ammoLeftLeftGun = player.gunLeft.ammo.currentAmmo
+      var ammoMaxLeftGun = player.gunLeft.ammo.maxAmmo // TODO Do not send max ammo every time, it is not going to change
+      var ammoLeftRightGun = player.gunRight.ammo.currentAmmo
+      var ammoMaxRightGun = player.gunRight.ammo.maxAmmo // TODO Do not send max ammo every time, it is not going to change
+
+
+      playerData.ammoLeft = {left: ammoLeftLeftGun, max: ammoMaxLeftGun}
+      playerData.ammoRight = {left: ammoLeftRightGun, max: ammoMaxRightGun}
+
       playerData.testBullet = player.gunLeft.shootHandler.getBulletRayData()//bulletData
       roomUpdateData.push(playerData)
     }
@@ -148,9 +160,9 @@ function Player(id, room, x, y){
   this.width = 16
   this.height = 64
 
-  //test   function Gun(id, laserLength, shootSpeed, travelSpeed, thickness){
-  this.gunLeft = new Gun(0, 10, 50, 5, 3)
-  this.gunRight = null
+  //test   function Gun(id, laserLength, shootSpeed, travelSpeed, maxAmmo, thickness){
+  this.gunLeft = new Gun(0, 5, 50, 1, 100, 1)
+  this.gunRight = new Gun(-1, 0, 0, 0, 0, 0)
 
   this.movespeed = 80
   this.jumpheight = 350
@@ -290,7 +302,7 @@ function Room(name){
         if(shootLeft){
           if(shootLeft == true){
             if(player.gunLeft){
-              player.gunLeft.shoot(player.body.position, dir)
+              player.gunLeft.shoot(player, player.body.position, dir)
             }
           }
         }
@@ -298,7 +310,7 @@ function Room(name){
         if(shootRight){
           if(shootRight == true){
             if(player.gunRight){
-              player.gunRight.shoot(player.body.position, dir)
+              player.gunRight.shoot(player, player.body.position, dir)
             }
           }
         }
@@ -342,8 +354,16 @@ function Room(name){
   }
 }
 
-function Gun(id, laserLength, shootSpeed, travelSpeed, thickness){
+function Gun(id, laserLength, shootSpeed, travelSpeed, maxAmmo, thickness){
   this.id = id
+
+  this.ammo = {
+    currentAmmo: maxAmmo,
+    maxAmmo: maxAmmo,
+    bulletPerReload: 1, //Multiple bullets can be reloaded at one time
+    reloadSpeed: 50
+  }
+
   this.laserLength = laserLength
   this.shootSpeed = shootSpeed
   this.travelSpeed = travelSpeed
@@ -353,10 +373,13 @@ function Gun(id, laserLength, shootSpeed, travelSpeed, thickness){
 
   this.time = Date.now()
 
-  this.shoot = function(start, direction){
+  this.shoot = function(player, start, direction){
     if(Date.now()-this.time > this.shootSpeed){
-      this.shootHandler.addBullet(start, direction)
-      this.time = Date.now()
+      if(this.ammo.currentAmmo > 0){
+        this.shootHandler.addBullet(player, start, direction)
+        this.ammo.currentAmmo -= 1
+        this.time = Date.now()
+      }
     }
   }
 }
@@ -370,8 +393,8 @@ function ShootHandler(gun){
 
     for(var b = 0; b < this.bulletData.length; b++){
       var bullet = this.bulletData[b]
-      var from = bullet.ray.from
-      var to = bullet.ray.to
+      var from = bullet.displayFrom//ray.from
+      var to = bullet.displayTo//ray.to
 
       var col = bullet.color
       var thickness = bullet.thickness
@@ -381,13 +404,21 @@ function ShootHandler(gun){
     return data
   }
 
-  this.addBullet = function(startPos, direction){
-    var endOffset = p2.vec2.create();
-    p2.vec2.scale(endOffset, direction, this.gun.laserLength)
-    var endPos = p2.vec2.create();
-    p2.vec2.add(endPos, startPos, endOffset)
+  this.addBullet = function(player, startPos, direction){
+    var laserLength = p2.vec2.create();
+    p2.vec2.scale(laserLength, direction, this.gun.laserLength)
+    var travelSpeedDistance = p2.vec2.create()
+    p2.vec2.scale(travelSpeedDistance, direction, this.gun.travelSpeed)
 
-    var bullet = new BulletData(this.gun, startPos, endPos, direction, this.gun.thickness)
+
+    var endDisplayPos = p2.vec2.create()
+    p2.vec2.add(endDisplayPos, startPos, laserLength)
+
+    var endRayPos = p2.vec2.create();
+    p2.vec2.copy(endRayPos, endDisplayPos)
+    p2.vec2.add(endRayPos, endDisplayPos, travelSpeedDistance)
+
+    var bullet = new BulletData(player, this.gun, startPos, endRayPos, endDisplayPos, direction, this.gun.thickness)
     this.bulletData.push(bullet)
   }
 
@@ -410,8 +441,9 @@ function ShootHandler(gun){
         bulletsToRemove.push(bullet)
       }
 
-      // Handle collisions
-
+      if(bullet.remove == true){
+        bulletsToRemove.push(bullet)
+      }
     }
 
     for(var b = 0; b < bulletsToRemove.length; b++){
@@ -423,38 +455,64 @@ function ShootHandler(gun){
   }
 }
 
-function BulletData(gun, from, to, direction, thickness){
+function BulletData(player, gun, from, toRay, toDisplay, direction, thickness){
   this.gun = gun
-
+  this.player = player
   this.ray = new p2.Ray({
     mode: p2.Ray.ANY
   })
 
+  this.displayFrom = from
+  this.displayTo = toDisplay
+
   this.ray.from = from
-  this.ray.to = to
+  this.ray.to = toRay
 
   this.direction = direction
 
   this.color = '0x'+Math.floor(Math.random()*16777215).toString(16)
   this.thickness = thickness
 
+  // What point (from or to) should change in the ray the next step
+  // This is to prevent the ray from skipping on invisible objects
+  // this.prevStepChange = 0
+
+  this.remove = false
+
   this.step = function(){
     var newFrom = p2.vec2.create()
-    var newTo = p2.vec2.create()
-    var newOffset = p2.vec2.create()
-    p2.vec2.scale(newOffset, this.direction, this.gun.travelSpeed)
+    var newToRay = p2.vec2.create()
+    var newToDisplay = p2.vec2.create()
 
-    p2.vec2.add(newFrom, this.ray.from, newOffset)
-    p2.vec2.add(newTo, this.ray.to, newOffset)
+    var laserDistance = p2.vec2.create()
+    var travelSpeedDistance = p2.vec2.create()
 
-    // console.log("step "+JSON.stringify(this.direction))
+    p2.vec2.copy(newFrom, this.ray.to)
+
+    p2.vec2.scale(laserDistance, this.direction, this.gun.laserLength)
+    p2.vec2.scale(travelSpeedDistance, this.direction, this.gun.travelSpeed)
+
     this.ray.from = newFrom
-    this.ray.to = newTo
+    this.displayFrom = newFrom
+
+    p2.vec2.add(newToDisplay, newFrom, laserDistance)
+    this.displayTo = newToDisplay
+
+    p2.vec2.add(newToRay, newToDisplay, travelSpeedDistance)
+    this.ray.to = newToRay
+
     this.ray.update()
 
+    // Handle collisions
+    var result = new p2.RaycastResult()
+    this.player.room.world.raycast(result, this.ray)
 
-    // this.ray.from += this.direction*this.gun.travelSpeed
-    // this.ray.to += this.direction*this.gun.travelSpeed
+    var hitPoint = p2.vec2.create()
+    result.getHitPoint(hitPoint, this.ray)
+    if(result.body && result.body != this.player.body){
+      // console.log("Bullet hit "+hitPoint[0]+" "+hitPoint[1]+" "+result.getHitDistance(this.ray)+" "+result.body)
+      this.remove = true
+    }
   }
 }
 

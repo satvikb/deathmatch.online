@@ -46,11 +46,18 @@ function update(data){
   for(var i = 0; i < d.length; i++){
     var playerData = d[i]
     var player = getPlayerById(playerData.id)
+
+    if(playerData.id == localPlayer.id){
+      ammoCounter.text = ""+playerData.ammoLeft.left+" / "+playerData.ammoLeft.max
+    }
+
     if(player){
       player.body.position[0] = playerData.position.x
       player.body.position[1] = playerData.position.y
       player.body.previousPosition[0] = playerData.position.x
       player.body.previousPosition[1] = playerData.position.y
+
+      player.setArmRotation(playerData.direction.x, playerData.direction.y)
     }
 
     var bullets = playerData.testBullet
@@ -61,6 +68,7 @@ function update(data){
       var to = [bullet[2], bullet[3]]
       // graphics.position.set()
       graphics.lineStyle(bullet[4], bullet[5]).moveTo(from[0], from[1]).lineTo(to[0], to[1])
+
     }
   }
 }
