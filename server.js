@@ -122,7 +122,7 @@ function sendUpdate(){
       playerData.position = {x: player.getPos()[0], y: player.getPos()[1]}
       // console.log("dir "+JSON.stringify(player.inputs.direction)+" "+player.inputs.direction.length)
       playerData.direction = {x: player.inputs.direction[0], y: player.inputs.direction[1]}
-      // playerData.velocity = {x: player.velocity.x, y: player.velocity.y}
+      playerData.health = {current: player.health.currentHealth, max: player.health.maxHealth}
       // playerData.mouseDirection = {x: player.mouseDirection.x, y: player.mouseDirection.y}
 
       var ammoLeftLeftGun = player.gunLeft.ammo.currentAmmo
@@ -160,9 +160,14 @@ function Player(id, room, x, y){
   this.width = 16
   this.height = 64
 
-  //test   function Gun(id, laserLength, shootSpeed, travelSpeed, maxAmmo, thickness){
-  this.gunLeft = new Gun(0, 5, 50, 1, 100, 1)
+  //test   function Gun(id, laserLength, shootSpeed, travelSpeed, maxAmmo, bulletDamage, thickness){
+  this.gunLeft = new Gun(0, 5, 50, 5, 100, 1, 3)
   this.gunRight = new Gun(-1, 0, 0, 0, 0, 0)
+
+  this.health = {
+    currentHealth: 100,
+    maxHealth: 100
+  }
 
   this.movespeed = 80
   this.jumpheight = 350
@@ -179,6 +184,8 @@ function Player(id, room, x, y){
 
   this.createBody = function(mass, posX, posY, width, height){
     this.body = new p2.Body({mass: mass, position: [posX, posY], fixedRotation: true, damping: 0})
+    this.body.isPlayer = true
+    this.body.player = this
     this.shape = new p2.Box({width: width, height: height, material: constants.playerMaterial})
     this.body.addShape(this.shape)
     this.room.world.addBody(this.body)
@@ -195,6 +202,24 @@ function Player(id, room, x, y){
       }
     }
     return false;
+  }
+
+  this.subtractHealth = function(byAmount, info){
+    this.health.currentHealth -= byAmount
+
+    if(this.health.currentHealth < 0){
+      console.log("DEATH TO "+this.id)
+      this.kill()
+    }
+    console.log("Player "+this.id+" got hit by "+info.type+" and dealt "+byAmount+" damage")
+  }
+
+  this.kill = function(){
+    if(room){
+      room.removePlayer(this)
+      io.sockets.connected[this.id].disconnect()
+      console.log("remove player "+this.id)
+    }
   }
 
   this.createBody(51, x+this.width/2, y-this.height/2, this.width, this.height)
@@ -354,7 +379,7 @@ function Room(name){
   }
 }
 
-function Gun(id, laserLength, shootSpeed, travelSpeed, maxAmmo, thickness){
+function Gun(id, laserLength, shootSpeed, travelSpeed, maxAmmo, bulletDamage, thickness){
   this.id = id
 
   this.ammo = {
@@ -368,6 +393,8 @@ function Gun(id, laserLength, shootSpeed, travelSpeed, maxAmmo, thickness){
   this.shootSpeed = shootSpeed
   this.travelSpeed = travelSpeed
   this.thickness = thickness
+
+  this.bulletDamage = bulletDamage
 
   this.shootHandler = new ShootHandler(this)
 
@@ -458,6 +485,7 @@ function ShootHandler(gun){
 function BulletData(player, gun, from, toRay, toDisplay, direction, thickness){
   this.gun = gun
   this.player = player
+
   this.ray = new p2.Ray({
     mode: p2.Ray.ANY
   })
@@ -512,6 +540,14 @@ function BulletData(player, gun, from, toRay, toDisplay, direction, thickness){
     if(result.body && result.body != this.player.body){
       // console.log("Bullet hit "+hitPoint[0]+" "+hitPoint[1]+" "+result.getHitDistance(this.ray)+" "+result.body)
       this.remove = true
+
+      if(result.body.isPlayer == true){
+        var shootingPlayer = this.player
+        var hitPlayer = result.body.player
+
+        hitPlayer.subtractHealth(this.gun.bulletDamage, {type: "player"})
+        console.log("Player!" +result.body.player.movespeed)
+      }
     }
   }
 }

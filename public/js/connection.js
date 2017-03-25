@@ -48,7 +48,7 @@ function update(data){
     var player = getPlayerById(playerData.id)
 
     if(playerData.id == localPlayer.id){
-      ammoCounter.text = ""+playerData.ammoLeft.left+" / "+playerData.ammoLeft.max
+      ammoCounter.text = ""+playerData.ammoLeft.left+" / "+playerData.ammoLeft.max+"\n"+playerData.health.current+" / "+playerData.health.max
     }
 
     if(player){
