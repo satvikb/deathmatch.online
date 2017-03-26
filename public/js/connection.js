@@ -60,15 +60,23 @@ function update(data){
       player.setArmRotation(playerData.direction.x, playerData.direction.y)
     }
 
-    var bullets = playerData.testBullet
-
-    for(var b = 0; b < bullets.length; b++){
-      var bullet = bullets[b]
+    //TODO Merge left gun bullets and right gun bullets
+    var bulletsLeft = playerData.gunLeft
+    for(var b = 0; b < bulletsLeft.length; b++){
+      var bullet = bulletsLeft[b]
       var from = [bullet[0], bullet[1]]
       var to = [bullet[2], bullet[3]]
       // graphics.position.set()
       graphics.lineStyle(bullet[4], bullet[5]).moveTo(from[0], from[1]).lineTo(to[0], to[1])
+    }
 
+    var bulletsRight = playerData.gunRight
+    for(var b = 0; b < bulletsRight.length; b++){
+      var bullet = bulletsRight[b]
+      var from = [bullet[0], bullet[1]]
+      var to = [bullet[2], bullet[3]]
+      // graphics.position.set()
+      graphics.lineStyle(bullet[4], bullet[5]).moveTo(from[0], from[1]).lineTo(to[0], to[1])
     }
   }
 }

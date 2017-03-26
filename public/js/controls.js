@@ -1,4 +1,4 @@
-var keys = {"jump":[32, 38, 87], "left":[37, 65], "right":[39, 68], "shootleft":[16, 18/*alt*/], "shootright":[83, 40]}
+var keys = {"jump":[32, 38, 87], "left":[37, 65], "right":[39, 68], "shootleft":[16 /* shift*/, 18/*alt for arrows*/], "shootright":[83 /* s */, 40/* down arrow */]}
 var jump = false
 var left = false
 var right = false

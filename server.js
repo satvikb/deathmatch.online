@@ -12,13 +12,13 @@ var io = require("socket.io").listen(server, {origins:'192.168.1.8:8000:*'})
 
 var p2 = require('p2')
 
+constants()
+Maps()
+
 var size = [1920, 1080]
 var mapSize = [32, 18]
 
 var rooms = [new Room("test")]
-
-constants()
-
 
 function init(){
   setEventHandlers();
@@ -134,7 +134,9 @@ function sendUpdate(){
       playerData.ammoLeft = {left: ammoLeftLeftGun, max: ammoMaxLeftGun}
       playerData.ammoRight = {left: ammoLeftRightGun, max: ammoMaxRightGun}
 
-      playerData.testBullet = player.gunLeft.shootHandler.getBulletRayData()//bulletData
+      playerData.gunLeft = player.gunLeft.shootHandler.getBulletRayData()//bulletData
+      playerData.gunRight = player.gunRight.shootHandler.getBulletRayData()//bulletData
+
       roomUpdateData.push(playerData)
     }
 
@@ -161,8 +163,8 @@ function Player(id, room, x, y){
   this.height = 64
 
   //test   function Gun(id, laserLength, shootSpeed, travelSpeed, maxAmmo, bulletDamage, thickness){
-  this.gunLeft = new Gun(0, 5, 50, 5, 100, 1, 3)
-  this.gunRight = new Gun(-1, 0, 0, 0, 0, 0)
+  this.gunLeft = new Gun(0, 5, 50, 1, 100, 1, 3) //TODO Gun handler class with constants
+  this.gunRight =  new Gun(0, 5, 150, 3, 100, 1, 3)
 
   this.health = {
     currentHealth: 100,
@@ -240,6 +242,34 @@ function constants(){
   }
 }
 
+function Maps(){
+  console.log("maps "+Maps.madeMaps)
+  if ( Maps.madeMaps == undefined ) {
+    Maps.madeMaps = true
+    console.log("setup")
+    Maps.defaultMap = [
+      [1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1],
+      [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+      [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+      [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+      [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+      [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+      [0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 1, 1, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+      [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+      [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+      [0, 0, 0, 0, 1, 1, 0, 0, 0, 0, 0, 0, 0, 1, 1, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+      [0, 0, 0, 0, 1, 1, 0, 0, 0, 0, 0, 1, 1, 1, 1, 1, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+      [0, 0, 0, 0, 1, 1, 0, 0, 0, 0, 0, 1, 1, 1, 1, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+      [0, 0, 0, 0, 1, 1, 0, 0, 0, 0, 0, 1, 1, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+      [0, 0, 0, 0, 1, 1, 0, 0, 1, 1, 0, 1, 1, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+      [0, 0, 0, 0, 1, 1, 0, 1, 1, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+      [0, 0, 0, 0, 1, 1, 0, 1, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 1, 0, 0, 0, 0, 0],
+      [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0],
+      [1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1]
+    ];
+  }
+}
+
 function Room(name){
   var that = this
   this.name = name
@@ -268,10 +298,11 @@ function Room(name){
   this.world.addContactMaterial(constants.tilePlayerCM);
 
   this.createMap = function(){
+    console.log("using map "+Maps.madeMaps)
     for(var x = 0; x < mapSize[0]; x++){
       this.map.push([])
       for(var y = 0; y < mapSize[1]; y++){
-        this.map[x][y] = getRandomInt(0, 100) < 30 ? 1 : 0
+        this.map[x][mapSize[1]-y] = Maps.defaultMap[y][x]//getRandomInt(0, 100) < 30 ? 1 : 0
       }
     }
   }
@@ -283,7 +314,8 @@ function Room(name){
     for(var x = 0; x < this.map.length; x++){
       for(var y = 0; y < this.map[x].length; y++){
         var tile = this.map[x][y]
-        var pos = [x*tileWidth, y*tileHeight]
+        var offset = [tileWidth/2, -tileHeight/2]
+        var pos = [(x*tileWidth)+offset[0], (y*tileHeight)+offset[1]]
 
         if(tile == 1){
           var tileShape = new p2.Box({width: tileWidth, height: tileHeight, material: constants.tileMaterial})

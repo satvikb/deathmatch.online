@@ -75,7 +75,7 @@ function gameLoop(){
 
   if(localPlayer){
     localPlayer.update(delta)
-    socket.emit("input", {left:left, right: right, jump: jump, shootLeft: shootLeft, shootRight, shootRight, direction: localPlayer.direction})
+    socket.emit("input", {left:left, right: right, jump: jump, shootLeft: shootLeft, shootRight: shootRight, direction: localPlayer.direction})
   }
 
   updatePhysics(delta)

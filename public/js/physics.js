@@ -62,9 +62,10 @@ function createMap(){
   var tileHeight = size[1]/mapSize[1]
 
   for(var x = 0; x < map.length; x++){
-    for(var y = 0; y < map[x].length; y++){
+    for(var y = map[x].length-1; y >= 0; y--){
       var tile = map[x][y]
-      var pos = [x*tileWidth, y*tileHeight]
+      var offset = [tileWidth/2, -tileHeight/2]
+      var pos = [(x*tileWidth)+offset[0], (y*tileHeight)+offset[1]]
 
       if(tile == 1){
         var tileShape = new p2.Box({width: tileWidth, height: tileHeight, material: tileMaterial})
@@ -72,6 +73,7 @@ function createMap(){
         tileBody.addShape(tileShape)
         this.world.addBody(tileBody)
 
+        //TODO Use different textures
         var tile = new PIXI.Sprite(PIXI.Texture.fromImage("tile_center.png"))
         tile.position.x = pos[0]
         tile.position.y = pos[1]
