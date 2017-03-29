@@ -14,6 +14,7 @@ var p2 = require('p2')
 
 constants()
 Maps()
+Guns()
 
 var size = [1920, 1080]
 var mapSize = [32, 18]
@@ -125,17 +126,19 @@ function sendUpdate(){
       playerData.health = {current: player.health.currentHealth, max: player.health.maxHealth}
       // playerData.mouseDirection = {x: player.mouseDirection.x, y: player.mouseDirection.y}
 
-      var ammoLeftLeftGun = player.gunLeft.ammo.currentAmmo
-      var ammoMaxLeftGun = player.gunLeft.ammo.maxAmmo // TODO Do not send max ammo every time, it is not going to change
-      var ammoLeftRightGun = player.gunRight.ammo.currentAmmo
-      var ammoMaxRightGun = player.gunRight.ammo.maxAmmo // TODO Do not send max ammo every time, it is not going to change
+      if(player.gunLeft){
+        var ammoLeftLeftGun = player.gunLeft.ammo.currentAmmo
+        var ammoMaxLeftGun = player.gunLeft.ammo.maxAmmo // TODO Do not send max ammo every time, it is not going to change
+        playerData.gunLeftData = {name: player.gunLeft.name, left: ammoLeftLeftGun, max: ammoMaxLeftGun} //TODO Send only this data to individual client that needs it, not to all
+        playerData.bulletsLeftGun = player.gunLeft.shootHandler.getBulletRayData()
+      }
 
-
-      playerData.ammoLeft = {left: ammoLeftLeftGun, max: ammoMaxLeftGun}
-      playerData.ammoRight = {left: ammoLeftRightGun, max: ammoMaxRightGun}
-
-      playerData.gunLeft = player.gunLeft.shootHandler.getBulletRayData()//bulletData
-      playerData.gunRight = player.gunRight.shootHandler.getBulletRayData()//bulletData
+      if(player.gunRight){
+        var ammoLeftRightGun = player.gunRight.ammo.currentAmmo
+        var ammoMaxRightGun = player.gunRight.ammo.maxAmmo
+        playerData.gunRightData = {name: player.gunRight.name, left: ammoLeftRightGun, max: ammoMaxRightGun}
+        playerData.bulletsRightGun = player.gunRight.shootHandler.getBulletRayData()
+      }
 
       roomUpdateData.push(playerData)
     }
@@ -162,9 +165,8 @@ function Player(id, room, x, y){
   this.width = 48
   this.height = 48
 
-  //test   function Gun(id, laserLength, shootSpeed, travelSpeed, maxAmmo, bulletDamage, thickness){
-  this.gunLeft = new Gun(0, 5, 50, 1, 100, 1, 3) //TODO Gun handler class with constants
-  this.gunRight =  new Gun(0, 15, 500, 3, 12, 8, 6)
+  this.gunLeft = Guns.pistol
+  // this.gunRight = Guns.machineGun
 
   this.health = {
     currentHealth: 100,
@@ -269,6 +271,20 @@ function Maps(){
       [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0],
       [1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1]
     ];
+  }
+}
+
+function Guns(){
+  if(Guns.madeGuns == undefined){
+    Guns.madeGuns = true
+
+    // function Gun(id, name, laserLength, shootSpeed, travelSpeed, maxAmmo, bulletDamage, reloadSpeed, thickness){
+    // this.gunLeft = new Gun(0, "name", 5, 50, 1, 100, 1, 200, 3) //TODO Gun handler class with constants
+
+    Guns.none = null
+    Guns.pistol = new Gun(    0,     "Pistol",      5,  150, 0.8, 16,  0.5, 500,  2)
+    Guns.machineGun = new Gun(1,     "Machine gun", 5,  50,  1,   100, 1,   200,  3)
+    Guns.shotgun = new Gun(   2,     "Shotgun",     15, 500, 3,   12,  8,   2000, 6)
   }
 }
 
@@ -385,57 +401,6 @@ function Room(name){
   this.createTileBodies()
 
   this.world.on('postStep', function(event){
-    // for(var i = 0; i < that.players.length; i++){
-    //   var player = that.players[i];
-    //
-    //   var leftMove = player.inputs.left == true ? -1 : 0
-    //   var rightMove = player.inputs.right == true ? 1 : 0
-    //   var totalMove = rightMove + leftMove
-    //
-    //   var jump = player.inputs.jump
-    //
-    //   if(jump){
-    //     if(jump == true){
-    //       if(player.canJump()){
-    //         player.body.velocity[1] = player.jumpheight
-    //       }
-    //     }
-    //   }
-    //
-    //   player.body.velocity[0] = player.movespeed*totalMove
-    //
-    //   var shootLeft = player.inputs.shootLeft
-    //   var shootRight = player.inputs.shootRight
-    //   var dir = player.inputs.direction
-    //
-    //   //TODO Check if guns exist
-    //   if(dir){
-    //     if(shootLeft){
-    //       if(shootLeft == true){
-    //         if(player.gunLeft){
-    //           player.gunLeft.shoot(player, player.body.position, dir)
-    //         }
-    //       }
-    //     }
-    //
-    //     if(shootRight){
-    //       if(shootRight == true){
-    //         if(player.gunRight){
-    //           player.gunRight.shoot(player, player.body.position, dir)
-    //         }
-    //       }
-    //     }
-    //   }
-    // }
-  })
-
-  // To animate the bodies, we must step the world forward in time, using a fixed time step size.
-  // The World will run substeps and interpolate automatically for us, to get smooth animation.
-  this.fixedTimeStep = 1/60; // seconds
-  this.maxSubSteps = 10; // Max sub steps to catch up with the wall clock
-
-
-  this.updatePhysics = function(d){
     for(var i = 0; i < that.players.length; i++){
       var player = that.players[i];
 
@@ -478,6 +443,16 @@ function Room(name){
         }
       }
     }
+  })
+
+  // To animate the bodies, we must step the world forward in time, using a fixed time step size.
+  // The World will run substeps and interpolate automatically for us, to get smooth animation.
+  this.fixedTimeStep = 1/60; // seconds
+  this.maxSubSteps = 10; // Max sub steps to catch up with the wall clock
+
+
+  this.updatePhysics = function(d){
+
 
     this.world.step(this.fixedTimeStep, d, this.maxSubSteps)
     this.updateBullets(d)
@@ -488,11 +463,11 @@ function Room(name){
       var player = that.players[i];
 
       if(player.gunLeft){
-        player.gunLeft.shootHandler.step()
+        player.gunLeft.step()
       }
 
       if(player.gunRight){
-        player.gunRight.shootHandler.step()
+        player.gunRight.step()
       }
     }
   }
@@ -508,33 +483,64 @@ function Room(name){
   }
 }
 
-function Gun(id, laserLength, shootSpeed, travelSpeed, maxAmmo, bulletDamage, thickness){
+/*
+  id - gun id
+  name - gun name
+  laserLength - length of each bullet (px?)
+  shootSpeed - minimum time inbetween shots (ms)
+  travelSpeed - distance each bullet travels every step (px?)
+  maxAmmo - maximum ammo gun can have. init's currentAmmo to this. (int)
+  bulletDamage - damage each bullet does (int) TODO Should be max damage when implelemting damageCurve
+  TODO damageCurve - math function to determine how much damage each bullet does based on bulletDamage. default: y = bulletDamage
+  reloadSpeed - time to reload each bullet (ms)
+  thickness - how thick each bullet is (px?) TODO Raycast multiple to achieve real thickness.
+*/
+function Gun(id, name, laserLength, shootSpeed, travelSpeed, maxAmmo, bulletDamage, reloadSpeed, thickness){
   this.id = id
+  this.name = name
 
   this.ammo = {
     currentAmmo: maxAmmo,
     maxAmmo: maxAmmo,
     bulletPerReload: 1, //Multiple bullets can be reloaded at one time
-    reloadSpeed: 50
+    reloadSpeed: reloadSpeed
   }
 
   this.laserLength = laserLength
   this.shootSpeed = shootSpeed
   this.travelSpeed = travelSpeed
+  this.bulletDamage = bulletDamage
   this.thickness = thickness
 
-  this.bulletDamage = bulletDamage
 
   this.shootHandler = new ShootHandler(this)
 
-  this.time = Date.now()
+  this.shootTime = Date.now()
+
+  this.reloadTime = Date.now()
+
+  this.reloadCooldown = 500 //Wait this long after shooting to start reloading
 
   this.shoot = function(player, start, direction){
-    if(Date.now()-this.time > this.shootSpeed){
+    if(Date.now()-this.shootTime > this.shootSpeed){
       if(this.ammo.currentAmmo > 0){
         this.shootHandler.addBullet(player, start, direction)
         this.ammo.currentAmmo -= 1
-        this.time = Date.now()
+        this.shootTime = Date.now()
+      }
+    }
+  }
+
+  this.step = function(){
+    this.shootHandler.step()
+
+    if(Date.now()-this.shootTime > this.reloadCooldown){
+      if(Date.now()-this.reloadTime > this.ammo.reloadSpeed){
+        if(this.ammo.currentAmmo < this.ammo.maxAmmo){
+          this.ammo.currentAmmo += 1
+          // this.ammo.currentAmmo = this.ammo.maxAmmo
+          this.reloadTime = Date.now()
+        }
       }
     }
   }

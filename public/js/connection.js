@@ -48,7 +48,17 @@ function update(data){
     var player = getPlayerById(playerData.id)
 
     if(playerData.id == localPlayer.id){
-      ammoCounter.text = "Machine Gun: "+playerData.ammoLeft.left+" / "+playerData.ammoLeft.max+"\nShotgun: "+playerData.ammoRight.left+" / "+playerData.ammoRight.max+"\nHealth: "+playerData.health.current+" / "+playerData.health.max
+      // console.log(";; "+playerData.gunLeftData)
+      if(playerData.gunLeftData){
+        gunLeftText.text = playerData.gunLeftData.name+": "+playerData.gunLeftData.left+" / "+playerData.gunLeftData.max
+      }
+
+      if(playerData.gunRightData){
+        gunRightText.text = playerData.gunRightData.name+": "+playerData.gunRightData.left+" / "+playerData.gunRightData.max
+      }
+
+      healthText.text = "Health: "+playerData.health.current+" / "+playerData.health.max
+      // ammoCounter.text = "Machine Gun: "+playerData.ammoLeft.left+" / "+playerData.ammoLeft.max+"\nShotgun: "+playerData.ammoRight.left+" / "+playerData.ammoRight.max+"\nHealth: "+playerData.health.current+" / "+playerData.health.max
     }
 
     if(player){
@@ -60,26 +70,32 @@ function update(data){
       player.display.position.x = player.body.position[0]//player.body.position[0]
       player.display.position.y = player.body.position[1]-player.height/2//player.body.position[1]-player.height/2
 
+      //TODO Health bar
+
       player.setArmRotation(playerData.direction.x, playerData.direction.y)
     }
 
     //TODO Merge left gun bullets and right gun bullets
-    var bulletsLeft = playerData.gunLeft
-    for(var b = 0; b < bulletsLeft.length; b++){
-      var bullet = bulletsLeft[b]
-      var from = [bullet[0], bullet[1]]
-      var to = [bullet[2], bullet[3]]
-      // graphics.position.set()
-      graphics.lineStyle(bullet[4], bullet[5]).moveTo(from[0], from[1]).lineTo(to[0], to[1])
+    var bulletsLeft = playerData.bulletsLeftGun
+    if(bulletsLeft){
+      for(var b = 0; b < bulletsLeft.length; b++){
+        var bullet = bulletsLeft[b]
+        var from = [bullet[0], bullet[1]]
+        var to = [bullet[2], bullet[3]]
+        // graphics.position.set()
+        graphics.lineStyle(bullet[4], bullet[5]).moveTo(from[0], from[1]).lineTo(to[0], to[1])
+      }
     }
 
-    var bulletsRight = playerData.gunRight
-    for(var b = 0; b < bulletsRight.length; b++){
-      var bullet = bulletsRight[b]
-      var from = [bullet[0], bullet[1]]
-      var to = [bullet[2], bullet[3]]
-      // graphics.position.set()
-      graphics.lineStyle(bullet[4], bullet[5]).moveTo(from[0], from[1]).lineTo(to[0], to[1])
+    var bulletsRight = playerData.bulletsRightGun
+    if(bulletsRight){
+      for(var b = 0; b < bulletsRight.length; b++){
+        var bullet = bulletsRight[b]
+        var from = [bullet[0], bullet[1]]
+        var to = [bullet[2], bullet[3]]
+        // graphics.position.set()
+        graphics.lineStyle(bullet[4], bullet[5]).moveTo(from[0], from[1]).lineTo(to[0], to[1])
+      }
     }
   }
 }

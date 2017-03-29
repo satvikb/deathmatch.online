@@ -4,7 +4,9 @@ var stage;
 var tileMap;
 
 var hud;
-var ammoCounter;
+var healthText;
+var gunLeftText;
+var gunRightText;
 
 var graphics;
 
@@ -32,12 +34,27 @@ function init(){
   graphics = new PIXI.Graphics()
   stage.addChild(graphics)
 
-  ammoCounter = new PIXI.Text('', {fill:0xffffff});
-  ammoCounter.text = ""
-  ammoCounter.x = 0;
-  ammoCounter.y = 100;
-  ammoCounter.scale.y = -1
-  hud.addChild(ammoCounter)
+  healthText = new PIXI.Text('', {fill:0xffffff});
+  healthText.text = ""
+  healthText.x = 0;
+  healthText.y = 100;
+  healthText.scale.y = -1
+  hud.addChild(healthText)
+
+  gunLeftText = new PIXI.Text('', {fill:0xffffff});
+  gunLeftText.text = ""
+  gunLeftText.x = 0;
+  gunLeftText.y = 200;
+  gunLeftText.scale.y = -1
+  hud.addChild(gunLeftText)
+
+  gunRightText = new PIXI.Text('', {fill:0xffffff});
+  gunRightText.text = ""
+  gunRightText.x = 0;
+  gunRightText.y = 150;
+  gunRightText.scale.y = -1
+  hud.addChild(gunRightText)
+
 
   loader.add(files).on("progress", loadProgress).load(loadFiles)
   resize()
