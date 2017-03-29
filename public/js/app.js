@@ -35,7 +35,7 @@ function init(){
   ammoCounter = new PIXI.Text('', {fill:0xffffff});
   ammoCounter.text = ""
   ammoCounter.x = 0;
-  ammoCounter.y = 1040;
+  ammoCounter.y = 100;
   ammoCounter.scale.y = -1
   hud.addChild(ammoCounter)
 

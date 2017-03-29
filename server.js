@@ -159,20 +159,20 @@ function Player(id, room, x, y){
   this.id = id
   this.room = room
 
-  this.width = 16
-  this.height = 64
+  this.width = 48
+  this.height = 48
 
   //test   function Gun(id, laserLength, shootSpeed, travelSpeed, maxAmmo, bulletDamage, thickness){
   this.gunLeft = new Gun(0, 5, 50, 1, 100, 1, 3) //TODO Gun handler class with constants
-  this.gunRight =  new Gun(0, 5, 150, 3, 100, 1, 3)
+  this.gunRight =  new Gun(0, 15, 500, 3, 12, 8, 6)
 
   this.health = {
     currentHealth: 100,
     maxHealth: 100
   }
 
-  this.movespeed = 80
-  this.jumpheight = 350
+  this.movespeed = 150
+  this.jumpheight = 550
 
   this.inputs = {left: false, right: false, jump: false, shootLeft: false, shootRight: false, direction: [-1, 0]}
 
@@ -224,7 +224,7 @@ function Player(id, room, x, y){
     }
   }
 
-  this.createBody(51, x+this.width/2, y-this.height/2, this.width, this.height)
+  this.createBody(50, x+this.width/2, y-this.height/2, this.width, this.height)
 }
 
 function constants(){
@@ -235,9 +235,11 @@ function constants(){
     constants.playerMaterial = new p2.Material();
     constants.groundPlayerCM = new p2.ContactMaterial(constants.groundMaterial, constants.playerMaterial, {
      friction : 0,
+     relaxation: 0.9,
     });
     constants.tilePlayerCM = new p2.ContactMaterial(constants.tileMaterial, constants.playerMaterial, {
       friction: 0,
+      relaxation: 0.9,
     })
   }
 }
@@ -278,24 +280,75 @@ function Room(name){
   this.map = []
 
   this.world = new p2.World({gravity: [0, -500]})
-  this.world.defaultContactMaterial.friction = 0.5
-  // this.world.setGlobalStiffness(1e5)
+  this.world.defaultContactMaterial.relaxation = 0.9
+  this.world.defaultContactMaterial.friction = 0
+
+  this.world.islandSplit = true
+  this.world.sleepMode = p2.World.ISLAND_SLEEPING
+
+  this.world.solver.iterations = 20
+  this.world.solver.tolerance = 0.001
+  this.world.setGlobalStiffness(1e6)
+  // this.world.solver.relation = 0.9
 
 
   this.groundSize = [size[0], 1]
   this.groundPos = [this.groundSize[0]/2, this.groundSize[1]/2]
 
-  // Create an infinite ground plane body
-  this.groundBody = new p2.Body({
-    mass: 0, position: this.groundPos // Setting mass to 0 makes it static
-  });
-  this.groundShape = new p2.Box({width: this.groundSize[0], height: this.groundSize[1], material: constants.groundMaterial});
-  this.groundBody.addShape(this.groundShape);
-  this.world.addBody(this.groundBody);
-  console.log(this.groundShape.width+" "+this.groundBody.position[0])
+  // // Create an infinite ground plane body
+  // this.groundBody = new p2.Body({
+  //   mass: 0, position: this.groundPos // Setting mass to 0 makes it static
+  // });
+  // this.groundShape = new p2.Box({width: this.groundSize[0], height: this.groundSize[1], material: constants.groundMaterial});
+  // this.groundBody.addShape(this.groundShape);
+  // this.world.addBody(this.groundBody);
 
-  this.world.addContactMaterial(constants.groundPlayerCM);
-  this.world.addContactMaterial(constants.tilePlayerCM);
+  // this.world.addContactMaterial(constants.groundPlayerCM);
+  // this.world.addContactMaterial(constants.tilePlayerCM);
+
+  this.createBoundaries = function(){
+    var thickness = 1
+
+    // Create an ground body
+    // Using a negative y position guarantees the body will actually be with the floor regardless of the thickness
+    var groundBodyB = new p2.Body({
+      mass: 0, position: [size[0]/2, -thickness/2]
+    });
+
+    var groundShapeB = new p2.Box({width: size[0], height: thickness, material: constants.groundMaterial});
+    groundBodyB.addShape(groundShapeB);
+    this.world.addBody(groundBodyB);
+
+
+
+    var groundBodyL = new p2.Body({
+      mass: 0, position: [-thickness/2, size[1]/2]
+    });
+
+    var groundShapeL = new p2.Box({width: thickness, height: size[1], material: constants.groundMaterial});
+    groundBodyL.addShape(groundShapeL);
+    this.world.addBody(groundBodyL);
+
+
+    var groundBodyT = new p2.Body({
+      mass: 0, position: [size[0]/2, size[1]+thickness/2]
+    });
+
+    var groundShapeT = new p2.Box({width: size[0]/2, height: thickness, material: constants.groundMaterial});
+    groundBodyT.addShape(groundShapeT);
+    this.world.addBody(groundBodyT);
+
+
+
+    var groundBodyR = new p2.Body({
+      mass: 0, position: [size[0]+thickness/2, size[1]/2]
+    });
+
+    var groundShapeR = new p2.Box({width: thickness, height: size[1], material: constants.groundMaterial});
+    groundBodyR.addShape(groundShapeR);
+    this.world.addBody(groundBodyR);
+  }
+
 
   this.createMap = function(){
     console.log("using map "+Maps.madeMaps)
@@ -327,10 +380,62 @@ function Room(name){
     }
   }
 
+  this.createBoundaries()
   this.createMap()
   this.createTileBodies()
 
   this.world.on('postStep', function(event){
+    // for(var i = 0; i < that.players.length; i++){
+    //   var player = that.players[i];
+    //
+    //   var leftMove = player.inputs.left == true ? -1 : 0
+    //   var rightMove = player.inputs.right == true ? 1 : 0
+    //   var totalMove = rightMove + leftMove
+    //
+    //   var jump = player.inputs.jump
+    //
+    //   if(jump){
+    //     if(jump == true){
+    //       if(player.canJump()){
+    //         player.body.velocity[1] = player.jumpheight
+    //       }
+    //     }
+    //   }
+    //
+    //   player.body.velocity[0] = player.movespeed*totalMove
+    //
+    //   var shootLeft = player.inputs.shootLeft
+    //   var shootRight = player.inputs.shootRight
+    //   var dir = player.inputs.direction
+    //
+    //   //TODO Check if guns exist
+    //   if(dir){
+    //     if(shootLeft){
+    //       if(shootLeft == true){
+    //         if(player.gunLeft){
+    //           player.gunLeft.shoot(player, player.body.position, dir)
+    //         }
+    //       }
+    //     }
+    //
+    //     if(shootRight){
+    //       if(shootRight == true){
+    //         if(player.gunRight){
+    //           player.gunRight.shoot(player, player.body.position, dir)
+    //         }
+    //       }
+    //     }
+    //   }
+    // }
+  })
+
+  // To animate the bodies, we must step the world forward in time, using a fixed time step size.
+  // The World will run substeps and interpolate automatically for us, to get smooth animation.
+  this.fixedTimeStep = 1/60; // seconds
+  this.maxSubSteps = 10; // Max sub steps to catch up with the wall clock
+
+
+  this.updatePhysics = function(d){
     for(var i = 0; i < that.players.length; i++){
       var player = that.players[i];
 
@@ -373,15 +478,7 @@ function Room(name){
         }
       }
     }
-  })
 
-  // To animate the bodies, we must step the world forward in time, using a fixed time step size.
-  // The World will run substeps and interpolate automatically for us, to get smooth animation.
-  this.fixedTimeStep = 1/60; // seconds
-  this.maxSubSteps = 10; // Max sub steps to catch up with the wall clock
-
-
-  this.updatePhysics = function(d){
     this.world.step(this.fixedTimeStep, d, this.maxSubSteps)
     this.updateBullets(d)
   }

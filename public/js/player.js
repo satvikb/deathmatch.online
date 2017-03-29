@@ -2,11 +2,11 @@ function Player(id, x, y){
   this.id = id
   this.localPlayer = false
 
-  this.movespeed = 80
-  this.jumpheight = 350
+  this.movespeed = 150
+  this.jumpheight = 550
 
-  this.width = 16
-  this.height = 64
+  this.width = 48
+  this.height = 48
 
   this.animationFrames = [
     PIXI.Texture.fromImage("player_0.png"),
@@ -26,20 +26,23 @@ function Player(id, x, y){
   this.view.animationSpeed = 0
   this.view.anchor.x = 0.5
   this.view.anchor.y = 1
-  this.view.scale.y = -1
+  this.view.scale.y = -3
+  this.view.scale.x = 3
   this.view.zOrder = 0
   this.view.displayGroup = this.bodyLayer
   this.display.addChild(this.view)
 
-  this.armY = 39
-  this.armYBack = 36
+  this.armY = 32
+  this.armYBack = 28
+
+  this.armScale = (6/16)
 
   this.armLeft = new PIXI.Sprite(PIXI.Texture.fromImage("arm.png"))//.fromImage("arm.png")
   // this.armLeft.texture.baseTexture.scaleMode = PIXI.SCALE_MODES.LINEAR;
   this.armLeft.anchor.x = 0.5
   this.armLeft.anchor.y = 0
-  this.armLeft.scale.y = -(8/36)
-  this.armLeft.scale.x = (8/36)
+  this.armLeft.scale.y = -this.armScale
+  this.armLeft.scale.x = this.armScale
   this.armLeft.position.y = this.armY
   this.armLeft.displayGroup = this.armLeftLayer
   this.armLeftLayer.zOrder = -1
@@ -49,8 +52,8 @@ function Player(id, x, y){
   // this.armRight.texture.baseTexture.scaleMode = PIXI.SCALE_MODES.LINEAR;
   this.armRight.anchor.x = 0.5
   this.armRight.anchor.y = 0
-  this.armRight.scale.y = -(8/36)
-  this.armRight.scale.x = (8/36)
+  this.armRight.scale.y = -this.armScale
+  this.armRight.scale.x = this.armScale
   this.armRight.position.y = this.armY
   this.armRight.displayGroup = this.armRightLayer
   this.armRightLayer.zOrder = 100
@@ -90,21 +93,21 @@ function Player(id, x, y){
       var sx = this.display.position.x*scaleBy
 
       if(x > sx){
-        this.view.scale.x = -1
-        this.armLeft.scale.x = -(8/36)
+        this.view.scale.x = -3
+        this.armLeft.scale.x = -this.armScale
         this.armLeftLayer.zOrder = -4
         this.armLeft.position.y = this.armYBack
 
-        this.armRight.scale.x = -(8/36)
+        this.armRight.scale.x = -this.armScale
         this.armRightLayer.zOrder = 4
         this.armRight.position.y = this.armY
       }else if(x < sx){
-        this.view.scale.x = 1
-        this.armLeft.scale.x = (8/36)
+        this.view.scale.x = 3
+        this.armLeft.scale.x = this.armScale
         this.armLeftLayer.zOrder = 4
         this.armLeft.position.y = this.armYBack
 
-        this.armRight.scale.x = (8/36)
+        this.armRight.scale.x = this.armScale
         this.armRightLayer.zOrder = -4
         this.armRight.position.y = this.armY
       }
@@ -146,7 +149,7 @@ function Player(id, x, y){
     return false;
   }
 
-  this.createBody(51, x+this.width/2, y-this.height/2, this.width, this.height)
+  this.createBody(50, x+this.width/2, y-this.height/2, this.width, this.height)
 }
 
 function normDir(dir){

@@ -12,63 +12,67 @@ function inArray(value, array){
 function keydown(event){
   var code = event.keyCode
 
-  if(inArray(code, keys["jump"])){
-    console.log("Jump!")
-    jump = true
-  }
+  if(localPlayer){
+    if(inArray(code, keys["jump"])){
+      console.log("Jump!")
+      jump = true
+    }
 
-  if(inArray(code, keys["left"])){
-    console.log("Left!")
-    left = true
-    localPlayer.startMove(true)
+    if(inArray(code, keys["left"])){
+      console.log("Left!")
+      left = true
+      localPlayer.startMove(true)
 
-  }
+    }
 
-  if(inArray(code, keys["right"])){
-    console.log("Right!")
-    right = true
-    localPlayer.startMove(false)
-  }
+    if(inArray(code, keys["right"])){
+      console.log("Right!")
+      right = true
+      localPlayer.startMove(false)
+    }
 
-  if(inArray(code, keys["shootleft"])){
-    console.log("Shoot Left Hand!")
-    shootLeft = true
-  }
+    if(inArray(code, keys["shootleft"])){
+      console.log("Shoot Left Hand!")
+      shootLeft = true
+    }
 
-  if(inArray(code, keys["shootright"])){
-    console.log("Shoot Right Hand!")
-    shootRight = true
+    if(inArray(code, keys["shootright"])){
+      console.log("Shoot Right Hand!")
+      shootRight = true
+    }
   }
 }
 
 function keyup(event){
   var code = event.keyCode
 
-  if(inArray(code, keys["jump"])){
-    console.log("Jump!")
-    jump = false
-  }
+  if(localPlayer){
+    if(inArray(code, keys["jump"])){
+      console.log("Jump!")
+      jump = false
+    }
 
-  if(inArray(code, keys["left"])){
-    console.log("Left!")
-    left = false
-    localPlayer.liftMove(true)
-  }
+    if(inArray(code, keys["left"])){
+      console.log("Left!")
+      left = false
+      localPlayer.liftMove(true)
+    }
 
-  if(inArray(code, keys["right"])){
-    console.log("Right!")
-    right = false
-    localPlayer.liftMove(false)
-  }
+    if(inArray(code, keys["right"])){
+      console.log("Right!")
+      right = false
+      localPlayer.liftMove(false)
+    }
 
-  if(inArray(code, keys["shootleft"])){
-    console.log("Shoot Left Hand!")
-    shootLeft = false
-  }
+    if(inArray(code, keys["shootleft"])){
+      console.log("Shoot Left Hand!")
+      shootLeft = false
+    }
 
-  if(inArray(code, keys["shootright"])){
-    console.log("Shoot Right Hand!")
-    shootRight = false
+    if(inArray(code, keys["shootright"])){
+      console.log("Shoot Right Hand!")
+      shootRight = false
+    }
   }
 }
 
@@ -101,9 +105,15 @@ function mouseup(event){
   event.preventDefault()
 }
 
+function context(e){
+  e.preventDefault()
+  return false
+}
+
 window.addEventListener("keydown", keydown, false)
 window.addEventListener("keyup", keyup, false)
 window.addEventListener("mousemove", mousemove, false)
 
 window.addEventListener("mousedown", mousedown, false)
 window.addEventListener("mouseup", mouseup, false)
+window.addEventListener("contextmenu", context, false)

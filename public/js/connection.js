@@ -48,7 +48,7 @@ function update(data){
     var player = getPlayerById(playerData.id)
 
     if(playerData.id == localPlayer.id){
-      ammoCounter.text = ""+playerData.ammoLeft.left+" / "+playerData.ammoLeft.max+"\n"+playerData.health.current+" / "+playerData.health.max
+      ammoCounter.text = "Machine Gun: "+playerData.ammoLeft.left+" / "+playerData.ammoLeft.max+"\nShotgun: "+playerData.ammoRight.left+" / "+playerData.ammoRight.max+"\nHealth: "+playerData.health.current+" / "+playerData.health.max
     }
 
     if(player){
@@ -56,6 +56,9 @@ function update(data){
       player.body.position[1] = playerData.position.y
       player.body.previousPosition[0] = playerData.position.x
       player.body.previousPosition[1] = playerData.position.y
+
+      player.display.position.x = player.body.position[0]//player.body.position[0]
+      player.display.position.y = player.body.position[1]-player.height/2//player.body.position[1]-player.height/2
 
       player.setArmRotation(playerData.direction.x, playerData.direction.y)
     }
