@@ -16,7 +16,7 @@ var MapConstants = function(){
     })
   }
 }
-
+  
 var Maps = function(){
   if ( Maps.madeMaps == undefined ) {
     console.log("maps "+Maps.madeMaps)
