@@ -1,7 +1,7 @@
 var socket;
 
 function initConnection(){
-  socket = io.connect("http://192.168.1.8:8000")
+  socket = io.connect("http://localhost:8000")
   socketEventHandlers()
 }
 
@@ -18,7 +18,10 @@ function socketEventHandlers(){
 
 function joingame(data){
   console.log("joined game "+data.id)
+  curretScene = 1
   map = data.map
+  // regions = data.regions
+  // console.log("region "+regions[0][0].size[1])
   setupWorld()
   setupLocalPlayer(data)
 }
@@ -26,8 +29,6 @@ function joingame(data){
 //Client connected to page, not game
 function socketconnect(data){
   console.log("connect")
-  //TODO Move to lobby
-  socket.emit("joingame")
 }
 
 function newplayer(data){
@@ -41,7 +42,7 @@ function removeplayer(data){
 
 function update(data){
   var d = data.d
-  graphics.clear()
+  bulletGraphics.clear()
 
   for(var i = 0; i < d.length; i++){
     var playerData = d[i]
@@ -60,6 +61,8 @@ function update(data){
       healthText.text = "Health: "+playerData.health.current+" / "+playerData.health.max
       // ammoCounter.text = "Machine Gun: "+playerData.ammoLeft.left+" / "+playerData.ammoLeft.max+"\nShotgun: "+playerData.ammoRight.left+" / "+playerData.ammoRight.max+"\nHealth: "+playerData.health.current+" / "+playerData.health.max
     }
+
+    timerText.text = ":"+playerData.timeleft/1000
 
     if(player){
       player.body.position[0] = playerData.position.x
@@ -83,7 +86,7 @@ function update(data){
         var from = [bullet[0], bullet[1]]
         var to = [bullet[2], bullet[3]]
         // graphics.position.set()
-        graphics.lineStyle(bullet[4], bullet[5]).moveTo(from[0], from[1]).lineTo(to[0], to[1])
+        bulletGraphics.lineStyle(bullet[4], bullet[5]).moveTo(from[0], from[1]).lineTo(to[0], to[1])
       }
     }
 
@@ -94,7 +97,7 @@ function update(data){
         var from = [bullet[0], bullet[1]]
         var to = [bullet[2], bullet[3]]
         // graphics.position.set()
-        graphics.lineStyle(bullet[4], bullet[5]).moveTo(from[0], from[1]).lineTo(to[0], to[1])
+        bulletGraphics.lineStyle(bullet[4], bullet[5]).moveTo(from[0], from[1]).lineTo(to[0], to[1])
       }
     }
   }

@@ -73,7 +73,7 @@ function Player(id, x, y){
   }
 
   this.createBody = function(mass, posX, posY, width, height){
-    this.body = new p2.Body({mass: mass, position: [posX, posY], fixedRotation: true, damping: 0})
+    this.body = new p2.Body({mass: mass, position: [posX, posY], fixedRotation: false, damping: 0})
     this.shape = new p2.Box({width: width, height: height, material: playerMaterial})
     this.body.addShape(this.shape)
     world.addBody(this.body)

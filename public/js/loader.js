@@ -21,6 +21,7 @@ function loadProgress(loader, resource){
 
 function loadFiles(){
   id = PIXI.loader.resources["textures/data.json"].textures;
+  init()
   initConnection()
 
   gameLoop()

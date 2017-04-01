@@ -210,6 +210,20 @@
                 <key>scale9FromFile</key>
                 <false/>
             </struct>
+            <key type="filename">button/button_0.png</key>
+            <key type="filename">button/button_1.png</key>
+            <struct type="IndividualSpriteSettings">
+                <key>pivotPoint</key>
+                <point_f>0.5,0.5</point_f>
+                <key>scale9Enabled</key>
+                <false/>
+                <key>scale9Borders</key>
+                <rect>8,4,16,8</rect>
+                <key>scale9Paddings</key>
+                <rect>8,4,16,8</rect>
+                <key>scale9FromFile</key>
+                <false/>
+            </struct>
             <key type="filename">player2/player_0.png</key>
             <key type="filename">player2/player_1.png</key>
             <key type="filename">player2/player_2.png</key>
@@ -252,6 +266,8 @@
             <filename>player2/player_1.png</filename>
             <filename>player2/player_2.png</filename>
             <filename>player2/player_3.png</filename>
+            <filename>button/button_0.png</filename>
+            <filename>button/button_1.png</filename>
         </array>
         <key>ignoreFileList</key>
         <array/>
