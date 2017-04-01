@@ -128,6 +128,10 @@ var Room = function(name){
   this.map = []
   this.regions = []
 
+  this.roundStarted = false
+  this.roundStartTime
+  this.roundEndTime
+
   this.world = new p2.World({gravity: [0, -500]})
   this.world.defaultContactMaterial.relaxation = 3
   this.world.defaultContactMaterial.friction = 0.4
@@ -316,6 +320,10 @@ var Room = function(name){
 
     this.world.step(this.fixedTimeStep, d, this.maxSubSteps)
     this.updateBullets(d)
+  }
+
+  this.updateRound = function(){
+
   }
 
   this.updateBullets = function(d){
