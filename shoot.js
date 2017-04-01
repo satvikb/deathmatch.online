@@ -204,6 +204,12 @@ var Gun = function(id, name, laserLength, shootSpeed, travelSpeed, maxAmmo, bull
       }
     }
   }
+
+  this.reset = function(){
+    this.shootHandler.bulletData = []
+    this.ammo.currentAmmo = this.ammo.maxAmmo
+    this.shootTime = this.reloadTime = Date.now()
+  }
 }
 
 var Guns = function(){

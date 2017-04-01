@@ -101,16 +101,19 @@ function setupLobby(){
   playButton.anchor.x = playButton.anchor.y = 0.5
   playButton.position.x = size[0]/2
   playButton.position.y = size[1]/2
-  playButton.scale.x = 9
-  playButton.scale.y = -9
+  playButton.scale.x = 20
+  playButton.scale.y = -20
   playButton.interactive = true
   playButton.on('mousedown', buttonDown).on("mouseup", playBtn).on("mouseupoutside", function(){
     this.texture = PIXI.Texture.fromImage("button_0.png")
     playText.position.y = 0
   })
 
-  var playText = new PIXI.Text("Play", {fill: 0xFFFFFF, fontSize: 8})
+  var playTextFontSize = 24
+  var playText = new PIXI.Text("Play", {fill: 0xFFFFFF, fontSize: playTextFontSize})
   playText.anchor.x = playText.anchor.y = 0.5
+  playText.scale.x = 8/playTextFontSize
+  playText.scale.y = 8/playTextFontSize
   // playText.x = -playButton.width/2/playButton.scale.x
   // playText.y = playButton.height/2/playButton.scale.y
   console.log("asdfa "+playButton.width/2+" "+playButton.height/2+" "+playText.fontSize)

@@ -128,9 +128,17 @@ var Room = function(name){
   this.map = []
   this.regions = []
 
+  this.roundTime = 60*1000
+  this.startingIn = 3*1000
+
+  this.updateCountdown = false
+  this.countdownTime
+  this.countdownEndTime
+
   this.roundStarted = false
   this.roundStartTime
   this.roundEndTime
+  this.timeLeft
 
   this.world = new p2.World({gravity: [0, -500]})
   this.world.defaultContactMaterial.relaxation = 3
@@ -317,13 +325,54 @@ var Room = function(name){
 
 
   this.update = function(d){
-
-    this.world.step(this.fixedTimeStep, d, this.maxSubSteps)
-    this.updateBullets(d)
+    this.updateRound(d)
   }
 
-  this.updateRound = function(){
+  this.updateRound = function(d){
+    if(this.roundStarted){
+      this.timeLeft = this.roundTime-(Date.now() - this.roundStartTime)
 
+      this.world.step(this.fixedTimeStep, d, this.maxSubSteps)
+      this.updateBullets(d)
+
+
+      if(this.timeLeft < 0){
+        this.endRound()
+      }
+    }else if(this.updateCountdown){
+      if(Date.now() - this.countdownTime > this.startingIn){
+        this.startRound()
+        this.updateCountdown = false
+      }
+    }
+  }
+
+  this.startCountdown = function(){
+    this.updateCountdown = true
+    this.countdownTime = Date.now()
+    this.countdownEndTime = Date.now()+this.startingIn
+  }
+
+  this.endRound = function(){
+    this.roundStarted = false
+
+    //reset
+    for(var i = 0; i < this.players.length; i++){
+      var player = this.players[i]
+      if(player.gunLeft){
+        player.gunLeft.reset()
+      }
+      if(player.gunRight){
+        player.gunRight.reset()
+      }
+    }
+    this.startCountdown()
+  }
+
+  this.startRound = function(){
+    this.roundStarted = true
+    this.roundStartTime = Date.now()
+    this.roundEndTime = this.roundStartTime+this.roundTime
   }
 
   this.updateBullets = function(d){
@@ -349,6 +398,8 @@ var Room = function(name){
     this.players.splice(this.players.indexOf(player), 1);
     this.world.removeBody(player.body)
   }
+
+  this.startCountdown()
 }
 
 module.exports.RoomHandler = RoomHandler

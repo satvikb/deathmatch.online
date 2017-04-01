@@ -114,7 +114,7 @@ function sendUpdate(){
       playerData.direction = {x: player.inputs.direction[0], y: player.inputs.direction[1]}
       playerData.health = {current: player.health.currentHealth, max: player.health.maxHealth}
       // playerData.mouseDirection = {x: player.mouseDirection.x, y: player.mouseDirection.y}
-
+      playerData.timeLeft = room.timeLeft
       if(player.gunLeft){
         var ammoLeftLeftGun = player.gunLeft.ammo.currentAmmo
         var ammoMaxLeftGun = player.gunLeft.ammo.maxAmmo // TODO Do not send max ammo every time, it is not going to change

@@ -62,7 +62,7 @@ function update(data){
       // ammoCounter.text = "Machine Gun: "+playerData.ammoLeft.left+" / "+playerData.ammoLeft.max+"\nShotgun: "+playerData.ammoRight.left+" / "+playerData.ammoRight.max+"\nHealth: "+playerData.health.current+" / "+playerData.health.max
     }
 
-    timerText.text = ":"+playerData.timeleft/1000
+    timerText.text = ":"+playerData.timeLeft/1000
 
     if(player){
       player.body.position[0] = playerData.position.x
