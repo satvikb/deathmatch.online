@@ -1,3 +1,4 @@
+var canvas;
 var renderer;
 
 var curretScene = 0
@@ -5,14 +6,19 @@ var menu;
 var stage;
 
 var tileMap;
-
 var hud;
-var healthText;
+var leaderboard;
+
+var leaderboardTexts = []
+
 var gunLeftText;
 var gunRightText;
 var timerText;
+var scoreText;
 
 var graphics;
+
+var nicknameField;
 
 function load(){
   PIXI.SCALE_MODES.DEFAULT = PIXI.SCALE_MODES.NEAREST;
@@ -22,7 +28,7 @@ function load(){
 }
 
 function init(){
-  var canvas = document.getElementById("gamecanvas")
+  canvas = document.getElementById("gamecanvas")
 
   console.log(canvas)
   renderer = PIXI.autoDetectRenderer(size[0], size[1], {view: canvas});
@@ -40,6 +46,12 @@ function init(){
   stage.position.y = size[1]
   stage.displayList = new PIXI.DisplayList()
 
+  setupGameUI()
+
+  resize()
+}
+
+function setupGameUI(){
   graphics = new PIXI.Graphics()
   stage.addChild(graphics)
 
@@ -49,15 +61,12 @@ function init(){
   hud = new Container()
   stage.addChild(hud)
 
+  leaderboard = new Container()
+  stage.addChild(leaderboard)
+
   bulletGraphics = new PIXI.Graphics()
   stage.addChild(bulletGraphics)
 
-  healthText = new PIXI.Text('', {fill:0xffffff});
-  healthText.text = ""
-  healthText.x = 0;
-  healthText.y = 100;
-  healthText.scale.y = -1
-  hud.addChild(healthText)
 
   gunLeftText = new PIXI.Text('', {fill:0xffffff});
   gunLeftText.text = ""
@@ -74,15 +83,46 @@ function init(){
   hud.addChild(gunRightText)
 
   timerText = new PIXI.Text('', {fill: 0xffffff})
-  timerText.x = size[0]
+  timerText.x = size[0]/2
   timerText.y = size[1]
-  timerText.anchor.x = 1
+  timerText.anchor.x = 0.5
   timerText.anchor.y = 0
   timerText.scale.y = -1
   hud.addChild(timerText)
 
-  resize()
+  scoreText = new PIXI.Text('', {fill: 0xffffff})
+  scoreText.x = size[0]
+  scoreText.y = size[1]
+  scoreText.anchor.x = 1
+  scoreText.anchor.y = -1
+  scoreText.scale.y = -1
+  // hud.addChild(scoreText)
+
+  var leaderboardTextWidth = size[0]*0.1
+
+  var leaderboardTitleText = new PIXI.Text("leaderboard", {fill: 0xffffff, align: "left"})
+  leaderboardTitleText.x = size[0]-leaderboardTextWidth/2
+  leaderboardTitleText.y = size[1]
+  leaderboardTitleText.anchor.x = 0.5
+  leaderboardTitleText.anchor.y = 0
+  leaderboardTitleText.scale.y = -1
+  leaderboard.addChild(leaderboardTitleText)
+
+  // setup leaderboard
+  for(var i = 1; i < 4; i++){
+    var text = new PIXI.Text((i)+".", {fill: 0xffffff, align: "left"})
+    text.x = size[0]-leaderboardTextWidth
+    text.y = size[1]-(text.height*i)
+    text.anchor.x = 0
+    text.anchor.y = 0
+    text.scale.y = -1
+    leaderboardTexts.push(text)
+    leaderboard.addChild(text)
+  }
 }
+
+
+
 
 function setupLobby(){
 
@@ -94,7 +134,7 @@ function setupLobby(){
   function playBtn(){
     this.texture = PIXI.Texture.fromImage("button_0.png")
     playText.position.y = 0
-    socket.emit("joingame")
+    socket.emit("joingame", {nickname: nicknameField.text})
   }
 
   var playButton = new PIXI.Sprite(PIXI.Texture.fromImage("button_0.png"))
@@ -126,6 +166,15 @@ function setupLobby(){
   titleText.position.y = size[1]
   titleText.scale.x = 5
   titleText.scale.y = -5
+
+  nicknameField = new PixiTextInput("", {fontSize: 44})
+  nicknameField.width = size[0]*0.2
+  nicknameField.x = size[0]/2-nicknameField.localWidth/2
+  nicknameField.y = size[1]*0.3
+  // nicknameField.anchor.x = 0.5//nicknameField.anchor.y = 0.5
+  nicknameField.scale.y = -1
+  menu.addChild(nicknameField)
+
 
   menu.addChild(titleText)
   menu.addChild(playButton)

@@ -1,4 +1,5 @@
 var constants = require('./constants.js')
+var Leaderboard = require('./leaderboard.js').Leaderboard
 var MapConstants = constants.MapConstants
 var Maps = constants.Maps
 var p2 = constants.p2
@@ -124,6 +125,7 @@ var Room = function(name){
   var that = this
   this.name = name
   this.players = []
+  this.leaderboard = new Leaderboard()
 
   this.map = []
   this.regions = []
@@ -335,6 +337,7 @@ var Room = function(name){
       this.world.step(this.fixedTimeStep, d, this.maxSubSteps)
       this.updateBullets(d)
 
+      this.sendLeaderboard()
 
       if(this.timeLeft < 0){
         this.endRound()
@@ -345,6 +348,17 @@ var Room = function(name){
         this.updateCountdown = false
       }
     }
+  }
+
+  this.sendLeaderboard = function(){
+    // TODO Don't send if the leaderboard did not change
+    this.players.sort(this.leaderboard.sortScore)
+    var data = this.leaderboard.getData(this.players)
+    for(var i = 0; i < this.players.length; i++){
+      var player = this.players[i]
+      player.socket.emit("leaderboard", data)
+    }
+
   }
 
   this.startCountdown = function(){
@@ -359,12 +373,7 @@ var Room = function(name){
     //reset
     for(var i = 0; i < this.players.length; i++){
       var player = this.players[i]
-      if(player.gunLeft){
-        player.gunLeft.reset()
-      }
-      if(player.gunRight){
-        player.gunRight.reset()
-      }
+      player.reset()
     }
     this.startCountdown()
   }

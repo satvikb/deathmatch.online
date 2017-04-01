@@ -1,8 +1,10 @@
 var p2 = require('./constants.js').p2
 var MapConstants = require("./constants.js").MapConstants
 
-var Player = function(id, room, x, y){
+var Player = function(id, nickname, socket, room, x, y){
   this.id = id
+  this.nickname = nickname
+  this.socket = socket
   this.room = room
 
   this.width = 48
@@ -18,6 +20,11 @@ var Player = function(id, room, x, y){
     maxHealth: 100
   }
 
+  this.scoreData = {
+    score: 0,
+    leaderboardPosition: 0
+  }
+
   this.movespeed = 150
   this.jumpheight = 550
 
@@ -28,6 +35,25 @@ var Player = function(id, room, x, y){
       return this.body.position
     }else{
       return [0, 0]
+    }
+  }
+
+  this.reset = function(){
+    this.health = {
+      currentHealth: 100,
+      maxHealth: 100
+    }
+
+    this.scoreData = {
+      score: 0,
+      leaderboardPosition: 0 //TODO implement this?
+    }
+
+    if(this.gunLeft){
+      this.gunLeft.reset()
+    }
+    if(this.gunRight){
+      this.gunRight.reset()
     }
   }
 
@@ -53,14 +79,20 @@ var Player = function(id, room, x, y){
     return false;
   }
 
-  this.subtractHealth = function(byAmount, info){
+  this.subtractHealth = function(byAmount, info, killHandler){
     this.health.currentHealth -= byAmount
 
     if(this.health.currentHealth < 0){
       console.log("DEATH TO "+this.id)
+      killHandler()
       this.kill()
     }
-    console.log("Player "+this.id+" got hit by "+info.type+" and dealt "+byAmount+" damage")
+    console.log("Player "+this.id+" got hit by a "+info.type+" and dealt "+byAmount+" damage")
+  }
+
+  this.addScore = function(addScore, info){
+    this.scoreData.score += addScore
+    this.socket.emit("score", {score: this.scoreData.score, add: addScore, type: info.type})
   }
 
   this.kill = function(){

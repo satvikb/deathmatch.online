@@ -1,5 +1,6 @@
-function Player(id, x, y){
+function Player(id, nickname, x, y){
   this.id = id
+  this.nickname = nickname
   this.localPlayer = false
 
   this.movespeed = 150
@@ -15,7 +16,32 @@ function Player(id, x, y){
     PIXI.Texture.fromFrame("player_3.png")
   ]
 
+
+
   this.display = new PIXI.Container()
+  this.healthBarHeight = 8
+  this.healthBarWidth = this.width*1.5
+
+  this.healthBar = new PIXI.Container()
+  this.healthBar.position.set(-(this.healthBarWidth/2), this.height+(this.healthBarHeight*2))
+  // this.healthBar.anchor.x = 0.5
+  // this.healthBar.anchor.y = 0
+  this.healthBar.scale.y = -1
+  this.display.addChild(this.healthBar)
+
+  var healthInnerBar = new PIXI.Graphics()
+  healthInnerBar.beginFill(0x000000)
+  healthInnerBar.drawRect(0, 0, this.healthBarWidth, this.healthBarHeight)
+  healthInnerBar.endFill()
+  this.healthBar.addChild(healthInnerBar)
+  var healthOuterBar = new PIXI.Graphics()
+  healthOuterBar.beginFill(0xFF0000)
+  healthOuterBar.drawRect(0, 0, this.healthBarWidth, this.healthBarHeight)
+  healthOuterBar.endFill()
+  this.healthBar.addChild(healthOuterBar)
+  this.healthBar.outer = healthOuterBar
+
+
 
   this.bodyLayer = new PIXI.DisplayGroup(0, false)
   this.armRightLayer = new PIXI.DisplayGroup(1, true)
@@ -93,23 +119,9 @@ function Player(id, x, y){
       var sx = this.display.position.x*scaleBy
 
       if(x > sx){
-        this.view.scale.x = -3
-        this.armLeft.scale.x = -this.armScale
-        this.armLeftLayer.zOrder = -4
-        this.armLeft.position.y = this.armYBack
-
-        this.armRight.scale.x = -this.armScale
-        this.armRightLayer.zOrder = 4
-        this.armRight.position.y = this.armY
+        this.switchDirection(false)
       }else if(x < sx){
-        this.view.scale.x = 3
-        this.armLeft.scale.x = this.armScale
-        this.armLeftLayer.zOrder = 4
-        this.armLeft.position.y = this.armYBack
-
-        this.armRight.scale.x = this.armScale
-        this.armRightLayer.zOrder = -4
-        this.armRight.position.y = this.armY
+        this.switchDirection(true)
       }
 
       var sy = (this.display.position.y*scaleBy)+(this.armY*scaleBy)
@@ -122,6 +134,28 @@ function Player(id, x, y){
       this.direction = uV
 
       this.setArmRotation(uV[0], uV[1])
+    }
+  }
+
+  this.switchDirection = function(left){
+    if(left){
+      this.view.scale.x = 3
+      this.armLeft.scale.x = this.armScale
+      this.armLeftLayer.zOrder = 4
+      this.armLeft.position.y = this.armYBack
+
+      this.armRight.scale.x = this.armScale
+      this.armRightLayer.zOrder = -4
+      this.armRight.position.y = this.armY
+    }else{
+      this.view.scale.x = -3
+      this.armLeft.scale.x = -this.armScale
+      this.armLeftLayer.zOrder = -4
+      this.armLeft.position.y = this.armYBack
+
+      this.armRight.scale.x = -this.armScale
+      this.armRightLayer.zOrder = 4
+      this.armRight.position.y = this.armY
     }
   }
 

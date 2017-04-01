@@ -136,7 +136,11 @@ var BulletData = function(player, gun, from, toRay, toDisplay, direction, thickn
         var shootingPlayer = this.player
         var hitPlayer = result.body.player
 
-        hitPlayer.subtractHealth(this.gun.bulletDamage, {type: "player"})
+        hitPlayer.subtractHealth(this.gun.bulletDamage, {type: "player"}, function(){
+          //kill handler
+          shootingPlayer.addScore(100, {type: "kill"})
+        })
+        shootingPlayer.addScore(this.gun.bulletDamage, {type: "hit"})
         console.log("Player!" +result.body.player.movespeed)
       }
     }

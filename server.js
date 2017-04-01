@@ -8,7 +8,7 @@ var server = require('http').createServer(app)
 var fs = require('fs')
 
 var util = require("util")
-var io = require("socket.io").listen(server, {origins:'localhost:8000:*'})
+var io = require("socket.io").listen(server, {origins:'10.0.0.55:8000:*'})
 
 var utils = require("./util.js").utils
 var ConstantsJS = require("./constants.js")
@@ -49,13 +49,18 @@ function onSocketConnection(client) {
 
     var room = RoomHandler.findOpenRoom(client.id)
     if(room){
-      var player = new Player(client.id, room, getRandomInt(0, 1000), 300)
+      var nickname = data.nickname
+      if(nickname == ""){
+        nickname = "player"
+      }
+
+      var player = new Player(client.id, nickname, client, room, getRandomInt(0, 1000), 70)
       player.gunLeft = Guns.pistol
 
       console.log("Joining to "+room.name )
       client.join(room.name)
 
-      var playerData = {id: player.id, x: player.getPos()[0], y: player.getPos()[1], map: room.map}//, regions: room.regions}
+      var playerData = {id: player.id, nickname: nickname, x: player.getPos()[0], y: player.getPos()[1], map: room.map}//, regions: room.regions}
       client.emit("joingame", playerData)
 
       //Tell everyone else in the room of the new player
@@ -63,7 +68,7 @@ function onSocketConnection(client) {
       //Tell the new player about existing players
       for(var i = 0; i < room.players.length; i++){
         var existingPlayer = room.players[i]
-        var existingData = {id: existingPlayer.id, x: existingPlayer.getPos()[0], y: existingPlayer.getPos()[1]}
+        var existingData = {id: existingPlayer.id, nickname: existingPlayer.nickname, x: existingPlayer.getPos()[0], y: existingPlayer.getPos()[1]}
         console.log("telling "+client.id+" about "+existingPlayer.id)
         client.emit("newplayer", existingData)
       }
@@ -115,6 +120,9 @@ function sendUpdate(){
       playerData.health = {current: player.health.currentHealth, max: player.health.maxHealth}
       // playerData.mouseDirection = {x: player.mouseDirection.x, y: player.mouseDirection.y}
       playerData.timeLeft = room.timeLeft
+
+      playerData.leaderboard = room.leaderboard.getData(room.players)
+
       if(player.gunLeft){
         var ammoLeftLeftGun = player.gunLeft.ammo.currentAmmo
         var ammoMaxLeftGun = player.gunLeft.ammo.maxAmmo // TODO Do not send max ammo every time, it is not going to change

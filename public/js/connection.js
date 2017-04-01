@@ -1,7 +1,7 @@
 var socket;
 
 function initConnection(){
-  socket = io.connect("http://localhost:8000")
+  socket = io.connect("http://10.0.0.55:8000")
   socketEventHandlers()
 }
 
@@ -10,6 +10,9 @@ function socketEventHandlers(){
   socket.on("update", update)
 
   socket.on("joingame", joingame)
+
+  socket.on("score", gotScore)
+  socket.on("leaderboard", updateLeaderboard)
 
   socket.on("newplayer", newplayer)
   socket.on("removeplayer", removeplayer)
@@ -40,6 +43,13 @@ function removeplayer(data){
   removePlayerFromScene({id: data.id})
 }
 
+function gotScore(data){
+  var newScore = data.score
+  var change = data.add
+
+  scoreText.text = "S: "+newScore
+}
+
 function update(data){
   var d = data.d
   bulletGraphics.clear()
@@ -58,13 +68,16 @@ function update(data){
         gunRightText.text = playerData.gunRightData.name+": "+playerData.gunRightData.left+" / "+playerData.gunRightData.max
       }
 
-      healthText.text = "Health: "+playerData.health.current+" / "+playerData.health.max
+      // healthText.text = "Health: "+playerData.health.current+" / "+playerData.health.max
+      // console.log("w "+healthBar.outer.width)
       // ammoCounter.text = "Machine Gun: "+playerData.ammoLeft.left+" / "+playerData.ammoLeft.max+"\nShotgun: "+playerData.ammoRight.left+" / "+playerData.ammoRight.max+"\nHealth: "+playerData.health.current+" / "+playerData.health.max
     }
 
-    timerText.text = ":"+playerData.timeLeft/1000
+    var secondRoundLeft = playerData.timeLeft/1000
+    timerText.text = ""+Math.round(secondRoundLeft * 100) / 100
 
     if(player){
+
       player.body.position[0] = playerData.position.x
       player.body.position[1] = playerData.position.y
       player.body.previousPosition[0] = playerData.position.x
@@ -73,9 +86,14 @@ function update(data){
       player.display.position.x = player.body.position[0]//player.body.position[0]
       player.display.position.y = player.body.position[1]-player.height/2//player.body.position[1]-player.height/2
 
-      //TODO Health bar
+      player.healthBar.outer.width = (playerData.health.current/playerData.health.max)*player.healthBarWidth;//healthBar.width
 
       player.setArmRotation(playerData.direction.x, playerData.direction.y)
+      if(playerData.direction.x < 0){
+        player.switchDirection(true)
+      }else(
+        player.switchDirection(false)
+      )
     }
 
     //TODO Merge left gun bullets and right gun bullets
@@ -99,6 +117,23 @@ function update(data){
         // graphics.position.set()
         bulletGraphics.lineStyle(bullet[4], bullet[5]).moveTo(from[0], from[1]).lineTo(to[0], to[1])
       }
+    }
+  }
+}
+
+function updateLeaderboard(data){
+  // console.log("LB: "+playerData.leaderboard)
+
+  for(var i = 0; i < data.length; i++){
+    if(i < leaderboardTexts.length){
+      var leaderboardData = data[i]
+      var player = getPlayerById(leaderboardData.id)
+
+      if(player){
+        leaderboardTexts[i].text = (i+1)+". "+player.nickname+" "+leaderboardData.score
+      }
+    }else{
+      return;
     }
   }
 }
