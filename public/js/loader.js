@@ -16,7 +16,7 @@ var files = [spritesheet]
 var id;
 
 function loadProgress(loader, resource){
-  console.log("loading "+loader.progress+"%")
+
 }
 
 function loadFiles(){
@@ -25,7 +25,4 @@ function loadFiles(){
   initConnection()
 
   gameLoop()
-  // animate()
-
-  // inputLoop()
 }

@@ -14,30 +14,24 @@ function keydown(event){
 
   if(localPlayer){
     if(inArray(code, keys["jump"])){
-      console.log("Jump!")
       jump = true
     }
 
     if(inArray(code, keys["left"])){
-      console.log("Left!")
       left = true
       localPlayer.startMove(true)
-
     }
 
     if(inArray(code, keys["right"])){
-      console.log("Right!")
       right = true
       localPlayer.startMove(false)
     }
 
     if(inArray(code, keys["shootleft"])){
-      console.log("Shoot Left Hand!")
       shootLeft = true
     }
 
     if(inArray(code, keys["shootright"])){
-      console.log("Shoot Right Hand!")
       shootRight = true
     }
   }
@@ -48,29 +42,24 @@ function keyup(event){
 
   if(localPlayer){
     if(inArray(code, keys["jump"])){
-      console.log("Jump!")
       jump = false
     }
 
     if(inArray(code, keys["left"])){
-      console.log("Left!")
       left = false
       localPlayer.liftMove(true)
     }
 
     if(inArray(code, keys["right"])){
-      console.log("Right!")
       right = false
       localPlayer.liftMove(false)
     }
 
     if(inArray(code, keys["shootleft"])){
-      console.log("Shoot Left Hand!")
       shootLeft = false
     }
 
     if(inArray(code, keys["shootright"])){
-      console.log("Shoot Right Hand!")
       shootRight = false
     }
   }

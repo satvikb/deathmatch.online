@@ -1,5 +1,5 @@
 var world = new p2.World({gravity: [0, -500]})
-world.defaultContactMaterial.relaxation = 3
+world.defaultContactMaterial.relaxation = 0.5
 world.defaultContactMaterial.friction = 0.4
 
 // world.setGlobalStiffness(1e5)
@@ -10,7 +10,7 @@ world.solver.frictionIterations = 10
 
 world.solver.iterations = 20
 world.solver.tolerance = 0.01
-world.setGlobalStiffness(1e4)
+world.setGlobalStiffness(1e8)
 // world.solver.relation = 0.9
 
 var map = []
@@ -54,8 +54,8 @@ function setupWorld(){
     }
   })
 
-  world.addContactMaterial(groundPlayerCM);
-  world.addContactMaterial(tilePlayerCM);
+  // world.addContactMaterial(groundPlayerCM);
+  // world.addContactMaterial(tilePlayerCM);
 
   createBoundaries()
   createMap()

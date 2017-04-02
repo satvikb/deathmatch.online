@@ -143,7 +143,7 @@ var Room = function(name){
   this.timeLeft
 
   this.world = new p2.World({gravity: [0, -500]})
-  this.world.defaultContactMaterial.relaxation = 3
+  this.world.defaultContactMaterial.relaxation = 0.5
   this.world.defaultContactMaterial.friction = 0.4
 
   this.world.solver.frictionIterations = 10
@@ -153,7 +153,7 @@ var Room = function(name){
 
   this.world.solver.iterations = 20
   this.world.solver.tolerance = 0.01
-  this.world.setGlobalStiffness(1e4)
+  this.world.setGlobalStiffness(1e8)
   // this.world.solver.relation = 0.9
 
 
@@ -161,8 +161,8 @@ var Room = function(name){
   this.groundPos = [this.groundSize[0]/2, this.groundSize[1]/2]
 
 
-  this.world.addContactMaterial(MapConstants.groundPlayerCM);
-  this.world.addContactMaterial(MapConstants.tilePlayerCM);
+  // this.world.addContactMaterial(MapConstants.groundPlayerCM);
+  // this.world.addContactMaterial(MapConstants.tilePlayerCM);
 
   this.createBoundaries = function(){
     var thickness = 30
@@ -399,7 +399,6 @@ var Room = function(name){
   }
 
   this.addPlayer = function(player){
-    console.log("adding player to room")
     this.players.push(player)
   }
 

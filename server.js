@@ -8,7 +8,7 @@ var server = require('http').createServer(app)
 var fs = require('fs')
 
 var util = require("util")
-var io = require("socket.io").listen(server, {origins:'10.0.0.55:8000:*'})
+var io = require("socket.io").listen(server, {origins:'192.168.0.26:8000:*'})
 
 var utils = require("./util.js").utils
 var ConstantsJS = require("./constants.js")
@@ -26,7 +26,6 @@ var Player = PlayerJS.Player
 // var Room = RoomJS.Room
 var RoomHandler = new RoomJS.RoomHandler()
 
-console.log("Room "+RoomHandler+" "+utils.size[0]+" ")
 var ShootHandler = ShootJS.ShootHandler
 var BulletData = ShootJS.BulletData
 var Gun = ShootJS.Gun
@@ -42,7 +41,7 @@ var setEventHandlers = function() {
 };
 
 function onSocketConnection(client) {
-  util.log("Client has connected: "+client.id);
+  // util.log("Client has connected: "+client.id);
 
   client.on("joingame", function(data){
     //create player
@@ -57,7 +56,7 @@ function onSocketConnection(client) {
       var player = new Player(client.id, nickname, client, room, getRandomInt(0, 1000), 70)
       player.gunLeft = Guns.pistol
 
-      console.log("Joining to "+room.name )
+      // console.log("Joining to "+room.name )
       client.join(room.name)
 
       var playerData = {id: player.id, nickname: nickname, x: player.getPos()[0], y: player.getPos()[1], map: room.map}//, regions: room.regions}
@@ -69,7 +68,7 @@ function onSocketConnection(client) {
       for(var i = 0; i < room.players.length; i++){
         var existingPlayer = room.players[i]
         var existingData = {id: existingPlayer.id, nickname: existingPlayer.nickname, x: existingPlayer.getPos()[0], y: existingPlayer.getPos()[1]}
-        console.log("telling "+client.id+" about "+existingPlayer.id)
+        // console.log("telling "+client.id+" about "+existingPlayer.id)
         client.emit("newplayer", existingData)
       }
 
@@ -115,11 +114,12 @@ function sendUpdate(){
       var playerData = {}
       playerData.id = player.id
       playerData.position = {x: player.getPos()[0], y: player.getPos()[1]}
-      // console.log("dir "+JSON.stringify(player.inputs.direction)+" "+player.inputs.direction.length)
+
       playerData.direction = {x: player.inputs.direction[0], y: player.inputs.direction[1]}
       playerData.health = {current: player.health.currentHealth, max: player.health.maxHealth}
-      // playerData.mouseDirection = {x: player.mouseDirection.x, y: player.mouseDirection.y}
+
       playerData.timeLeft = room.timeLeft
+      playerData.roundProgress = room.timeLeft / room.roundTime
 
       playerData.leaderboard = room.leaderboard.getData(room.players)
 

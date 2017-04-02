@@ -89,7 +89,7 @@ var BulletData = function(player, gun, from, toRay, toDisplay, direction, thickn
 
   this.direction = direction
 
-  this.color = '0x'+Math.floor(Math.random()*16777215).toString(16)
+  this.color = '0xffffff'//+Math.floor(Math.random()*16777215).toString(16)
   this.thickness = thickness
 
   // What point (from or to) should change in the ray the next step
@@ -217,9 +217,7 @@ var Gun = function(id, name, laserLength, shootSpeed, travelSpeed, maxAmmo, bull
 }
 
 var Guns = function(){
-  console.log("g")
   if(Guns.madeGuns == undefined){
-    console.log("GUNS")
     Guns.madeGuns = true
 
     // function Gun(id, name, laserLength, shootSpeed, travelSpeed, maxAmmo, bulletDamage, reloadSpeed, thickness){

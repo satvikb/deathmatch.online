@@ -16,10 +16,9 @@ var MapConstants = function(){
     })
   }
 }
-  
+
 var Maps = function(){
   if ( Maps.madeMaps == undefined ) {
-    console.log("maps "+Maps.madeMaps)
     Maps.madeMaps = true
     Maps.defaultMap = [
       [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],

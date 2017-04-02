@@ -64,7 +64,6 @@ var Player = function(id, nickname, socket, room, x, y){
     this.shape = new p2.Box({width: width, height: height, material: MapConstants.playerMaterial})
     this.body.addShape(this.shape)
     this.room.world.addBody(this.body)
-    console.log("New body")
   }
 
   this.canJump = function(){
@@ -83,11 +82,9 @@ var Player = function(id, nickname, socket, room, x, y){
     this.health.currentHealth -= byAmount
 
     if(this.health.currentHealth < 0){
-      console.log("DEATH TO "+this.id)
       killHandler()
       this.kill()
     }
-    console.log("Player "+this.id+" got hit by a "+info.type+" and dealt "+byAmount+" damage")
   }
 
   this.addScore = function(addScore, info){
@@ -99,7 +96,6 @@ var Player = function(id, nickname, socket, room, x, y){
     if(room){
       room.removePlayer(this)
       io.sockets.connected[this.id].disconnect()
-      console.log("remove player "+this.id)
     }
   }
 

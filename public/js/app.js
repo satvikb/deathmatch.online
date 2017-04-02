@@ -11,8 +11,9 @@ var leaderboard;
 
 var leaderboardTexts = []
 
-var gunLeftText;
-var gunRightText;
+var timerBar;
+var gunLeftBar;
+var gunRightBar;
 var timerText;
 var scoreText;
 
@@ -30,7 +31,6 @@ function load(){
 function init(){
   canvas = document.getElementById("gamecanvas")
 
-  console.log(canvas)
   renderer = PIXI.autoDetectRenderer(size[0], size[1], {view: canvas});
 
   menu = new Container();
@@ -68,25 +68,39 @@ function setupGameUI(){
   stage.addChild(bulletGraphics)
 
 
-  gunLeftText = new PIXI.Text('', {fill:0xffffff});
-  gunLeftText.text = ""
-  gunLeftText.x = 0;
-  gunLeftText.y = 200;
-  gunLeftText.scale.y = -1
-  hud.addChild(gunLeftText)
+  // gunLeftText = new PIXI.Text('', {fill:0xffffff});
+  // gunLeftText.text = ""
+  // gunLeftText.x = 0;
+  // gunLeftText.y = 200;
+  // gunLeftText.scale.y = -1
+  // hud.addChild(gunLeftText)
+  //
+  // gunRightText = new PIXI.Text('', {fill:0xffffff});
+  // gunRightText.text = ""
+  // gunRightText.x = 0;
+  // gunRightText.y = 150;
+  // gunRightText.scale.y = -1
+  // hud.addChild(gunRightText)
 
-  gunRightText = new PIXI.Text('', {fill:0xffffff});
-  gunRightText.text = ""
-  gunRightText.x = 0;
-  gunRightText.y = 150;
-  gunRightText.scale.y = -1
-  hud.addChild(gunRightText)
+  gunLeftBar = new Bar(size[0]*0.1, size[1]*0.025, {outerColor: 0x000080})
+  gunLeftBar.hide()
+  gunLeftBar.display.position.set(0, size[1]*0.05)
+  hud.addChild(gunLeftBar.display)
 
-  timerText = new PIXI.Text('', {fill: 0xffffff})
+  gunRightBar = new Bar(size[0]*0.1, size[1]*0.025)
+  gunRightBar.hide()
+  gunRightBar.display.position.set(0, size[1]*0.025)
+  hud.addChild(gunRightBar.display)
+
+  timerBar = new Bar(size[0], size[1]*0.01)
+  timerBar.display.position.set(0, size[1])
+  hud.addChild(timerBar.display)
+
+  timerText = new PIXI.Text('', {fontSize: 30,fill: 0xffffff})
   timerText.x = size[0]/2
   timerText.y = size[1]
   timerText.anchor.x = 0.5
-  timerText.anchor.y = 0
+  timerText.anchor.y = -0.25
   timerText.scale.y = -1
   hud.addChild(timerText)
 
@@ -110,7 +124,7 @@ function setupGameUI(){
 
   // setup leaderboard
   for(var i = 1; i < 4; i++){
-    var text = new PIXI.Text((i)+".", {fill: 0xffffff, align: "left"})
+    var text = new PIXI.Text("", {fill: 0xffffff, align: "left"})
     text.x = size[0]-leaderboardTextWidth
     text.y = size[1]-(text.height*i)
     text.anchor.x = 0
@@ -156,7 +170,6 @@ function setupLobby(){
   playText.scale.y = 8/playTextFontSize
   // playText.x = -playButton.width/2/playButton.scale.x
   // playText.y = playButton.height/2/playButton.scale.y
-  console.log("asdfa "+playButton.width/2+" "+playButton.height/2+" "+playText.fontSize)
   playButton.addChild(playText)
 
   var titleText = new PIXI.Text("deathmatch.online", {fill: 0xFFFFFF})

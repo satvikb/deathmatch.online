@@ -16,32 +16,11 @@ function Player(id, nickname, x, y){
     PIXI.Texture.fromFrame("player_3.png")
   ]
 
-
-
   this.display = new PIXI.Container()
-  this.healthBarHeight = 8
-  this.healthBarWidth = this.width*1.5
 
-  this.healthBar = new PIXI.Container()
-  this.healthBar.position.set(-(this.healthBarWidth/2), this.height+(this.healthBarHeight*2))
-  // this.healthBar.anchor.x = 0.5
-  // this.healthBar.anchor.y = 0
-  this.healthBar.scale.y = -1
-  this.display.addChild(this.healthBar)
-
-  var healthInnerBar = new PIXI.Graphics()
-  healthInnerBar.beginFill(0x000000)
-  healthInnerBar.drawRect(0, 0, this.healthBarWidth, this.healthBarHeight)
-  healthInnerBar.endFill()
-  this.healthBar.addChild(healthInnerBar)
-  var healthOuterBar = new PIXI.Graphics()
-  healthOuterBar.beginFill(0xFF0000)
-  healthOuterBar.drawRect(0, 0, this.healthBarWidth, this.healthBarHeight)
-  healthOuterBar.endFill()
-  this.healthBar.addChild(healthOuterBar)
-  this.healthBar.outer = healthOuterBar
-
-
+  this.healthBar = new Bar(this.width*1.5, 8)
+  this.healthBar.display.position.set(-(this.healthBar.width/2), this.height+(this.healthBar.height*2))
+  this.display.addChild(this.healthBar.display)
 
   this.bodyLayer = new PIXI.DisplayGroup(0, false)
   this.armRightLayer = new PIXI.DisplayGroup(1, true)
@@ -103,7 +82,6 @@ function Player(id, nickname, x, y){
     this.shape = new p2.Box({width: width, height: height, material: playerMaterial})
     this.body.addShape(this.shape)
     world.addBody(this.body)
-    console.log("New body")
   }
 
   this.liftMove = function(left){

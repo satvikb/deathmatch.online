@@ -1,7 +1,7 @@
 var socket;
 
 function initConnection(){
-  socket = io.connect("http://10.0.0.55:8000")
+  socket = io.connect("http://192.168.0.26:8000")
   socketEventHandlers()
 }
 
@@ -20,22 +20,18 @@ function socketEventHandlers(){
 }
 
 function joingame(data){
-  console.log("joined game "+data.id)
   curretScene = 1
   map = data.map
-  // regions = data.regions
-  // console.log("region "+regions[0][0].size[1])
   setupWorld()
   setupLocalPlayer(data)
 }
 
 //Client connected to page, not game
 function socketconnect(data){
-  console.log("connect")
+
 }
 
 function newplayer(data){
-  console.log("New player!! "+data.id)
   createNewPlayer(data)
 }
 
@@ -47,7 +43,7 @@ function gotScore(data){
   var newScore = data.score
   var change = data.add
 
-  scoreText.text = "S: "+newScore
+  //TODO Show text or something for score changes e.g. showing where a hit is with score text "+5"
 }
 
 function update(data){
@@ -59,22 +55,26 @@ function update(data){
     var player = getPlayerById(playerData.id)
 
     if(playerData.id == localPlayer.id){
-      // console.log(";; "+playerData.gunLeftData)
       if(playerData.gunLeftData){
-        gunLeftText.text = playerData.gunLeftData.name+": "+playerData.gunLeftData.left+" / "+playerData.gunLeftData.max
+        gunLeftBar.show()
+        gunLeftBar.text.text = playerData.gunLeftData.name+": "+playerData.gunLeftData.left+" / "+playerData.gunLeftData.max
+        gunLeftBar.setProgress(playerData.gunLeftData.left/playerData.gunLeftData.max)
+      }else{
+        gunLeftBar.hide()
       }
 
       if(playerData.gunRightData){
-        gunRightText.text = playerData.gunRightData.name+": "+playerData.gunRightData.left+" / "+playerData.gunRightData.max
+        gunRightBar.show()
+        gunRightBar.text.text = playerData.gunRightData.name+": "+playerData.gunRightData.left+" / "+playerData.gunRightData.max
+        gunRightBar.setProgress(playerData.gunRightData.left/playerData.gunRightData.max)
+      }else{
+        gunRightBar.hide()
       }
-
-      // healthText.text = "Health: "+playerData.health.current+" / "+playerData.health.max
-      // console.log("w "+healthBar.outer.width)
-      // ammoCounter.text = "Machine Gun: "+playerData.ammoLeft.left+" / "+playerData.ammoLeft.max+"\nShotgun: "+playerData.ammoRight.left+" / "+playerData.ammoRight.max+"\nHealth: "+playerData.health.current+" / "+playerData.health.max
     }
 
     var secondRoundLeft = playerData.timeLeft/1000
     timerText.text = ""+Math.round(secondRoundLeft * 100) / 100
+    timerBar.setProgress(playerData.roundProgress)
 
     if(player){
 
@@ -86,7 +86,7 @@ function update(data){
       player.display.position.x = player.body.position[0]//player.body.position[0]
       player.display.position.y = player.body.position[1]-player.height/2//player.body.position[1]-player.height/2
 
-      player.healthBar.outer.width = (playerData.health.current/playerData.health.max)*player.healthBarWidth;//healthBar.width
+      player.healthBar.setProgress(playerData.health.current/playerData.health.max)//outer.width = (playerData.health.current/playerData.health.max)*player.healthBarWidth;//healthBar.width
 
       player.setArmRotation(playerData.direction.x, playerData.direction.y)
       if(playerData.direction.x < 0){
@@ -130,7 +130,9 @@ function updateLeaderboard(data){
       var player = getPlayerById(leaderboardData.id)
 
       if(player){
-        leaderboardTexts[i].text = (i+1)+". "+player.nickname+" "+leaderboardData.score
+        leaderboardTexts[i].text = ""+player.nickname+" "+leaderboardData.score
+      }else{
+        leaderboardTexts[i].text = ""
       }
     }else{
       return;
