@@ -8,7 +8,7 @@ var server = require('http').createServer(app)
 var fs = require('fs')
 
 var util = require("util")
-var io = require("socket.io").listen(server, {origins:'192.168.0.26:8000:*'})
+var io = require("socket.io").listen(server, {origins:'deathmatch.online:*'})
 
 var utils = require("./util.js").utils
 var ConstantsJS = require("./constants.js")
@@ -85,7 +85,6 @@ function onSocketConnection(client) {
       if(room){
         room.removePlayer(player)
         client.broadcast.to(room.name).emit("removeplayer", {id: client.id})
-        console.log("remove player "+client.id)
       }
     })
   })

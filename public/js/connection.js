@@ -1,7 +1,7 @@
 var socket;
 
 function initConnection(){
-  socket = io.connect("http://192.168.0.26:8000")
+  socket = io.connect("http://deathmatch.online")
   socketEventHandlers()
 }
 
