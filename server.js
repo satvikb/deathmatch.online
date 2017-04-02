@@ -8,7 +8,7 @@ var server = require('http').createServer(app)
 var fs = require('fs')
 
 var util = require("util")
-var io = require("socket.io").listen(server, {origins:'deathmatch.online:*'})
+var io = require("socket.io").listen(server, {origins:'localhost:8000:*'})
 
 var utils = require("./util.js").utils
 var ConstantsJS = require("./constants.js")
