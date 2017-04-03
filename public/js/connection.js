@@ -7,19 +7,20 @@ function initConnection(){
 
 function socketEventHandlers(){
   socket.on("connect", socketconnect)
-  socket.on("update", update)
+  socket.on("u", update)
 
-  socket.on("joingame", joingame)
+  socket.on("jg", joingame)
 
-  socket.on("score", gotScore)
-  socket.on("leaderboard", updateLeaderboard)
+  // socket.on("score", gotScore)
+  // socket.on("leaderboard", updateLeaderboard)
 
-  socket.on("newplayer", newplayer)
-  socket.on("removeplayer", removeplayer)
+  socket.on("np", newplayer)
+  socket.on("rp", removeplayer)
   // setupLocalPlayer({id: "awewe", x: 300, y: 300})
 }
 
 function joingame(data){
+  console.log("ID "+data.id)
   curretScene = 1
   map = data.map
   setupWorld()
@@ -47,49 +48,39 @@ function gotScore(data){
 }
 
 function update(data){
-  var d = data.d
+  var d = data
   bulletGraphics.clear()
 
-  for(var i = 0; i < d.length; i++){
-    var playerData = d[i]
-    var player = getPlayerById(playerData.id)
+  var roundProgress = d.gs[0]
+  var secondRoundLeft = roundProgress*60
+  timerText.text = ""+Math.round(secondRoundLeft * 100) / 100
+  timerBar.setProgress(roundProgress)
 
-    if(playerData.id == localPlayer.id){
-      if(playerData.gunLeftData){
-        gunLeftBar.show()
-        gunLeftBar.text.text = playerData.gunLeftData.name+": "+playerData.gunLeftData.left+" / "+playerData.gunLeftData.max
-        gunLeftBar.setProgress(playerData.gunLeftData.left/playerData.gunLeftData.max)
-      }else{
-        gunLeftBar.hide()
-      }
 
-      if(playerData.gunRightData){
-        gunRightBar.show()
-        gunRightBar.text.text = playerData.gunRightData.name+": "+playerData.gunRightData.left+" / "+playerData.gunRightData.max
-        gunRightBar.setProgress(playerData.gunRightData.left/playerData.gunRightData.max)
-      }else{
-        gunRightBar.hide()
-      }
-    }
+  updateLeaderboard(d.gs[1])
 
-    var secondRoundLeft = playerData.timeLeft/1000
-    timerText.text = ""+Math.round(secondRoundLeft * 100) / 100
-    timerBar.setProgress(playerData.roundProgress)
+  for(var i = 0; i < d.op.length; i++){
+    var pd = d.op[i]
+    var player = getPlayerById(pd[0])
+
+    // var meta = playerData.m
+    var pos = [pd[1], pd[2]]
+    var dir = [pd[3], pd[4]]
+    var ph = pd[5] //player health (prop)
 
     if(player){
-
-      player.body.position[0] = playerData.position.x
-      player.body.position[1] = playerData.position.y
-      player.body.previousPosition[0] = playerData.position.x
-      player.body.previousPosition[1] = playerData.position.y
+      player.body.position[0] = pos[0]
+      player.body.position[1] = pos[1]
+      player.body.previousPosition[0] = pos[0]
+      player.body.previousPosition[1] = pos[1]
 
       player.display.position.x = player.body.position[0]//player.body.position[0]
       player.display.position.y = player.body.position[1]-player.height/2//player.body.position[1]-player.height/2
 
-      player.healthBar.setProgress(playerData.health.current/playerData.health.max)//outer.width = (playerData.health.current/playerData.health.max)*player.healthBarWidth;//healthBar.width
+      player.healthBar.setProgress(ph)//outer.width = (playerData.health.current/playerData.health.max)*player.healthBarWidth;//healthBar.width
 
-      player.setArmRotation(playerData.direction.x, playerData.direction.y)
-      if(playerData.direction.x < 0){
+      player.setArmRotation(dir[0], dir[1])
+      if(dir[0] < 0){
         player.switchDirection(true)
       }else(
         player.switchDirection(false)
@@ -97,40 +88,87 @@ function update(data){
     }
 
     //TODO Merge left gun bullets and right gun bullets
-    var bulletsLeft = playerData.bulletsLeftGun
-    if(bulletsLeft){
-      for(var b = 0; b < bulletsLeft.length; b++){
-        var bullet = bulletsLeft[b]
-        var from = [bullet[0], bullet[1]]
-        var to = [bullet[2], bullet[3]]
-        // graphics.position.set()
-        bulletGraphics.lineStyle(bullet[4], bullet[5]).moveTo(from[0], from[1]).lineTo(to[0], to[1])
-      }
-    }
-
-    var bulletsRight = playerData.bulletsRightGun
-    if(bulletsRight){
-      for(var b = 0; b < bulletsRight.length; b++){
-        var bullet = bulletsRight[b]
-        var from = [bullet[0], bullet[1]]
-        var to = [bullet[2], bullet[3]]
-        // graphics.position.set()
-        bulletGraphics.lineStyle(bullet[4], bullet[5]).moveTo(from[0], from[1]).lineTo(to[0], to[1])
-      }
-    }
+    //TODO Show bullet shots from the client by broadcasting a shoot message from each client
+    // var bulletsLeft = playerData.bulletsLeftGun
+    // if(bulletsLeft){
+    //   for(var b = 0; b < bulletsLeft.length; b++){
+    //     var bullet = bulletsLeft[b]
+    //     var from = [bullet[0], bullet[1]]
+    //     var to = [bullet[2], bullet[3]]
+    //     // graphics.position.set()
+    //     bulletGraphics.lineStyle(bullet[4], bullet[5]).moveTo(from[0], from[1]).lineTo(to[0], to[1])
+    //   }
+    // }
+    //
+    // var bulletsRight = playerData.bulletsRightGun
+    // if(bulletsRight){
+    //   for(var b = 0; b < bulletsRight.length; b++){
+    //     var bullet = bulletsRight[b]
+    //     var from = [bullet[0], bullet[1]]
+    //     var to = [bullet[2], bullet[3]]
+    //     // graphics.position.set()
+    //     bulletGraphics.lineStyle(bullet[4], bullet[5]).moveTo(from[0], from[1]).lineTo(to[0], to[1])
+    //   }
+    // }
   }
+
+  var tpd = d.p
+  var player = localPlayer
+  var pos = [tpd[1], tpd[2]]
+  var dir = [tpd[3], tpd[4]]
+  var ph = tpd[5] //player health (prop)
+
+  if(player){
+    player.body.position[0] = pos[0]
+    player.body.position[1] = pos[1]
+    player.body.previousPosition[0] = pos[0]
+    player.body.previousPosition[1] = pos[1]
+
+    player.display.position.x = player.body.position[0]//player.body.position[0]
+    player.display.position.y = player.body.position[1]-player.height/2//player.body.position[1]-player.height/2
+
+    player.healthBar.setProgress(ph)//outer.width = (playerData.health.current/playerData.health.max)*player.healthBarWidth;//healthBar.width
+
+    player.setArmRotation(dir[0], dir[1])
+    if(dir[0] < 0){
+      player.switchDirection(true)
+    }else(
+      player.switchDirection(false)
+    )
+  }
+
+  if(d.gl){
+    var gun = GetGunFromId(d.gl[0])
+
+    gunLeftBar.show()
+    gunLeftBar.text.text = gun.name+": "+d.gl[1]+" / "+gun.ammo.maxAmmo
+    gunLeftBar.setProgress(d.gl[1]/gun.ammo.maxAmmo)
+  }else{
+    gunLeftBar.hide()
+  }
+
+  if(d.gr){
+    var gun = GetGunFromId(d.gr[0])
+
+    gunRightBar.show()
+    gunRightBar.text.text = gun.name+": "+d.gr[1]+" / "+gun.ammo.maxAmmo
+    gunRightBar.setProgress(d.gr[1]/gun.ammo.maxAmmo)
+  }else{
+    gunRightBar.hide()
+  }
+
 }
 
 function updateLeaderboard(data){
-  // console.log("LB: "+playerData.leaderboard)
+  // console.log("LB: "+data)
 
   for(var i = 0; i < data.length; i++){
     if(i < leaderboardTexts.length){
       var leaderboardData = data[i]
-      var player = getPlayerById(leaderboardData.id)
+      var player = getPlayerById(leaderboardData[0])
 
       if(player){
-        leaderboardTexts[i].text = ""+player.nickname+" "+leaderboardData.score
+        leaderboardTexts[i].text = ""+player.nickname+" "+leaderboardData[1]
       }else{
         leaderboardTexts[i].text = ""
       }

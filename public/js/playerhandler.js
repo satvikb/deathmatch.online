@@ -16,15 +16,17 @@ function createNewPlayer(data){
 
 function removePlayerFromScene(data){
   var player = getPlayerById(data.id)
-  allplayers.splice(allplayers.indexOf(player), 1);
+  if(player){
+    allplayers.splice(allplayers.indexOf(player), 1);
 
-  stage.removeChild(player.display)
-  world.removeBody(player.body)
+    stage.removeChild(player.display)
+    world.removeBody(player.body)
+  }
 }
 
 function getPlayerById(id){
   for(var i = 0; i < allplayers.length; i++){
-    if(allplayers[i].id == id){
+    if(allplayers[i].clientId == id){
       return allplayers[i]
     }
   }

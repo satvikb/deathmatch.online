@@ -8,7 +8,7 @@ var Leaderboard = function(){
 
     //TODO Only send data of the top 3(?)
     for(var i = 0; i < players.length; i++){
-      data.push({id: players[i].id, score: players[i].scoreData.score})
+      data.push([players[i].clientId, players[i].scoreData.score])
     }
     return data
   }

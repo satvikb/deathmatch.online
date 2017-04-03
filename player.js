@@ -1,8 +1,10 @@
 var p2 = require('./constants.js').p2
 var MapConstants = require("./constants.js").MapConstants
 
-var Player = function(id, nickname, socket, room, x, y){
-  this.id = id
+var Player = function(socketId, clientId, nickname, socket, room, x, y){
+  this.socketId = socketId
+  this.clientId = clientId
+
   this.nickname = nickname
   this.socket = socket
   this.room = room
@@ -12,8 +14,8 @@ var Player = function(id, nickname, socket, room, x, y){
 
   this.gunLeft
   this.gunRight
-  // this.gunLeft = Guns.pistol
-  // this.gunRight = Guns.machineGun
+
+  this.oldPosition
 
   this.health = {
     currentHealth: 100,
@@ -28,7 +30,7 @@ var Player = function(id, nickname, socket, room, x, y){
   this.movespeed = 150
   this.jumpheight = 550
 
-  this.inputs = {left: false, right: false, jump: false, shootLeft: false, shootRight: false, direction: [-1, 0]}
+  this.inputs = [0, 0, 0, 0, 0, 0, 0]//{left: false, right: false, jump: false, shootLeft: false, shootRight: false, direction: [-1, 0]}
 
   this.getPos = function(){
     if(this.body){
@@ -59,6 +61,7 @@ var Player = function(id, nickname, socket, room, x, y){
 
   this.createBody = function(mass, posX, posY, width, height){
     this.body = new p2.Body({mass: mass, position: [posX, posY], fixedRotation: false, damping: 0})
+    this.oldPosition = [posX, posY]
     this.body.isPlayer = true
     this.body.player = this
     this.shape = new p2.Box({width: width, height: height, material: MapConstants.playerMaterial})
@@ -95,8 +98,65 @@ var Player = function(id, nickname, socket, room, x, y){
   this.kill = function(){
     if(room){
       room.removePlayer(this)
-      io.sockets.connected[this.id].disconnect()
+      io.sockets.connected[this.socketId].disconnect()
     }
+  }
+
+  this.sendUpdate = function(){
+    var packetData = {}
+
+    var leaderboard = this.room.leaderboard.getData(this.room.players.sort(this.room.leaderboard.sortScore))
+    var roundProgress = this.room.timeLeft/this.room.roundTime
+
+    packetData.gs = [rd(roundProgress), leaderboard]
+
+    var otherPlayerData = []
+    for(var i = 0; i < this.room.players.length; i++){
+      var otherPlayer = this.room.players[i]
+
+      if(otherPlayer.clientId != this.clientId){
+        var pos = otherPlayer.getPos()
+        // if(pos[0] != otherPlayer.oldPosition[0] || pos[1] != otherPlayer.oldPosition[1]){
+        //   console.log("change pos "+pos[0]+" "+pos[1]+" "+otherPlayer.oldPosition[0]+" "+otherPlayer.oldPosition[1])
+        // }
+        var dir = [otherPlayer.inputs[5], otherPlayer.inputs[6]]
+        var propHealth = otherPlayer.health.currentHealth/otherPlayer.health.maxHealth
+
+        otherPlayerData.push([otherPlayer.clientId, rd(pos[0]), rd(pos[1]), rd(dir[0]), rd(dir[1]), rd(propHealth)])
+      }
+    }
+    packetData.op = otherPlayerData
+
+    //TODO test for changes
+    var pos = this.getPos()
+    var dir = [this.inputs[5], this.inputs[6]]
+    var propHealth = this.health.currentHealth/this.health.maxHealth
+
+    var thisPlayerData = [this.clientId, rd(pos[0]), rd(pos[1]), rd(dir[0]), rd(dir[1]), rd(propHealth)]
+    packetData.p = thisPlayerData
+
+    if(this.gunLeft){
+      var ammoLeftLeftGun = this.gunLeft.ammo.currentAmmo
+      var ammoMaxLeftGun = this.gunLeft.ammo.maxAmmo // TODO Do not send max ammo every time, it is not going to change
+
+      //gun left data
+      packetData.gl = [this.gunLeft.id, ammoLeftLeftGun]//{name: player.gunLeft.name, left: ammoLeftLeftGun, max: ammoMaxLeftGun} //TODO Send only this data to individual client that needs it, not to all
+    }
+
+    if(this.gunRight){
+      var ammoLeftRightGun = this.gunRight.ammo.currentAmmo
+      var ammoMaxRightGun = this.gunRight.ammo.maxAmmo
+
+      //gun right data
+      packetData.gr = [this.gunRight.id, ammoLeftRightGun]//{name: player.gunRight.name, left: ammoLeftRightGun, max: ammoMaxRightGun}
+    }
+
+    this.socket.emit("u", packetData)
+  }
+
+  // round num
+  function rd(num){
+    return parseFloat(num.toFixed(2))
   }
 
   this.createBody(50, x+this.width/2, y-this.height/2, this.width, this.height)

@@ -30,7 +30,6 @@ function load(){
 
 function init(){
   canvas = document.getElementById("gamecanvas")
-
   renderer = PIXI.autoDetectRenderer(size[0], size[1], {view: canvas});
 
   menu = new Container();
@@ -67,20 +66,6 @@ function setupGameUI(){
   bulletGraphics = new PIXI.Graphics()
   stage.addChild(bulletGraphics)
 
-
-  // gunLeftText = new PIXI.Text('', {fill:0xffffff});
-  // gunLeftText.text = ""
-  // gunLeftText.x = 0;
-  // gunLeftText.y = 200;
-  // gunLeftText.scale.y = -1
-  // hud.addChild(gunLeftText)
-  //
-  // gunRightText = new PIXI.Text('', {fill:0xffffff});
-  // gunRightText.text = ""
-  // gunRightText.x = 0;
-  // gunRightText.y = 150;
-  // gunRightText.scale.y = -1
-  // hud.addChild(gunRightText)
 
   gunLeftBar = new Bar(size[0]*0.1, size[1]*0.025, {outerColor: 0x000080})
   gunLeftBar.hide()
@@ -148,7 +133,7 @@ function setupLobby(){
   function playBtn(){
     this.texture = PIXI.Texture.fromImage("button_0.png")
     playText.position.y = 0
-    socket.emit("joingame", {nickname: nicknameField.text})
+    socket.emit("jg", {nickname: nicknameField.text})
   }
 
   var playButton = new PIXI.Sprite(PIXI.Texture.fromImage("button_0.png"))
@@ -226,7 +211,7 @@ function gameLoop(){
   if(curretScene == 1){
     if(localPlayer){
       localPlayer.update(delta)
-      socket.emit("input", {left:left, right: right, jump: jump, shootLeft: shootLeft, shootRight: shootRight, direction: localPlayer.direction})
+      socket.emit("i", [bToI(left), bToI(right), bToI(jump), bToI(shootLeft), bToI(shootRight), rd(localPlayer.direction[0]), rd(localPlayer.direction[1])])//{left:left, right: right, jump: jump, shootLeft: shootLeft, shootRight: shootRight, direction: localPlayer.direction})
     }
 
     updatePhysics(delta)
@@ -237,6 +222,20 @@ function gameLoop(){
   }
   // setTimeout(gameLoop, 1/60)
   time = Date.now()
+}
+
+//bool to int
+function bToI(b){
+  if(b == true){
+    return 0
+  }else{
+    return 1
+  }
+}
+
+// round num
+function rd(num){
+  return parseFloat(num.toFixed(2))
 }
 
 function music(){

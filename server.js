@@ -8,17 +8,24 @@ var server = require('http').createServer(app)
 var fs = require('fs')
 
 var util = require("util")
-var io = require("socket.io").listen(server, {origins:'deathmatch.online:8000'})
+
+var origins = "deathmatch.online"
+
+var io = require("socket.io").listen(server, {origins:origins})
 
 var utils = require("./util.js").utils
 var ConstantsJS = require("./constants.js")
 var PlayerJS = require("./player.js")
 var RoomJS = require("./room.js")//"./room.js")
 var ShootJS = require("./shoot.js")
+var IDJS = require("./id.js")
 
 var MapConstants = ConstantsJS.MapConstants()
 var Maps = ConstantsJS.Maps()
 var Guns = ShootJS.Guns
+var CloneGun = ShootJS.CloneGun
+var IDHandler = new IDJS.IDHandler()
+
 Guns()
 
 var Player = PlayerJS.Player
@@ -43,7 +50,7 @@ var setEventHandlers = function() {
 function onSocketConnection(client) {
   // util.log("Client has connected: "+client.id);
 
-  client.on("joingame", function(data){
+  client.on("jg", function(data){
     //create player
 
     var room = RoomHandler.findOpenRoom(client.id)
@@ -53,38 +60,39 @@ function onSocketConnection(client) {
         nickname = "player"
       }
 
-      var player = new Player(client.id, nickname, client, room, getRandomInt(0, 1000), 70)
-      player.gunLeft = Guns.pistol
+      var clientId = IDHandler.generateID()
+
+      var player = new Player(client.id, clientId, nickname, client, room, getRandomInt(0, 1000), 70)
+      player.gunLeft = CloneGun(Guns.pistol)
 
       // console.log("Joining to "+room.name )
       client.join(room.name)
 
-      var playerData = {id: player.id, nickname: nickname, x: player.getPos()[0], y: player.getPos()[1], map: room.map}//, regions: room.regions}
-      client.emit("joingame", playerData)
+      var playerData = {id: player.clientId, nickname: nickname, x: player.getPos()[0], y: player.getPos()[1], map: room.map}//, regions: room.regions}
+      client.emit("jg", playerData)
 
       //Tell everyone else in the room of the new player
-      client.broadcast.to(room.name).emit("newplayer", playerData)
+      client.broadcast.to(room.name).emit("np", playerData)
       //Tell the new player about existing players
       for(var i = 0; i < room.players.length; i++){
         var existingPlayer = room.players[i]
-        var existingData = {id: existingPlayer.id, nickname: existingPlayer.nickname, x: existingPlayer.getPos()[0], y: existingPlayer.getPos()[1]}
+        var existingData = {id: existingPlayer.clientId, nickname: existingPlayer.nickname, x: existingPlayer.getPos()[0], y: existingPlayer.getPos()[1]}
         // console.log("telling "+client.id+" about "+existingPlayer.id)
-        client.emit("newplayer", existingData)
+        client.emit("np", existingData)
       }
 
       room.addPlayer(player)
     }
 
     //TODO Optimize
-    client.on('input', function(data){
+    client.on('i', function(data){
       player.inputs = data
-
     })
 
     client.on("disconnect", function(){
       if(room){
         room.removePlayer(player)
-        client.broadcast.to(room.name).emit("removeplayer", {id: client.id})
+        client.broadcast.to(room.name).emit("rp", {id: client.clientId})
       }
     })
   })
@@ -106,41 +114,57 @@ function update(){
 function sendUpdate(){
   for(var r = 0; r < RoomHandler.rooms.length; r++){
     var room = RoomHandler.rooms[r];
-    var roomUpdateData = []
 
     for(var i = 0; i < room.players.length; i++){
       var player = room.players[i]
-      var playerData = {}
-      playerData.id = player.id
-      playerData.position = {x: player.getPos()[0], y: player.getPos()[1]}
-
-      playerData.direction = {x: player.inputs.direction[0], y: player.inputs.direction[1]}
-      playerData.health = {current: player.health.currentHealth, max: player.health.maxHealth}
-
-      playerData.timeLeft = room.timeLeft
-      playerData.roundProgress = room.timeLeft / room.roundTime
-
-      playerData.leaderboard = room.leaderboard.getData(room.players)
-
-      if(player.gunLeft){
-        var ammoLeftLeftGun = player.gunLeft.ammo.currentAmmo
-        var ammoMaxLeftGun = player.gunLeft.ammo.maxAmmo // TODO Do not send max ammo every time, it is not going to change
-        playerData.gunLeftData = {name: player.gunLeft.name, left: ammoLeftLeftGun, max: ammoMaxLeftGun} //TODO Send only this data to individual client that needs it, not to all
-        playerData.bulletsLeftGun = player.gunLeft.shootHandler.getBulletRayData()
-      }
-
-      if(player.gunRight){
-        var ammoLeftRightGun = player.gunRight.ammo.currentAmmo
-        var ammoMaxRightGun = player.gunRight.ammo.maxAmmo
-        playerData.gunRightData = {name: player.gunRight.name, left: ammoLeftRightGun, max: ammoMaxRightGun}
-        playerData.bulletsRightGun = player.gunRight.shootHandler.getBulletRayData()
-      }
-
-      roomUpdateData.push(playerData)
+      player.sendUpdate()
     }
-
-    io.sockets.in(room.name).emit('update', {d:roomUpdateData})
+    // var roomUpdateData = {}
+    //
+    // roomUpdateData.l = room.leaderboard.getData(room.players.sort(room.leaderboard.sortScore)
+    //
+    // roomUpdateData.p = []
+    // for(var i = 0; i < room.players.length; i++){
+    //   var player = room.players[i]
+    //   var playerData = {}
+    //   playerData.id = player.clientId
+    //
+    //   var pos = player.getPos()
+    //   var dir = player.inputs.direction
+    //   var propHealth = player.health.currentHealth/player.health.maxHealth
+    //   var timeLeft = room.timeLeft
+    //   var roundProgress = room.timeLeft/room.roundTime
+    //
+    //   playerData.m = [rd(pos[0]), rd(pos[1]), rd(dir[0]), rd(dir[1]), rd(propHealth), rd(timeLeft), rd(roundProgress)]
+    //
+    //   if(player.gunLeft){
+    //     var ammoLeftLeftGun = player.gunLeft.ammo.currentAmmo
+    //     var ammoMaxLeftGun = player.gunLeft.ammo.maxAmmo // TODO Do not send max ammo every time, it is not going to change
+    //
+    //     //gun left data
+    //     playerData.gl = [player.gunLeft.id, ammoLeftLeftGun]//{name: player.gunLeft.name, left: ammoLeftLeftGun, max: ammoMaxLeftGun} //TODO Send only this data to individual client that needs it, not to all
+    //     // playerData.bulletsLeftGun = player.gunLeft.shootHandler.getBulletRayData()
+    //   }
+    //
+    //   if(player.gunRight){
+    //     var ammoLeftRightGun = player.gunRight.ammo.currentAmmo
+    //     var ammoMaxRightGun = player.gunRight.ammo.maxAmmo
+    //
+    //     //gun right data
+    //     playerData.gr = [player.gunRight.id, ammoLeftRightGun]//{name: player.gunRight.name, left: ammoLeftRightGun, max: ammoMaxRightGun}
+    //     // playerData.bulletsRightGun = player.gunRight.shootHandler.getBulletRayData()
+    //   }
+    //
+    //   roomUpdateData.p.push(playerData)
+    // }
+    //
+    // io.sockets.in(room.name).emit('update', roomUpdateData)
   }
+}
+
+// round num
+function rd(num){
+  return parseFloat(num.toFixed(2))
 }
 
 function updateRooms(d){

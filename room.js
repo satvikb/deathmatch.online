@@ -279,41 +279,36 @@ var Room = function(name){
     for(var i = 0; i < that.players.length; i++){
       var player = that.players[i];
 
-      var leftMove = player.inputs.left == true ? -1 : 0
-      var rightMove = player.inputs.right == true ? 1 : 0
+      player.oldPosition = player.body.position
+
+      var leftMove = player.inputs[0] == 0 ? -1 : 0
+      var rightMove = player.inputs[1] == 0 ? 1 : 0
       var totalMove = rightMove + leftMove
 
-      var jump = player.inputs.jump
+      var jump = player.inputs[2] == 0
 
       if(jump){
-        if(jump == true){
-          if(player.canJump()){
-            player.body.velocity[1] = player.jumpheight
-          }
+        if(player.canJump()){
+          player.body.velocity[1] = player.jumpheight
         }
       }
 
       player.body.velocity[0] = player.movespeed*totalMove
 
-      var shootLeft = player.inputs.shootLeft
-      var shootRight = player.inputs.shootRight
-      var dir = player.inputs.direction
+      var shootLeft = player.inputs[3] == 0
+      var shootRight = player.inputs[4] == 0
+      var dir = [player.inputs[5], player.inputs[6]]
 
-      //TODO Check if guns exist
       if(dir){
         if(shootLeft){
-          if(shootLeft == true){
-            if(player.gunLeft){
-              player.gunLeft.shoot(player, player.body.position, dir)
-            }
+          if(player.gunLeft){
+            player.gunLeft.shoot(player, player.body.position, dir)
           }
         }
 
         if(shootRight){
-          if(shootRight == true){
-            if(player.gunRight){
-              player.gunRight.shoot(player, player.body.position, dir)
-            }
+          if(player.gunRight){
+            player.gunRight.shoot(player, player.body.position, dir)
           }
         }
       }
@@ -337,7 +332,7 @@ var Room = function(name){
       this.world.step(this.fixedTimeStep, d, this.maxSubSteps)
       this.updateBullets(d)
 
-      this.sendLeaderboard()
+      // this.updateLeaderboard()
 
       if(this.timeLeft < 0){
         this.endRound()
@@ -350,13 +345,14 @@ var Room = function(name){
     }
   }
 
-  this.sendLeaderboard = function(){
+  this.updateLeaderboard = function(){
     // TODO Don't send if the leaderboard did not change
     this.players.sort(this.leaderboard.sortScore)
     var data = this.leaderboard.getData(this.players)
+
     for(var i = 0; i < this.players.length; i++){
       var player = this.players[i]
-      player.socket.emit("leaderboard", data)
+      // player.socket.emit("leaderboard", data)
     }
 
   }

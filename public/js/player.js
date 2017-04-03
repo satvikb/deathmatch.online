@@ -1,5 +1,5 @@
-function Player(id, nickname, x, y){
-  this.id = id
+function Player(clientId, nickname, x, y){
+  this.clientId = clientId
   this.nickname = nickname
   this.localPlayer = false
 

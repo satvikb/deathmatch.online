@@ -141,7 +141,6 @@ var BulletData = function(player, gun, from, toRay, toDisplay, direction, thickn
           shootingPlayer.addScore(100, {type: "kill"})
         })
         shootingPlayer.addScore(this.gun.bulletDamage, {type: "hit"})
-        console.log("Player!" +result.body.player.movespeed)
       }
     }
   }
@@ -159,7 +158,7 @@ var BulletData = function(player, gun, from, toRay, toDisplay, direction, thickn
   reloadSpeed - time to reload each bullet (ms)
   thickness - how thick each bullet is (px?) TODO Raycast multiple to achieve real thickness.
 */
-var Gun = function(id, name, laserLength, shootSpeed, travelSpeed, maxAmmo, bulletDamage, reloadSpeed, thickness){
+function Gun(id, name, laserLength, shootSpeed, travelSpeed, maxAmmo, bulletDamage, reloadSpeed, thickness){
   this.id = id
   this.name = name
 
@@ -224,13 +223,20 @@ var Guns = function(){
     // this.gunLeft = new Gun(0, "name", 5, 50, 1, 100, 1, 200, 3) //TODO Gun handler class with constants
 
     Guns.none = null
-    Guns.pistol = new Gun(    0,     "Pistol",      5,  150, 0.8, 16,  0.5, 500,  2)
-    Guns.machineGun = new Gun(1,     "Machine gun", 5,  50,  1,   100, 1,   200,  3)
-    Guns.shotgun = new Gun(   2,     "Shotgun",     15, 500, 3,   12,  8,   2000, 6)
+    Guns.pistol = new Gun(     0,     "Pistol",      5,  150, 0.8, 16,  0.5, 500,  2)
+    Guns.machineGun = new Gun( 1,     "Machine gun", 5,  50,  1,   100, 1,   200,  3)
+    Guns.shotgun = new Gun(    2,     "Shotgun",     15, 500, 3,   12,  8,   2000, 6)
   }
 }
+
+var CloneGun = function(gun){
+  // var Gun = function(id, name, laserLength, shootSpeed, travelSpeed, maxAmmo, bulletDamage, reloadSpeed, thickness){
+  return new Gun(gun.id, gun.name, gun.laserLength, gun.shootSpeed, gun.travelSpeed, gun.ammo.maxAmmo, gun.bulletDamage, gun.ammo.reloadSpeed, gun.thickness)
+}
+
 
 exports.ShootHandler = ShootHandler
 exports.BulletData = BulletData
 exports.Gun = Gun
 exports.Guns = Guns
+exports.CloneGun = CloneGun
