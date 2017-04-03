@@ -9,7 +9,7 @@ var fs = require('fs')
 
 var util = require("util")
 
-var origins = "deathmatch.online"
+var origins = "deathmatch.online:8000"
 
 var io = require("socket.io").listen(server, {origins:origins})
 

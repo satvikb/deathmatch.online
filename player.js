@@ -108,7 +108,7 @@ var Player = function(socketId, clientId, nickname, socket, room, x, y){
     var leaderboard = this.room.leaderboard.getData(this.room.players.sort(this.room.leaderboard.sortScore))
     var roundProgress = this.room.timeLeft/this.room.roundTime
 
-    packetData.gs = [rd(roundProgress), leaderboard]
+    packetData.gs = [parseFloat(roundProgress.toFixed(3)), leaderboard]
 
     var otherPlayerData = []
     for(var i = 0; i < this.room.players.length; i++){

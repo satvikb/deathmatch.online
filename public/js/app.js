@@ -103,7 +103,7 @@ function setupGameUI(){
   leaderboardTitleText.x = size[0]-leaderboardTextWidth/2
   leaderboardTitleText.y = size[1]
   leaderboardTitleText.anchor.x = 0.5
-  leaderboardTitleText.anchor.y = 0
+  leaderboardTitleText.anchor.y = -0.25
   leaderboardTitleText.scale.y = -1
   leaderboard.addChild(leaderboardTitleText)
 
@@ -113,7 +113,7 @@ function setupGameUI(){
     text.x = size[0]-leaderboardTextWidth
     text.y = size[1]-(text.height*i)
     text.anchor.x = 0
-    text.anchor.y = 0
+    text.anchor.y = -0.25
     text.scale.y = -1
     leaderboardTexts.push(text)
     leaderboard.addChild(text)
@@ -174,6 +174,15 @@ function setupLobby(){
   menu.addChild(nicknameField)
 
 
+  var versionText = new PIXI.Text("beta v0.1", {fill: 0xFFFFFF})
+  versionText.anchor.x = 0
+  versionText.anchor.y = 1
+  versionText.position.x = 0
+  versionText.position.y = 0
+  versionText.scale.x = 2
+  versionText.scale.y = -2
+
+  menu.addChild(versionText)
   menu.addChild(titleText)
   menu.addChild(playButton)
 }
