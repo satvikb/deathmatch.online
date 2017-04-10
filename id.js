@@ -8,7 +8,7 @@ var IDHandler = function(){
     var id;
 
     if(id == undefined){
-      id = this.randomString(this.idLength)
+      id = utils.randomString(this.idLength)
       while(this.currentIDs.indexOf(id) > -1){
         id = utils.randomString(this.idLength)
       }

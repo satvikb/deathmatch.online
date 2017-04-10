@@ -100,7 +100,7 @@ var MapIslandCreator = function(){
 }
 
 var RoomHandler = function(){
-  this.rooms = [new Room("test")]
+  this.rooms = [new Room(utils.randomString(10))]
 
   this.MAX_PER_ROOM = 10
 
@@ -307,6 +307,7 @@ var Room = function(name){
         if(shootLeft){
           if(player.gunLeft){
             player.gunLeft.shoot(player, player.body.position, dir)
+            //TODO Emit to other clients
           }
         }
 

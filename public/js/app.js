@@ -220,7 +220,7 @@ function gameLoop(){
   if(curretScene == 1){
     if(localPlayer){
       localPlayer.update(delta)
-      socket.emit("i", [bToI(left), bToI(right), bToI(jump), bToI(shootLeft), bToI(shootRight), rd(localPlayer.direction[0]), rd(localPlayer.direction[1])])//{left:left, right: right, jump: jump, shootLeft: shootLeft, shootRight: shootRight, direction: localPlayer.direction})
+      socket.emit("i", [bToI(left), bToI(right), bToI(jump), bToI(shootLeft), bToI(shootRight), rd(localPlayer.direction[0]), rd(localPlayer.direction[1])])
     }
 
     updatePhysics(delta)
