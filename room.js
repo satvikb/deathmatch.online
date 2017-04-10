@@ -114,9 +114,13 @@ var RoomHandler = function(){
         return this.rooms[i];
       }
     }
+
     //TODO Create new rooms based on new players
-    console.log("NOT ENOUGH SPACE IN ROOM")
-    return null
+    // console.log("NOT ENOUGH SPACE IN ROOM")
+    var room = new Room(utils.randomString(10))
+    this.room.push(room)
+
+    return room
   }
 }
 
