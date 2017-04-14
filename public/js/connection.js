@@ -14,8 +14,17 @@ function socketEventHandlers(){
   socket.on("np", newplayer)
   socket.on("rp", removeplayer)
 
-  
+  socket.on("sl", playerShotLeft)
+  socket.on("sr", playerShotRight)
   // setupLocalPlayer({id: "awewe", x: 300, y: 300})
+}
+
+function playerShotLeft(data){
+  console.log("player shot left "+data[0])
+}
+
+function playerShotRight(data){
+
 }
 
 function joingame(data){
