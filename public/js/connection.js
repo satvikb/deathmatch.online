@@ -14,23 +14,23 @@ function socketEventHandlers(){
   socket.on("np", newplayer)
   socket.on("rp", removeplayer)
 
-  socket.on("sl", playerShotLeft)
-  socket.on("sr", playerShotRight)
+  // socket.on("sl", playerShotLeft)
+  // socket.on("sr", playerShotRight)
   // setupLocalPlayer({id: "awewe", x: 300, y: 300})
 }
 
-function playerShotLeft(data){
-  console.log("player shot left "+data[0])
-
-  var player = getPlayerById(data[0])
-  if(player && player.gunLeft){
-    addBullet(player, player.gunLeft)
-  }
-}
-
-function playerShotRight(data){
-
-}
+// function playerShotLeft(data){
+//   console.log("player shot left "+data[0])
+//
+//   var player = getPlayerById(data[0])
+//   if(player && player.gunLeft){
+//     addBullet(player, player.gunLeft)
+//   }
+// }
+//
+// function playerShotRight(data){
+//
+// }
 
 function joingame(data){
   console.log("ID "+data.id)
@@ -104,9 +104,18 @@ function update(data){
       player.setArmRotation(dir[0], dir[1])
       if(dir[0] < 0){
         player.switchDirection(true)
-      }else(
+      }else{
         player.switchDirection(false)
-      )
+      }
+
+      if(pd[6] == 0 && player.gunLeft){
+        //shoot left
+        addBullet(player, player.gunLeft)
+      }
+      if(pd[7] == 0 && player.gunRight){
+        //shoot right
+        addBullet(player, player.gunRight)
+      }
     }
 
   }
@@ -131,9 +140,18 @@ function update(data){
     player.setArmRotation(dir[0], dir[1])
     if(dir[0] < 0){
       player.switchDirection(true)
-    }else(
+    }else{
       player.switchDirection(false)
-    )
+    }
+
+    if(pd[6] == 0 && player.gunLeft){
+      //shoot left
+      addBullet(player, player.gunLeft)
+    }
+    if(pd[7] == 0 && player.gunRight){
+      //shoot right
+      addBullet(player, player.gunRight)
+    }
   }
 
   if(d.gl){

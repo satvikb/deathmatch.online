@@ -122,7 +122,18 @@ var Player = function(socketId, clientId, nickname, socket, room, x, y){
         var dir = [otherPlayer.inputs[5], otherPlayer.inputs[6]]
         var propHealth = otherPlayer.health.currentHealth/otherPlayer.health.maxHealth
 
-        otherPlayerData.push([otherPlayer.clientId, rd(pos[0]), rd(pos[1]), rd(dir[0]), rd(dir[1]), rd(propHealth)])
+        // var didShootLeft = otherPlayer.gunLeft.shootCurrentFrame
+        var sl = 1 //false
+        if(otherPlayer.gunLeft){
+          sl = bToI(otherPlayer.gunLeft.shootCurrentFrame)
+        }
+
+        var sr = 1 //false
+        if(otherPlayer.gunRight){
+          sr = bToI(otherPlayer.gunRight.shootCurrentFrame)
+        }
+
+        otherPlayerData.push([otherPlayer.clientId, rd(pos[0]), rd(pos[1]), rd(dir[0]), rd(dir[1]), rd(propHealth), sl, sr])
       }
     }
     packetData.op = otherPlayerData
@@ -132,7 +143,17 @@ var Player = function(socketId, clientId, nickname, socket, room, x, y){
     var dir = [this.inputs[5], this.inputs[6]]
     var propHealth = this.health.currentHealth/this.health.maxHealth
 
-    var thisPlayerData = [this.clientId, rd(pos[0]), rd(pos[1]), rd(dir[0]), rd(dir[1]), rd(propHealth)]
+    var sl = 1 //false
+    if(this.gunLeft){
+      sl = bToI(this.gunLeft.shootCurrentFrame)
+    }
+
+    var sr = 1 //false
+    if(this.gunRight){
+      sr = bToI(this.gunRight.shootCurrentFrame)
+    }
+
+    var thisPlayerData = [this.clientId, rd(pos[0]), rd(pos[1]), rd(dir[0]), rd(dir[1]), rd(propHealth), sl, sr]
     packetData.p = thisPlayerData
 
     if(this.gunLeft){
@@ -157,6 +178,15 @@ var Player = function(socketId, clientId, nickname, socket, room, x, y){
   // round num
   function rd(num){
     return parseFloat(num.toFixed(2))
+  }
+
+  //bool to int
+  function bToI(b){
+    if(b == true){
+      return 0
+    }else{
+      return 1
+    }
   }
 
   this.createBody(50, x+this.width/2, y-this.height/2, this.width, this.height)
