@@ -28,7 +28,7 @@ function loadFiles(){
   PIXI.loader.add("guns", "data/guns.json");
   PIXI.loader.load(function(loader, resources){
     gunJson = resources.guns
-    console.log('loaded guns '+gunJson)
+    console.log('loaded guns '+gunJson+" "+JSON.stringify(gunJson["guns"]))
 
     init()
     initConnection()
