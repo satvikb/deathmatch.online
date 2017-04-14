@@ -308,12 +308,14 @@ var Room = function(name){
           if(player.gunLeft){
             player.gunLeft.shoot(player, player.body.position, dir)
             //TODO Emit to other clients
+            io.in(this.name).emit("sl", [player.clientId])
           }
         }
 
         if(shootRight){
           if(player.gunRight){
             player.gunRight.shoot(player, player.body.position, dir)
+            io.in(this.name).emit("sr", [player.clientId])
           }
         }
       }

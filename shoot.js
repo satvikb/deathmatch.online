@@ -1,6 +1,7 @@
 var constants = require('./constants.js')
 var p2 = constants.p2
 var utils = require("./util.js").utils
+var fs = require('fs')
 
 var ShootHandler = function(gun){
   this.gun = gun
@@ -219,13 +220,25 @@ var Guns = function(){
   if(Guns.madeGuns == undefined){
     Guns.madeGuns = true
 
+
     // function Gun(id, name, laserLength, shootSpeed, travelSpeed, maxAmmo, bulletDamage, reloadSpeed, thickness){
     // this.gunLeft = new Gun(0, "name", 5, 50, 1, 100, 1, 200, 3) //TODO Gun handler class with constants
 
     Guns.none = null
-    Guns.pistol = new Gun(     0,     "Pistol",      5,  150, 0.8, 16,  0.5, 500,  2)
-    Guns.machineGun = new Gun( 1,     "Machine gun", 5,  50,  1,   100, 1,   200,  3)
-    Guns.shotgun = new Gun(    2,     "Shotgun",     15, 500, 3,   12,  8,   2000, 6)
+    // Guns['pistol'] = new Gun(     0,     "Pistol",      5,  150, 0.8, 16,  0.5, 500,  2)
+    // Guns.machineGun = new Gun( 1,     "Machine gun", 5,  50,  1,   100, 1,   200,  3)
+    // Guns.shotgun = new Gun(    2,     "Shotgun",     15, 500, 3,   12,  8,   2000, 6)
+
+    var gunsData = JSON.parse(fs.readFileSync('public/data/guns.json', 'utf8'))["guns"]
+
+    for(var i = 0; i < gunsData.length; i++){
+      var d = gunsData[i]
+      Guns[d.name] = new Gun(d.id, d.name, d.laserLength, d.shootSpeed, d.travelSpeed, d.maxAmmo, d.bulletDamage, d.reloadSpeed, d.thickness)
+      console.log("Loaded gun: "+JSON.stringify(d.name))
+
+    }
+
+
   }
 }
 

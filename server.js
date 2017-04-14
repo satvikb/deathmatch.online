@@ -63,8 +63,8 @@ function onSocketConnection(client) {
       var clientId = IDHandler.generateID()
 
       var player = new Player(client.id, clientId, nickname, client, room, getRandomInt(0, 1000), 70)
-      player.gunLeft = CloneGun(Guns.pistol)
-      
+      player.gunLeft = CloneGun(Guns["Pistol"])
+
       // console.log("Joining to "+room.name )
       client.join(room.name)
 

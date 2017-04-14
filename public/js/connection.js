@@ -11,11 +11,10 @@ function socketEventHandlers(){
 
   socket.on("jg", joingame)
 
-  // socket.on("score", gotScore)
-  // socket.on("leaderboard", updateLeaderboard)
-
   socket.on("np", newplayer)
   socket.on("rp", removeplayer)
+
+  
   // setupLocalPlayer({id: "awewe", x: 300, y: 300})
 }
 
@@ -37,7 +36,7 @@ function newplayer(data){
 }
 
 function removeplayer(data){
-  removePlayerFromScene({id: data.id})
+  removePlayerFromScene(data)
 }
 
 function gotScore(data){
