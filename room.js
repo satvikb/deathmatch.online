@@ -306,16 +306,18 @@ var Room = function(name, io){
       if(dir){
         if(shootLeft){
           if(player.gunLeft){
-            player.gunLeft.shoot(player, player.body.position, dir)
-            //TODO Emit to other clients
-            io.in(this.name).emit("sl", [player.clientId])
+            if(player.gunLeft.shoot(player, player.body.position, dir) == true){
+              //TODO Emit to other clients
+              io.in(this.name).emit("sl", [player.clientId])
+            }
           }
         }
 
         if(shootRight){
           if(player.gunRight){
-            player.gunRight.shoot(player, player.body.position, dir)
-            io.in(this.name).emit("sr", [player.clientId])
+            if(player.gunRight.shoot(player, player.body.position, dir) == true){
+              io.in(this.name).emit("sr", [player.clientId])
+            }
           }
         }
       }

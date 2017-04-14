@@ -21,6 +21,11 @@ function socketEventHandlers(){
 
 function playerShotLeft(data){
   console.log("player shot left "+data[0])
+
+  var player = getPlayerById(data[0])
+  if(player && player.gunLeft){
+    addBullet(player, player.gunLeft)
+  }
 }
 
 function playerShotRight(data){
@@ -67,6 +72,15 @@ function update(data){
 
   updateLeaderboard(d.gs[1])
 
+
+  var bullets = bulletData
+  if(bullets){
+    for(var b = 0; b < bullets.length; b++){
+      var bullet = bullets[b]
+      bulletGraphics.lineStyle(bullet.thickness, bullet.color).moveTo(bullet.displayFrom[0], bullet.displayFrom[1]).lineTo(bullet.displayTo[0], bullet.displayTo[1])
+    }
+  }
+
   for(var i = 0; i < d.op.length; i++){
     var pd = d.op[i]
     var player = getPlayerById(pd[0])
@@ -95,29 +109,6 @@ function update(data){
       )
     }
 
-    //TODO Merge left gun bullets and right gun bullets
-    //TODO Show bullet shots from the client by broadcasting a shoot message from each client
-    // var bulletsLeft = playerData.bulletsLeftGun
-    // if(bulletsLeft){
-    //   for(var b = 0; b < bulletsLeft.length; b++){
-    //     var bullet = bulletsLeft[b]
-    //     var from = [bullet[0], bullet[1]]
-    //     var to = [bullet[2], bullet[3]]
-    //     // graphics.position.set()
-    //     bulletGraphics.lineStyle(bullet[4], bullet[5]).moveTo(from[0], from[1]).lineTo(to[0], to[1])
-    //   }
-    // }
-    //
-    // var bulletsRight = playerData.bulletsRightGun
-    // if(bulletsRight){
-    //   for(var b = 0; b < bulletsRight.length; b++){
-    //     var bullet = bulletsRight[b]
-    //     var from = [bullet[0], bullet[1]]
-    //     var to = [bullet[2], bullet[3]]
-    //     // graphics.position.set()
-    //     bulletGraphics.lineStyle(bullet[4], bullet[5]).moveTo(from[0], from[1]).lineTo(to[0], to[1])
-    //   }
-    // }
   }
 
   var tpd = d.p

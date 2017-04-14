@@ -155,7 +155,7 @@ var BulletData = function(player, gun, from, toRay, toDisplay, direction, thickn
   travelSpeed - distance each bullet travels every step (px?)
   maxAmmo - maximum ammo gun can have. init's currentAmmo to this. (int)
   bulletDamage - damage each bullet does (int) TODO Should be max damage when implelemting damageCurve
-  TODO damageCurve - math function to determine how much damage each bullet does based on bulletDamage. default: y = bulletDamage
+  TODO damageCurve - math function to determine how much damage each bullet does, based on bulletDamage (e.g. take into account distance). default: y = bulletDamage
   reloadSpeed - time to reload each bullet (ms)
   thickness - how thick each bullet is (px?) TODO Raycast multiple to achieve real thickness.
 */
@@ -191,8 +191,10 @@ function Gun(id, name, laserLength, shootSpeed, travelSpeed, maxAmmo, bulletDama
         this.shootHandler.addBullet(player, start, direction)
         this.ammo.currentAmmo -= 1
         this.shootTime = Date.now()
+        return true
       }
     }
+    return false
   }
 
   this.step = function(){
