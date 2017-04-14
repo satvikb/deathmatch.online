@@ -148,17 +148,25 @@ var Player = function(socketId, clientId, nickname, socket, room, x, y){
     var sl = 1 //false
     if(this.gunLeft){
       sl = bToI(this.gunLeft.shootCurrentFrame)
-      this.gunLeft.shootCurrentFrame = false
+      // this.gunLeft.shootCurrentFrame = false
     }
 
     var sr = 1 //false
     if(this.gunRight){
       sr = bToI(this.gunRight.shootCurrentFrame)
-      this.gunRight.shootCurrentFrame = false
+      // this.gunRight.shootCurrentFrame = false
     }
 
     var thisPlayerData = [this.clientId, rd(pos[0]), rd(pos[1]), rd(dir[0]), rd(dir[1]), rd(propHealth), sl, sr]
     packetData.p = thisPlayerData
+
+    if(this.gunLeft){
+      this.gunLeft.shootCurrentFrame = false
+    }
+
+    if(this.gunRight){
+      this.gunRight.shootCurrentFrame = false
+    }
 
     if(this.gunLeft){
       var ammoLeftLeftGun = this.gunLeft.ammo.currentAmmo
