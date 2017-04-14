@@ -20,11 +20,11 @@ function addBullet(player, gun){
     p2.vec2.add(endRayPos, endDisplayPos, travelSpeedDistance)
 
     var bullet = new BulletData(player, gun, startPos, endRayPos, endDisplayPos, direction, gun.thickness)
-    this.bulletData.push(bullet)
+    bulletData.push(bullet)
   }
 }
 
-function step(){
+function stepBullets(){
   var bulletsToRemove = []
 
   for(var b = 0; b < bulletData.length; b++){

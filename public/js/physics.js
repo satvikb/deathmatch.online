@@ -182,7 +182,7 @@ function createMap(){
 
 function updatePhysics(d){
   world.step(fixedTimeStep, d, maxSubSteps)
-
+  stepBullets()
   // for(var i = 0; i < allplayers.length; i++){
   //   var player = allplayers[i]
   //   if(player.body){
