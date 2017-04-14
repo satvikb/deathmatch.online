@@ -99,8 +99,8 @@ var MapIslandCreator = function(){
   }
 }
 
-var RoomHandler = function(){
-  this.rooms = [new Room(utils.randomString(10))]
+var RoomHandler = function(io){
+  this.rooms = []
 
   this.MAX_PER_ROOM = 4
 
@@ -117,7 +117,7 @@ var RoomHandler = function(){
 
     //TODO Create new rooms based on new players
     // console.log("NOT ENOUGH SPACE IN ROOM")
-    var room = new Room(utils.randomString(10))
+    var room = new Room(utils.randomString(10), io)
     this.rooms.push(room)
 
     return room
@@ -125,7 +125,7 @@ var RoomHandler = function(){
 }
 
 
-var Room = function(name){
+var Room = function(name, io){
   var that = this
   this.name = name
   this.players = []

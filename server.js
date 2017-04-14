@@ -31,7 +31,7 @@ Guns()
 var Player = PlayerJS.Player
 
 // var Room = RoomJS.Room
-var RoomHandler = new RoomJS.RoomHandler()
+var RoomHandler = new RoomJS.RoomHandler(io)
 
 var ShootHandler = ShootJS.ShootHandler
 var BulletData = ShootJS.BulletData
