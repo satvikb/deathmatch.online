@@ -111,7 +111,9 @@ function update(data){
       if(pd[6] == 0 && player.gunLeft){
         //shoot left
         addBullet(player, player.gunLeft)
+        console.log("shoot left other player")
       }
+      
       if(pd[7] == 0 && player.gunRight){
         //shoot right
         addBullet(player, player.gunRight)
@@ -147,6 +149,7 @@ function update(data){
     if(tpd[6] == 0 && player.gunLeft){
       //shoot left
       addBullet(player, player.gunLeft)
+      console.log("shoot left player")
     }
     if(tpd[7] == 0 && player.gunRight){
       //shoot right
