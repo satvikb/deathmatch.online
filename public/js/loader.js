@@ -30,6 +30,7 @@ function loadFiles(){
     gunJson = resources.guns["data"]
     console.log('loaded guns '+gunJson+" "+JSON.stringify(gunJson["guns"]))
 
+    initGuns()
     init()
     initConnection()
 
