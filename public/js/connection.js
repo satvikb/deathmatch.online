@@ -73,13 +73,7 @@ function update(data){
   updateLeaderboard(d.gs[1])
 
 
-  var bullets = bulletData
-  if(bullets){
-    for(var b = 0; b < bullets.length; b++){
-      var bullet = bullets[b]
-      bulletGraphics.lineStyle(bullet.thickness, bullet.color).moveTo(bullet.displayFrom[0], bullet.displayFrom[1]).lineTo(bullet.displayTo[0], bullet.displayTo[1])
-    }
-  }
+
 
   for(var i = 0; i < d.op.length; i++){
     var pd = d.op[i]
@@ -119,7 +113,6 @@ function update(data){
         addBullet(player, player.gunRight)
       }
     }
-
   }
 
   var tpd = d.p
@@ -146,15 +139,26 @@ function update(data){
       player.switchDirection(false)
     }
 
-    console.log("shoot "+tpd[6]+" "+tpd[7])
-    if(tpd[6] == 0 && player.gunLeft){
-      //shoot left
-      addBullet(player, player.gunLeft)
-      console.log("shoot left player")
+    // console.log("shoot "+tpd[6]+" "+tpd[7])
+    if(player.gunLeft){
+      if(tpd[6] == 0){
+        //shoot left
+        addBullet(player, player.gunLeft)
+        console.log("shoot left player")
+      }
     }
+
     if(tpd[7] == 0 && player.gunRight){
       //shoot right
       addBullet(player, player.gunRight)
+    }
+  }
+
+  var bullets = bulletData
+  if(bullets){
+    for(var b = 0; b < bullets.length; b++){
+      var bullet = bullets[b]
+      bulletGraphics.lineStyle(bullet.thickness, bullet.color).moveTo(bullet.displayFrom[0], bullet.displayFrom[1]).lineTo(bullet.displayTo[0], bullet.displayTo[1])
     }
   }
 
