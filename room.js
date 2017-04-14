@@ -309,7 +309,7 @@ var Room = function(name, io){
             if(player.gunLeft.shoot(player, player.body.position, dir) == true){
               //TODO Emit to other clients
               console.log("sending shoot left")
-              io.in(this.name).emit("sl", [player.clientId])
+              io.sockets.in(this.name).emit("sl", [player.clientId])
             }else{
               console.log("shoot unsuccessful")
             }
@@ -319,7 +319,7 @@ var Room = function(name, io){
         if(shootRight){
           if(player.gunRight){
             if(player.gunRight.shoot(player, player.body.position, dir) == true){
-              io.in(this.name).emit("sr", [player.clientId])
+              io.sockets.in(this.name).emit("sr", [player.clientId])
             }
           }
         }
@@ -356,18 +356,18 @@ var Room = function(name, io){
       }
     }
   }
-
-  this.updateLeaderboard = function(){
-    // TODO Don't send if the leaderboard did not change
-    this.players.sort(this.leaderboard.sortScore)
-    var data = this.leaderboard.getData(this.players)
-
-    for(var i = 0; i < this.players.length; i++){
-      var player = this.players[i]
-      // player.socket.emit("leaderboard", data)
-    }
-
-  }
+  //
+  // this.updateLeaderboard = function(){
+  //   // TODO Don't send if the leaderboard did not change
+  //   this.players.sort(this.leaderboard.sortScore)
+  //   var data = this.leaderboard.getData(this.players)
+  //
+  //   for(var i = 0; i < this.players.length; i++){
+  //     var player = this.players[i]
+  //     // player.socket.emit("leaderboard", data)
+  //   }
+  //
+  // }
 
   this.startCountdown = function(){
     this.updateCountdown = true
