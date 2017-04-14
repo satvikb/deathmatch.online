@@ -23,10 +23,10 @@ function loadProgress(loader, resource){
 
 function loadFiles(){
   id = PIXI.loader.resources["textures/data.json"].textures;
-  var resourceLoader = new loader.Loader()
+  // var resourceLoader = new PIXI.loader.Loader()
 
-  resourceLoader.add("guns", "data/guns.json");
-  resourceLoader.load(function(loader, resources){
+  PIXI.loader.add("guns", "data/guns.json");
+  PIXI.loader.load(function(loader, resources){
     gunJson = resources.guns
     console.log('loaded guns '+gunJson)
 
