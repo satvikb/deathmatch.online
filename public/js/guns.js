@@ -3,9 +3,11 @@ var Guns = {}
 function initGuns(){
   Guns.none = null
 
-  for(d in gunJson["guns"]){
+  var data = gunJson["guns"]
+  for(var i = 0; i < data.length; i++){
+    var d = data[i]
     Guns[d.name] = new Gun(d.id, d.name, d.laserLength, d.shootSpeed, d.travelSpeed, d.maxAmmo, d.bulletDamage, d.reloadSpeed, d.thickness)
-    console.log("loaded gun "+" "+d.name+" "+Guns[d.name]+" "+Guns[d.name].name)
+    console.log("loaded gun "+JSON.stringify(d)+"...."+d.name+" "+Guns[d.name]+" "+Guns[d.name].name)
   }
 }
 // Guns.pistol = new Gun(     0,     "Pistol",      5,  150, 0.8, 16,  0.5, 500,  2)
