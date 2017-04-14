@@ -139,7 +139,7 @@ function update(data){
   if(d.gl){
     var gun = GetGunFromId(d.gl[0])
 
-    console.log("gun left "+gun)
+    // console.log("gun left "+gun)
 
     gunLeftBar.show()
     gunLeftBar.text.text = gun.name+": "+d.gl[1]+" / "+gun.ammo.maxAmmo

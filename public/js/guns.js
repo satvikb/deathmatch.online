@@ -7,7 +7,7 @@ function initGuns(){
   for(var i = 0; i < data.length; i++){
     var d = data[i]
     Guns[d.name] = new Gun(d.id, d.name, d.laserLength, d.shootSpeed, d.travelSpeed, d.maxAmmo, d.bulletDamage, d.reloadSpeed, d.thickness)
-    console.log("loaded gun "+JSON.stringify(d)+"...."+d.name+" "+Guns[d.name]+" "+Guns[d.name].name)
+    // console.log("loaded gun "+JSON.stringify(d)+"...."+d.name+" "+Guns[d.name]+" "+Guns[d.name].name)
   }
 }
 // Guns.pistol = new Gun(     0,     "Pistol",      5,  150, 0.8, 16,  0.5, 500,  2)
@@ -32,7 +32,7 @@ function Gun(id, name, laserLength, shootSpeed, travelSpeed, maxAmmo, bulletDama
 
 function GetGunFromId(id){
   for(var gunName in Guns){
-    console.log("g "+gunName+" "+Guns)
+    // console.log("g "+gunName+" "+Guns)
     var gun = Guns[gunName]
     if(gun){
       if(gun.id == id){
