@@ -187,7 +187,7 @@ var Player = function(socketId, clientId, nickname, socket, room, x, y){
     this.socket.emit("u", packetData)
   }
 
-  function getGunLeftId(){
+  this.getGunLeftId = function(){
     if(this.gunLeft){
       return this.gunLeft.id
     }else{
@@ -195,7 +195,7 @@ var Player = function(socketId, clientId, nickname, socket, room, x, y){
     }
   }
 
-  function getGunRightId(){
+  this.getGunRightId = function(){
     if(this.gunRight){
       return this.gunRight.id
     }else{
