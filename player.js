@@ -15,6 +15,9 @@ var Player = function(socketId, clientId, nickname, socket, room, x, y){
   this.gunLeft
   this.gunRight
 
+  this.shootLeftFrame = false
+  this.shootLeftFrame = false
+
   this.oldPosition
 
   this.health = {
@@ -119,25 +122,13 @@ var Player = function(socketId, clientId, nickname, socket, room, x, y){
         var dir = [otherPlayer.inputs[5], otherPlayer.inputs[6]]
         var propHealth = otherPlayer.health.currentHealth/otherPlayer.health.maxHealth
 
-        var sl = 1 //false
-        if(otherPlayer.gunLeft){
-          sl = bToI(otherPlayer.gunLeft.shootCurrentFrame)
-        }
+        var sl = bToI(otherPlayer.shootLeftFrame)
+        var sr = bToI(otherPlayer.shootRightFrame)
 
-        var sr = 1 //false
-        if(otherPlayer.gunRight){
-          sr = bToI(otherPlayer.gunRight.shootCurrentFrame)
-        }
 
         otherPlayerData.push([otherPlayer.clientId, rd(pos[0]), rd(pos[1]), rd(dir[0]), rd(dir[1]), rd(propHealth), sl, sr])
 
-        // if(otherPlayer.gunLeft){
-        //   otherPlayer.gunLeft.shootCurrentFrame = false
-        // }
-        //
-        // if(otherPlayer.gunRight){
-        //   otherPlayer.gunRight.shootCurrentFrame = false
-        // }
+        otherPlayer.shootLeftFrame = otherPlayer.shootRightFrame = false
       }
     }
     packetData.op = otherPlayerData
@@ -147,26 +138,13 @@ var Player = function(socketId, clientId, nickname, socket, room, x, y){
     var dir = [this.inputs[5], this.inputs[6]]
     var propHealth = this.health.currentHealth/this.health.maxHealth
 
-    var sl = 1 //false
-    if(this.gunLeft){
-      sl = bToI(this.gunLeft.shootCurrentFrame)
-    }
-
-    var sr = 1 //false
-    if(this.gunRight){
-      sr = bToI(this.gunRight.shootCurrentFrame)
-    }
+    var sl = bToI(this.shootLeftFrame)
+    var sr = bToI(this.shootRightFrame)
 
     var thisPlayerData = [this.clientId, rd(pos[0]), rd(pos[1]), rd(dir[0]), rd(dir[1]), rd(propHealth), sl, sr]
     packetData.p = thisPlayerData
 
-    // if(this.gunLeft){
-    //   this.gunLeft.shootCurrentFrame = false
-    // }
-    //
-    // if(this.gunRight){
-    //   this.gunRight.shootCurrentFrame = false
-    // }
+    this.shootLeftFrame = this.shootRightFrame = false
 
     if(this.gunLeft){
       var ammoLeftLeftGun = this.gunLeft.ammo.currentAmmo

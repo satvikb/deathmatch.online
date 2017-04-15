@@ -307,9 +307,7 @@ var Room = function(name, io){
         if(shootLeft){
           if(player.gunLeft){
             if(player.gunLeft.shoot(player, player.body.position, dir) == true){
-              //TODO Emit to other clients
-              // console.log("sending shoot left "+io)
-              // io.in(this.name).emit("sl", [player.clientId])
+              player.shootLeftFrame = true
             }
           }
         }
@@ -317,7 +315,7 @@ var Room = function(name, io){
         if(shootRight){
           if(player.gunRight){
             if(player.gunRight.shoot(player, player.body.position, dir) == true){
-              // io.in(this.name).emit("sr", [player.clientId])
+              player.shootRightFrame = true
             }
           }
         }

@@ -185,21 +185,19 @@ function Gun(id, name, laserLength, shootSpeed, travelSpeed, maxAmmo, bulletDama
 
   this.reloadCooldown = 1000 //Wait this long after shooting to start reloading
 
-  this.shootCurrentFrame = false
-
   this.shoot = function(player, start, direction){
     if(Date.now()-this.shootTime > this.shootSpeed){
       if(this.ammo.currentAmmo > 0){
         this.shootHandler.addBullet(player, start, direction)
         this.ammo.currentAmmo -= 1
         this.shootTime = Date.now()
-        this.shootCurrentFrame = true
+        return true
       }
     }
+    return false
   }
 
   this.step = function(){
-    this.shootCurrentFrame = false
     this.shootHandler.step()
     // console.log("step")
     if(Date.now()-this.shootTime > this.reloadCooldown){
