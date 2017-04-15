@@ -15,8 +15,8 @@ var Player = function(socketId, clientId, nickname, socket, room, x, y){
   this.gunLeft
   this.gunRight
 
-  this.shootLeftFrame = false
-  this.shootLeftFrame = false
+  // this.shootLeftFrame = false
+  // this.shootRightFrame = false
 
   this.oldPosition
 
@@ -122,8 +122,8 @@ var Player = function(socketId, clientId, nickname, socket, room, x, y){
         var dir = [otherPlayer.inputs[5], otherPlayer.inputs[6]]
         var propHealth = otherPlayer.health.currentHealth/otherPlayer.health.maxHealth
 
-        var sl = bToI(otherPlayer.shootLeftFrame)
-        var sr = bToI(otherPlayer.shootRightFrame)
+        var sl = bToI(otherPlayer.gunLeft ? otherPlayer.gunLeft.shootFrame : false)
+        var sr = bToI(otherPlayer.gunRight ? otherPlayer.gunRight.shootFrame : false)
 
 
         otherPlayerData.push([otherPlayer.clientId, rd(pos[0]), rd(pos[1]), rd(dir[0]), rd(dir[1]), rd(propHealth), sl, sr])
@@ -138,8 +138,8 @@ var Player = function(socketId, clientId, nickname, socket, room, x, y){
     var dir = [this.inputs[5], this.inputs[6]]
     var propHealth = this.health.currentHealth/this.health.maxHealth
 
-    var sl = bToI(this.shootLeftFrame)
-    var sr = bToI(this.shootRightFrame)
+    var sl = bToI(this.gunLeft ? this.gunLeft.shootFrame : false)
+    var sr = bToI(this.gunRight ? this.gunRight.shootFrame : false)
 
     var thisPlayerData = [this.clientId, rd(pos[0]), rd(pos[1]), rd(dir[0]), rd(dir[1]), rd(propHealth), sl, sr]
     packetData.p = thisPlayerData
@@ -166,7 +166,13 @@ var Player = function(socketId, clientId, nickname, socket, room, x, y){
   }
 
   this.resetFrame = function(){
-    this.shoootLeftFrame = this.shootRightFrame = false
+    if(this.gunLeft){
+      this.gunLeft.shootFrame = false
+    }
+
+    if(this.gunRight){
+      this.gunRight.shootFrame = false
+    }
   }
 
   this.getGunLeftId = function(){

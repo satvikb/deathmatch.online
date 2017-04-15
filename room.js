@@ -307,7 +307,7 @@ var Room = function(name, io){
         if(shootLeft){
           if(player.gunLeft){
             if(player.gunLeft.shoot(player, player.body.position, dir) == true){
-              player.shootLeftFrame = true
+              // player.shootLeftFrame = true
             }
           }
         }
@@ -315,7 +315,7 @@ var Room = function(name, io){
         if(shootRight){
           if(player.gunRight){
             if(player.gunRight.shoot(player, player.body.position, dir) == true){
-              player.shootRightFrame = true
+              // player.shootRightFrame = true
             }
           }
         }
