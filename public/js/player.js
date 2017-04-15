@@ -116,8 +116,6 @@ function Player(clientId, nickname, x, y, gunLeftId, gunRightId){
       var dirY = (sh-y)-sy
       var uV = normDir([dirX, dirY])
 
-      this.direction = uV
-      
       this.setArmRotation(uV[0], uV[1])
     }
   }
@@ -146,6 +144,7 @@ function Player(clientId, nickname, x, y, gunLeftId, gunRightId){
 
   this.setArmRotation = function(dirX, dirY){
     // this.direction = [dirX, dirY]
+    this.direction = [dirX, dirY]
 
     var rot = Math.atan2(dirY, dirX)
 

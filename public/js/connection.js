@@ -97,6 +97,7 @@ function update(data){
       otherPlayer.healthBar.setProgress(ph)//outer.width = (playerData.health.current/playerData.health.max)*player.healthBarWidth;//healthBar.width
 
       otherPlayer.setArmRotation(dir[0], dir[1])
+      
       if(dir[0] < 0){
         otherPlayer.switchDirection(true)
       }else{
@@ -139,6 +140,7 @@ function update(data){
     player.healthBar.setProgress(ph)//outer.width = (playerData.health.current/playerData.health.max)*player.healthBarWidth;//healthBar.width
 
     player.setArmRotation(dir[0], dir[1])
+
     if(dir[0] < 0){
       player.switchDirection(true)
     }else{
