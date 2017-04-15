@@ -91,7 +91,7 @@ function update(data){
       otherPlayer.body.previousPosition[1] = pos[1]
 
       otherPlayer.display.position.x = otherPlayer.body.position[0]//player.body.position[0]
-      otherPlayer.display.position.y = otherPlayer.body.position[1]-player.height/2//player.body.position[1]-player.height/2
+      otherPlayer.display.position.y = otherPlayer.body.position[1]-otherPlayer.height/2//player.body.position[1]-player.height/2
 
 
       otherPlayer.healthBar.setProgress(ph)//outer.width = (playerData.health.current/playerData.health.max)*player.healthBarWidth;//healthBar.width
