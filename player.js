@@ -116,9 +116,6 @@ var Player = function(socketId, clientId, nickname, socket, room, x, y){
 
       if(otherPlayer.clientId != this.clientId){
         var pos = otherPlayer.getPos()
-        // if(pos[0] != otherPlayer.oldPosition[0] || pos[1] != otherPlayer.oldPosition[1]){
-        //   console.log("change pos "+pos[0]+" "+pos[1]+" "+otherPlayer.oldPosition[0]+" "+otherPlayer.oldPosition[1])
-        // }
         var dir = [otherPlayer.inputs[5], otherPlayer.inputs[6]]
         var propHealth = otherPlayer.health.currentHealth/otherPlayer.health.maxHealth
 
@@ -153,13 +150,11 @@ var Player = function(socketId, clientId, nickname, socket, room, x, y){
     var sl = 1 //false
     if(this.gunLeft){
       sl = bToI(this.gunLeft.shootCurrentFrame)
-      // this.gunLeft.shootCurrentFrame = false
     }
 
     var sr = 1 //false
     if(this.gunRight){
       sr = bToI(this.gunRight.shootCurrentFrame)
-      // this.gunRight.shootCurrentFrame = false
     }
 
     var thisPlayerData = [this.clientId, rd(pos[0]), rd(pos[1]), rd(dir[0]), rd(dir[1]), rd(propHealth), sl, sr]

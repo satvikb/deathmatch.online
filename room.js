@@ -310,8 +310,6 @@ var Room = function(name, io){
               //TODO Emit to other clients
               // console.log("sending shoot left "+io)
               // io.in(this.name).emit("sl", [player.clientId])
-            }else{
-              // console.log("shoot unsuccessful")
             }
           }
         }
