@@ -143,7 +143,7 @@ function Player(clientId, nickname, x, y, gunLeftId, gunRightId){
   }
 
   this.setArmRotation = function(dirX, dirY){
-    this.direction = [dirX, dirY]
+    // this.direction = [dirX, dirY]
 
     var rot = Math.atan2(dirY, dirX)
 

@@ -107,7 +107,7 @@ function update(data){
       if(otherPlayer.gunLeft){
         if(pd[6] == 0){
           console.log("("+localPlayer.clientId+") player "+otherPlayer.clientId+" shot "+otherPlayer.gunLeft.name)
-          addBullet(player, otherPlayer.gunLeft)
+          addBullet(otherPlayer, otherPlayer.gunLeft)
         }
       }else{
         console.log("other player no gun")
@@ -115,7 +115,7 @@ function update(data){
 
       if(otherPlayer.gunRight){
         if(pd[7] == 0){
-          addBullet(player, otherPlayer.gunRight)
+          addBullet(otherPlayer, otherPlayer.gunRight)
         }
       }
     }
