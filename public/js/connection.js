@@ -102,15 +102,17 @@ function update(data){
         player.switchDirection(false)
       }
 
-      if(pd[6] == 0 && player.gunLeft){
-        //shoot left
-        addBullet(player, player.gunLeft)
-        console.log("shoot left other player")
+
+      if(player.gunLeft){
+        if(pd[6] == 0){
+          addBullet(player, player.gunLeft)
+        }
       }
 
-      if(pd[7] == 0 && player.gunRight){
-        //shoot right
-        addBullet(player, player.gunRight)
+      if(player.gunRight){
+        if(pd[7] == 0){
+          addBullet(player, player.gunRight)
+        }
       }
     }
   }
@@ -139,20 +141,16 @@ function update(data){
       player.switchDirection(false)
     }
 
-    // console.log("shoot "+tpd[6]+" "+tpd[7])
     if(player.gunLeft){
       if(tpd[6] == 0){
-        //shoot left
         addBullet(player, player.gunLeft)
-        console.log("shoot left player")
       }
-    }else{
-      console.log('no gun')
     }
 
-    if(tpd[7] == 0 && player.gunRight){
-      //shoot right
-      addBullet(player, player.gunRight)
+    if(player.gunRight){
+      if(tpd[7] == 0){
+        addBullet(player, player.gunRight)
+      }
     }
   }
 

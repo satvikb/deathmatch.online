@@ -5,7 +5,7 @@
       "name": "Pistol",
       "laserLength": 5,
       "shootSpeed": 150,
-      "travelSpeed": 0.8,
+      "travelSpeed": 2,
       "maxAmmo": 16,
       "bulletDamage": 0.5,
       "reloadSpeed": 500,

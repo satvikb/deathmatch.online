@@ -3,7 +3,6 @@ var bulletData = []
 function addBullet(player, gun){
 
   if(player){
-    console.log("added bullet")
     var startPos = player.body.position
     var direction = player.direction
 
