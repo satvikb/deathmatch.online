@@ -1,7 +1,13 @@
-function Player(clientId, nickname, x, y){
+function Player(clientId, nickname, x, y, gunLeftId, gunRightId){
   this.clientId = clientId
   this.nickname = nickname
   this.localPlayer = false
+
+  this.gunLeftId = gunLeftId
+  this.gunRightId = gunRightId
+
+  this.gunLeft = CloneGun(GetGunFromId(gunLeftId))
+  this.gunRight = CloneGun(GetGunFromId(gunRightId))
 
   this.movespeed = 150
   this.jumpheight = 550

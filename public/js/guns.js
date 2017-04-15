@@ -10,9 +10,6 @@ function initGuns(){
     // console.log("loaded gun "+JSON.stringify(d)+"...."+d.name+" "+Guns[d.name]+" "+Guns[d.name].name)
   }
 }
-// Guns.pistol = new Gun(     0,     "Pistol",      5,  150, 0.8, 16,  0.5, 500,  2)
-// Guns.machineGun = new Gun( 1,     "Machine gun", 5,  50,  1,   100, 1,   200,  3)
-// Guns.shotgun = new Gun(    2,     "Shotgun",     15, 500, 3,   12,  8,   2000, 6)
 
 function Gun(id, name, laserLength, shootSpeed, travelSpeed, maxAmmo, bulletDamage, reloadSpeed, thickness){
   this.id = id
@@ -30,6 +27,14 @@ function Gun(id, name, laserLength, shootSpeed, travelSpeed, maxAmmo, bulletDama
   this.thickness = thickness
 }
 
+var CloneGun = function(gun){
+  if(gun){
+    return new Gun(gun.id, gun.name, gun.laserLength, gun.shootSpeed, gun.travelSpeed, gun.ammo.maxAmmo, gun.bulletDamage, gun.ammo.reloadSpeed, gun.thickness)
+  }else{
+    return Guns.none
+  }
+}
+
 function GetGunFromId(id){
   for(var gunName in Guns){
     // console.log("g "+gunName+" "+Guns)
@@ -40,4 +45,5 @@ function GetGunFromId(id){
       }
     }
   }
+  return Guns.none
 }

@@ -68,7 +68,8 @@ function onSocketConnection(client) {
       // console.log("Joining to "+room.name )
       client.join(room.name)
 
-      var playerData = {id: player.clientId, nickname: nickname, x: player.getPos()[0], y: player.getPos()[1], map: room.map}//, regions: room.regions}
+      //TODO Make efficient by using arrays
+      var playerData = {id: player.clientId, nickname: nickname, x: player.getPos()[0], y: player.getPos()[1], map: room.map, gunL: player.getGunLeftId(), gunR: player.getGunRightId()}//, regions: room.regions}
       client.emit("jg", playerData)
 
       //Tell everyone else in the room of the new player
@@ -76,7 +77,7 @@ function onSocketConnection(client) {
       //Tell the new player about existing players
       for(var i = 0; i < room.players.length; i++){
         var existingPlayer = room.players[i]
-        var existingData = {id: existingPlayer.clientId, nickname: existingPlayer.nickname, x: existingPlayer.getPos()[0], y: existingPlayer.getPos()[1]}
+        var existingData = {id: existingPlayer.clientId, nickname: existingPlayer.nickname, x: existingPlayer.getPos()[0], y: existingPlayer.getPos()[1], gunL: player.getGunLeftId(), gunR: player.getGunRightId()}
         // console.log("telling "+client.id+" about "+existingPlayer.id)
         client.emit("np", existingData)
       }

@@ -187,6 +187,22 @@ var Player = function(socketId, clientId, nickname, socket, room, x, y){
     this.socket.emit("u", packetData)
   }
 
+  function getGunLeftId(){
+    if(this.gunLeft){
+      return this.gunLeft.id
+    }else{
+      return -1;
+    }
+  }
+
+  function getGunRightId(){
+    if(this.gunRight){
+      return this.gunRight.id
+    }else{
+      return -1;
+    }
+  }
+
   // round num
   function rd(num){
     return parseFloat(num.toFixed(2))
