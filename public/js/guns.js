@@ -28,8 +28,8 @@ function Gun(id, name, laserLength, shootSpeed, travelSpeed, maxAmmo, bulletDama
 }
 
 var CloneGun = function(gun){
-  console.log("cloning gun "+gun.id+" "+gun.name)
   if(gun){
+    console.log("cloning gun "+gun.id+" "+gun.name)
     return new Gun(gun.id, gun.name, gun.laserLength, gun.shootSpeed, gun.travelSpeed, gun.ammo.maxAmmo, gun.bulletDamage, gun.ammo.reloadSpeed, gun.thickness)
   }else{
     return Guns.none
