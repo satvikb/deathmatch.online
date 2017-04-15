@@ -75,6 +75,7 @@ function Player(clientId, nickname, x, y, gunLeftId, gunRightId){
   this.body
   this.shape
   this.direction = [-1, 0]
+  this.serverDir = [-1, 0]
 
   this.getPos = function(){
     if(this.body){
@@ -115,8 +116,6 @@ function Player(clientId, nickname, x, y, gunLeftId, gunRightId){
       var dirY = (sh-y)-sy
       var uV = normDir([dirX, dirY])
 
-      this.direction = uV
-
       this.setArmRotation(uV[0], uV[1])
     }
   }
@@ -144,6 +143,8 @@ function Player(clientId, nickname, x, y, gunLeftId, gunRightId){
   }
 
   this.setArmRotation = function(dirX, dirY){
+    this.direction = [dirX, dirY]
+
     var rot = Math.atan2(dirY, dirX)
 
     this.armLeft.rotation = rot+Math.PI/2 //TODO Figure out why we need to add pi/2

@@ -93,7 +93,6 @@ function update(data){
       player.display.position.x = player.body.position[0]//player.body.position[0]
       player.display.position.y = player.body.position[1]-player.height/2//player.body.position[1]-player.height/2
 
-      player.direction = dir
 
       player.healthBar.setProgress(ph)//outer.width = (playerData.health.current/playerData.health.max)*player.healthBarWidth;//healthBar.width
 
@@ -146,10 +145,9 @@ function update(data){
       player.switchDirection(false)
     }
 
-    player.direction = dir
-
     if(player.gunLeft){
       if(tpd[6] == 0){
+        console.log("shoot gun local "+localPlayer.clientId)
         addBullet(player, player.gunLeft)
       }
     }

@@ -4,7 +4,7 @@ function addBullet(player, gun){
 
   if(player){
     var startPos = player.body.position
-    var direction = player.direction
+    var direction = player.serverDir
 
     var laserLength = p2.vec2.create();
     p2.vec2.scale(laserLength, direction, gun.laserLength)
