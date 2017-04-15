@@ -16,7 +16,7 @@ function createNewPlayer(data){
 
 function removePlayerFromScene(data){
   var player = getPlayerById(data.id)
-  console.log("removing player "+data.id+" "+player)
+
   if(player){
     allplayers.splice(allplayers.indexOf(player), 1);
 
