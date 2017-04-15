@@ -131,13 +131,13 @@ var Player = function(socketId, clientId, nickname, socket, room, x, y){
 
         otherPlayerData.push([otherPlayer.clientId, rd(pos[0]), rd(pos[1]), rd(dir[0]), rd(dir[1]), rd(propHealth), sl, sr])
 
-        if(otherPlayer.gunLeft){
-          otherPlayer.gunLeft.shootCurrentFrame = false
-        }
-
-        if(otherPlayer.gunRight){
-          otherPlayer.gunRight.shootCurrentFrame = false
-        }
+        // if(otherPlayer.gunLeft){
+        //   otherPlayer.gunLeft.shootCurrentFrame = false
+        // }
+        //
+        // if(otherPlayer.gunRight){
+        //   otherPlayer.gunRight.shootCurrentFrame = false
+        // }
       }
     }
     packetData.op = otherPlayerData
@@ -160,13 +160,13 @@ var Player = function(socketId, clientId, nickname, socket, room, x, y){
     var thisPlayerData = [this.clientId, rd(pos[0]), rd(pos[1]), rd(dir[0]), rd(dir[1]), rd(propHealth), sl, sr]
     packetData.p = thisPlayerData
 
-    if(this.gunLeft){
-      this.gunLeft.shootCurrentFrame = false
-    }
-
-    if(this.gunRight){
-      this.gunRight.shootCurrentFrame = false
-    }
+    // if(this.gunLeft){
+    //   this.gunLeft.shootCurrentFrame = false
+    // }
+    //
+    // if(this.gunRight){
+    //   this.gunRight.shootCurrentFrame = false
+    // }
 
     if(this.gunLeft){
       var ammoLeftLeftGun = this.gunLeft.ammo.currentAmmo

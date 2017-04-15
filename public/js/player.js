@@ -116,6 +116,8 @@ function Player(clientId, nickname, x, y, gunLeftId, gunRightId){
       var dirY = (sh-y)-sy
       var uV = normDir([dirX, dirY])
 
+      this.direction = uV
+      
       this.setArmRotation(uV[0], uV[1])
     }
   }

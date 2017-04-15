@@ -199,6 +199,7 @@ function Gun(id, name, laserLength, shootSpeed, travelSpeed, maxAmmo, bulletDama
   }
 
   this.step = function(){
+    this.shootCurrentFrame = false
     this.shootHandler.step()
     // console.log("step")
     if(Date.now()-this.shootTime > this.reloadCooldown){

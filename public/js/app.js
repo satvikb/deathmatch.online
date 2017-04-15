@@ -224,6 +224,7 @@ function gameLoop(){
     }
 
     updatePhysics(delta)
+    stepBullets()
 
     renderer.render(stage)
   }else if(curretScene == 0){
