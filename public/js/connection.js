@@ -107,6 +107,8 @@ function update(data){
         if(pd[6] == 0){
           addBullet(player, player.gunLeft)
         }
+      }else{
+        console.log("other player no gun")
       }
 
       if(player.gunRight){

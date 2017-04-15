@@ -122,20 +122,25 @@ var Player = function(socketId, clientId, nickname, socket, room, x, y){
         var dir = [otherPlayer.inputs[5], otherPlayer.inputs[6]]
         var propHealth = otherPlayer.health.currentHealth/otherPlayer.health.maxHealth
 
-        // var didShootLeft = otherPlayer.gunLeft.shootCurrentFrame
         var sl = 1 //false
         if(otherPlayer.gunLeft){
           sl = bToI(otherPlayer.gunLeft.shootCurrentFrame)
-          otherPlayer.gunLeft.shootCurrentFrame = false
         }
 
         var sr = 1 //false
         if(otherPlayer.gunRight){
           sr = bToI(otherPlayer.gunRight.shootCurrentFrame)
-          otherPlayer.gunRight.shootCurrentFrame = false
         }
 
         otherPlayerData.push([otherPlayer.clientId, rd(pos[0]), rd(pos[1]), rd(dir[0]), rd(dir[1]), rd(propHealth), sl, sr])
+
+        if(otherPlayer.gunLeft){
+          otherPlayer.gunLeft.shootCurrentFrame = false
+        }
+
+        if(otherPlayer.gunRight){
+          otherPlayer.gunRight.shootCurrentFrame = false
+        }
       }
     }
     packetData.op = otherPlayerData

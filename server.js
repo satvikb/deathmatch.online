@@ -77,7 +77,7 @@ function onSocketConnection(client) {
       //Tell the new player about existing players
       for(var i = 0; i < room.players.length; i++){
         var existingPlayer = room.players[i]
-        var existingData = {id: existingPlayer.clientId, nickname: existingPlayer.nickname, x: existingPlayer.getPos()[0], y: existingPlayer.getPos()[1], gunL: player.getGunLeftId(), gunR: player.getGunRightId()}
+        var existingData = {id: existingPlayer.clientId, nickname: existingPlayer.nickname, x: existingPlayer.getPos()[0], y: existingPlayer.getPos()[1], gunL: existingPlayer.getGunLeftId(), gunR: existingPlayer.getGunRightId()}
         // console.log("telling "+client.id+" about "+existingPlayer.id)
         client.emit("np", existingData)
       }
@@ -93,7 +93,7 @@ function onSocketConnection(client) {
     client.on("disconnect", function(){
       if(room){
         room.removePlayer(player)
-        client.broadcast.to(room.name).emit("rp", {id: client.clientId})
+        client.broadcast.to(room.name).emit("rp", {id: player.clientId})
       }
     })
   })
