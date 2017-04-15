@@ -120,6 +120,11 @@ function sendUpdate(){
       var player = room.players[i]
       player.sendUpdate()
     }
+
+    for(var i = 0; i < room.players.length; i++){
+      var player = room.players[i]
+      player.resetFrame()
+    }
     // var roomUpdateData = {}
     //
     // roomUpdateData.l = room.leaderboard.getData(room.players.sort(room.leaderboard.sortScore)

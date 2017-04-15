@@ -128,7 +128,7 @@ var Player = function(socketId, clientId, nickname, socket, room, x, y){
 
         otherPlayerData.push([otherPlayer.clientId, rd(pos[0]), rd(pos[1]), rd(dir[0]), rd(dir[1]), rd(propHealth), sl, sr])
 
-        otherPlayer.shootLeftFrame = otherPlayer.shootRightFrame = false
+        // otherPlayer.shootLeftFrame = otherPlayer.shootRightFrame = false
       }
     }
     packetData.op = otherPlayerData
@@ -144,7 +144,7 @@ var Player = function(socketId, clientId, nickname, socket, room, x, y){
     var thisPlayerData = [this.clientId, rd(pos[0]), rd(pos[1]), rd(dir[0]), rd(dir[1]), rd(propHealth), sl, sr]
     packetData.p = thisPlayerData
 
-    this.shootLeftFrame = this.shootRightFrame = false
+    // this.shootLeftFrame = this.shootRightFrame = false
 
     if(this.gunLeft){
       var ammoLeftLeftGun = this.gunLeft.ammo.currentAmmo
@@ -163,6 +163,10 @@ var Player = function(socketId, clientId, nickname, socket, room, x, y){
     }
 
     this.socket.emit("u", packetData)
+  }
+
+  this.resetFrame = function(){
+    this.shoootLeftFrame = this.shootRightFrame = false
   }
 
   this.getGunLeftId = function(){
