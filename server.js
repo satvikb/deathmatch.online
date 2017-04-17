@@ -30,7 +30,7 @@ Guns()
 
 var Player = PlayerJS.Player
 
-var RoomHandler = new RoomJS.RoomHandler(io)
+var RoomHandler = new RoomJS.RoomHandler()
 
 var ShootHandler = ShootJS.ShootHandler
 var BulletData = ShootJS.BulletData
@@ -65,7 +65,7 @@ function onSocketConnection(client) {
       client.join(room.name)
 
       //TODO Make efficient by using arrays instead of keys
-      var playerData = {id: player.clientId, nickname: nickname, x: player.getPos()[0], y: player.getPos()[1], map: room.map, gunL: player.getGunLeftId(), gunR: player.getGunRightId()}//, regions: room.regions}
+      var playerData = {id: player.clientId, nickname: nickname, x: player.getPos()[0], y: player.getPos()[1], map: room.map, gunL: player.getGunLeftId(), gunR: player.getGunRightId()}
       client.emit("jg", playerData)
 
       //Tell everyone else in the room of the new player

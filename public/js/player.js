@@ -75,7 +75,6 @@ function Player(clientId, nickname, x, y, gunLeftId, gunRightId){
   this.body
   this.shape
   this.direction = [-1, 0]
-  this.serverDir = [-1, 0]
 
   this.getPos = function(){
     if(this.body){

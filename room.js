@@ -9,7 +9,7 @@ function getRandomInt(min, max) {
     return Math.floor(Math.random() * (max - min + 1)) + min;
 }
 
-var RoomHandler = function(io){
+var RoomHandler = function(){
   this.rooms = []
 
   this.MAX_PER_ROOM = 4
@@ -23,7 +23,7 @@ var RoomHandler = function(io){
       }
     }
 
-    var room = new Room(utils.randomString(10), io)
+    var room = new Room(utils.randomString(10))
     this.rooms.push(room)
 
     return room
@@ -31,7 +31,7 @@ var RoomHandler = function(io){
 }
 
 
-var Room = function(name, io){
+var Room = function(name){
   var that = this
   this.name = name
   this.players = []
