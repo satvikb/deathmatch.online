@@ -69,7 +69,7 @@ function setupGameUI(){
 
   gunLeftBar = new Bar(size[0]*0.1, size[1]*0.025, {outerColor: 0x000080})
   gunLeftBar.hide()
-  gunLeftBar.display.position.set(0, size[1]*0.05)
+  gunLeftBar.display.position.set(0, size[1]*0.075)
   hud.addChild(gunLeftBar.display)
 
   gunRightBar = new Bar(size[0]*0.1, size[1]*0.025)
