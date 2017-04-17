@@ -3,7 +3,6 @@ var autoDetectRenderer = PIXI.autoDetectRenderer;
 var TextureCache = PIXI.utils.TextureCache;
 var Texture = PIXI.Texture;
 var Sprite = PIXI.Sprite;
-var JsonLoader = PIXI.JsonLoader;
 var loader = PIXI.loader;
 var resources = PIXI.loader.resources;
 

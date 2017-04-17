@@ -63,6 +63,7 @@ function update(data){
       otherPlayer.display.position.y = otherPlayer.body.position[1]-otherPlayer.height/2
 
       otherPlayer.healthBar.setProgress(ph)
+      otherPlayer.direction = [dir[0], dir[1]]
       otherPlayer.setArmRotation(dir[0], dir[1])
 
       if(dir[0] < 0){
