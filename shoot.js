@@ -137,6 +137,8 @@ var BulletData = function(player, gun, from, toRay, toDisplay, direction, thickn
         hitPlayer.subtractHealth(this.gun.bulletDamage, {type: "player"}, function(){
           //kill handler
           shootingPlayer.addScore(100, {type: "kill"})
+          this.remove = true
+          return;
         })
         shootingPlayer.addScore(this.gun.bulletDamage, {type: "hit"})
       }

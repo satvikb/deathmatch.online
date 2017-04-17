@@ -92,13 +92,13 @@ var Player = function(socketId, clientId, nickname, socket, room, x, y){
 
   this.addScore = function(addScore, info){
     this.scoreData.score += addScore
-    this.socket.emit("score", {score: this.scoreData.score, add: addScore, type: info.type})
+    // this.socket.emit("score", {score: this.scoreData.score, add: addScore, type: info.type})
   }
 
   this.kill = function(){
     if(room){
-      room.removePlayer(this)
       this.socket.disconnect()
+      this.room.removePlayer(this)
     }
   }
 
