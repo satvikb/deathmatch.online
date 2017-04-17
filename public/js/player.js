@@ -154,7 +154,6 @@ function Player(clientId, nickname, x, y, gunLeftId, gunRightId){
   }
 
   this.update = function(d){
-    // console.log('V '+this.body.velocity[0])
     this.view.animationSpeed = (Math.abs(this.body.velocity[0]) / (this.movespeed*10))
   }
 

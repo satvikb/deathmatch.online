@@ -15,9 +15,6 @@ var Player = function(socketId, clientId, nickname, socket, room, x, y){
   this.gunLeft
   this.gunRight
 
-  // this.shootLeftFrame = false
-  // this.shootRightFrame = false
-
   this.oldPosition
 
   this.health = {
@@ -125,10 +122,7 @@ var Player = function(socketId, clientId, nickname, socket, room, x, y){
         var sl = bToI(otherPlayer.gunLeft ? otherPlayer.gunLeft.shootFrame : false)
         var sr = bToI(otherPlayer.gunRight ? otherPlayer.gunRight.shootFrame : false)
 
-
         otherPlayerData.push([otherPlayer.clientId, rd(pos[0]), rd(pos[1]), rd(dir[0]), rd(dir[1]), rd(propHealth), sl, sr])
-
-        // otherPlayer.shootLeftFrame = otherPlayer.shootRightFrame = false
       }
     }
     packetData.op = otherPlayerData
@@ -144,14 +138,12 @@ var Player = function(socketId, clientId, nickname, socket, room, x, y){
     var thisPlayerData = [this.clientId, rd(pos[0]), rd(pos[1]), rd(dir[0]), rd(dir[1]), rd(propHealth), sl, sr]
     packetData.p = thisPlayerData
 
-    // this.shootLeftFrame = this.shootRightFrame = false
-
     if(this.gunLeft){
       var ammoLeftLeftGun = this.gunLeft.ammo.currentAmmo
       var ammoMaxLeftGun = this.gunLeft.ammo.maxAmmo // TODO Do not send max ammo every time, it is not going to change
 
       //gun left data
-      packetData.gl = [this.gunLeft.id, ammoLeftLeftGun]//{name: player.gunLeft.name, left: ammoLeftLeftGun, max: ammoMaxLeftGun} //TODO Send only this data to individual client that needs it, not to all
+      packetData.gl = [this.gunLeft.id, ammoLeftLeftGun]
     }
 
     if(this.gunRight){
@@ -159,7 +151,7 @@ var Player = function(socketId, clientId, nickname, socket, room, x, y){
       var ammoMaxRightGun = this.gunRight.ammo.maxAmmo
 
       //gun right data
-      packetData.gr = [this.gunRight.id, ammoLeftRightGun]//{name: player.gunRight.name, left: ammoLeftRightGun, max: ammoMaxRightGun}
+      packetData.gr = [this.gunRight.id, ammoLeftRightGun]
     }
 
     this.socket.emit("u", packetData)

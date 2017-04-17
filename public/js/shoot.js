@@ -1,7 +1,6 @@
 var bulletData = []
 
 function addBullet(player, gun){
-
   if(player){
     var startPos = player.body.position
     var direction = player.direction
@@ -21,8 +20,6 @@ function addBullet(player, gun){
 
     var bullet = new BulletData(player, gun, startPos, endRayPos, endDisplayPos, direction, gun.thickness)
     bulletData.push(bullet)
-  }else{
-    console.log("no player for add bullet")
   }
 }
 
@@ -33,18 +30,6 @@ function stepBullets(){
     var bullet = bulletData[b]
     bullet.step()
 
-    // var bPosF = bullet.ray.from
-    // var bX = bPosF[0]
-    // var bY = bPosF[1]
-    //
-    // var boundSize = [size[0]*0.05, size[1]*0.05]
-    //
-    // if(bX > (size[0]+boundSize[0]) || bX < (-boundSize[0]) || bY > (size[1]+boundSize[1]) || bY < (-boundSize[1])){
-    //   // console.log("OOB "+bX+" "+bY)
-    //   //Out of bouunds
-    //   bulletsToRemove.push(bullet)
-    // }
-
     if(bullet.remove == true){
       bulletsToRemove.push(bullet)
     }
@@ -53,7 +38,6 @@ function stepBullets(){
   for(var b = 0; b < bulletsToRemove.length; b++){
     var bul = bulletsToRemove[b]
     bulletData.splice(bulletData.indexOf(bul), 1);
-    // console.log("removing bullet")
   }
   bulletsToRemove = []
 }

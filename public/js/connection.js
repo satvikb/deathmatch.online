@@ -13,24 +13,7 @@ function socketEventHandlers(){
 
   socket.on("np", newplayer)
   socket.on("rp", removeplayer)
-
-  // socket.on("sl", playerShotLeft)
-  // socket.on("sr", playerShotRight)
-  // setupLocalPlayer({id: "awewe", x: 300, y: 300})
 }
-
-// function playerShotLeft(data){
-//   console.log("player shot left "+data[0])
-//
-//   var player = getPlayerById(data[0])
-//   if(player && player.gunLeft){
-//     addBullet(player, player.gunLeft)
-//   }
-// }
-//
-// function playerShotRight(data){
-//
-// }
 
 function joingame(data){
   console.log("ID "+data.id)
@@ -41,9 +24,7 @@ function joingame(data){
 }
 
 //Client connected to page, not game
-function socketconnect(data){
-
-}
+function socketconnect(data){}
 
 function newplayer(data){
   createNewPlayer(data)
@@ -51,13 +32,6 @@ function newplayer(data){
 
 function removeplayer(data){
   removePlayerFromScene(data)
-}
-
-function gotScore(data){
-  var newScore = data.score
-  var change = data.add
-
-  //TODO Show text or something for score changes e.g. showing where a hit is with score text "+5"
 }
 
 function update(data){
@@ -69,17 +43,12 @@ function update(data){
   timerText.text = ""+Math.round(secondRoundLeft * 100) / 100
   timerBar.setProgress(roundProgress)
 
-
   updateLeaderboard(d.gs[1])
-
-
-
 
   for(var i = 0; i < d.op.length; i++){
     var pd = d.op[i]
     var otherPlayer = getPlayerById(pd[0])
 
-    // var meta = playerData.m
     var pos = [pd[1], pd[2]]
     var dir = [pd[3], pd[4]]
     var ph = pd[5] //player health (prop)
@@ -90,28 +59,22 @@ function update(data){
       otherPlayer.body.previousPosition[0] = pos[0]
       otherPlayer.body.previousPosition[1] = pos[1]
 
-      otherPlayer.display.position.x = otherPlayer.body.position[0]//player.body.position[0]
-      otherPlayer.display.position.y = otherPlayer.body.position[1]-otherPlayer.height/2//player.body.position[1]-player.height/2
+      otherPlayer.display.position.x = otherPlayer.body.position[0]
+      otherPlayer.display.position.y = otherPlayer.body.position[1]-otherPlayer.height/2
 
-
-      otherPlayer.healthBar.setProgress(ph)//outer.width = (playerData.health.current/playerData.health.max)*player.healthBarWidth;//healthBar.width
-
+      otherPlayer.healthBar.setProgress(ph)
       otherPlayer.setArmRotation(dir[0], dir[1])
-      
+
       if(dir[0] < 0){
         otherPlayer.switchDirection(true)
       }else{
         otherPlayer.switchDirection(false)
       }
 
-
       if(otherPlayer.gunLeft){
         if(pd[6] == 0){
-          console.log("("+localPlayer.clientId+") player "+otherPlayer.clientId+" shot "+otherPlayer.gunLeft.name)
           addBullet(otherPlayer, otherPlayer.gunLeft)
         }
-      }else{
-        console.log("other player no gun")
       }
 
       if(otherPlayer.gunRight){
@@ -134,11 +97,10 @@ function update(data){
     player.body.previousPosition[0] = pos[0]
     player.body.previousPosition[1] = pos[1]
 
-    player.display.position.x = player.body.position[0]//player.body.position[0]
-    player.display.position.y = player.body.position[1]-player.height/2//player.body.position[1]-player.height/2
+    player.display.position.x = player.body.position[0]
+    player.display.position.y = player.body.position[1]-player.height/2
 
-    player.healthBar.setProgress(ph)//outer.width = (playerData.health.current/playerData.health.max)*player.healthBarWidth;//healthBar.width
-
+    player.healthBar.setProgress(ph)
     player.setArmRotation(dir[0], dir[1])
 
     if(dir[0] < 0){
@@ -149,11 +111,8 @@ function update(data){
 
     if(player.gunLeft){
       if(tpd[6] == 0){
-        console.log("shoot gun local "+localPlayer.clientId)
         addBullet(player, player.gunLeft)
       }
-    }else{
-      console.log("no local gun")
     }
 
     if(player.gunRight){
@@ -173,8 +132,6 @@ function update(data){
 
   if(d.gl){
     var gun = GetGunFromId(d.gl[0])
-
-    // console.log("gun left "+gun)
 
     gunLeftBar.show()
     gunLeftBar.text.text = gun.name+": "+d.gl[1]+" / "+gun.ammo.maxAmmo
@@ -196,8 +153,6 @@ function update(data){
 }
 
 function updateLeaderboard(data){
-  // console.log("LB: "+data)
-
   for(var i = 0; i < data.length; i++){
     if(i < leaderboardTexts.length){
       var leaderboardData = data[i]

@@ -11,7 +11,7 @@ world.solver.frictionIterations = 10
 world.solver.iterations = 20
 world.solver.tolerance = 0.01
 world.setGlobalStiffness(1e8)
-// world.solver.relation = 0.9
+// world.solver.relaxation = 0.9
 
 var map = []
 var regions = []
@@ -127,68 +127,14 @@ function createMap(){
         tile.position.x = pos[0]
         tile.position.y = pos[1]
         tile.anchor.x = tile.anchor.y = 0.5
-        tile.scale.x = tileWidth/8 //TODO Use dynamic tile pixel sizes
+        tile.scale.x = tileWidth/8 //TODO Use dynamic tile pixel sizes (8 is tile image width)
         tile.scale.y = tileHeight/8
         tileMap.addChild(tile)
       }
-
     }
   }
-
-
-  // for(var x = 0; x < regions.length; x++){
-  //   for(var y = regions[x].length-1; y >= 0; y--){
-  //     var region = regions[x][y]
-  //     var islandPoints = region.islandPoints
-  //     console.log("region "+region.pos[0]+" "+region.pos[1]+" "+JSON.stringify(islandPoints))
-  //     graphics.beginFill("0x"+Math.floor(Math.random()*16777215).toString(16))
-  //     graphics.lineStyle(5, 0xFF0000)
-  //
-  //     if(region.createdIsland == true){
-  //       // graphics.drawRect(region.pos[0], region.pos[1], region.size[0], region.size[1])
-  //       var polygonPoints = []
-  //       for(var i = 0; i < islandPoints.length; i++){
-  //         var p = islandPoints[i]
-  //         polygonPoints.push(p[0])
-  //         polygonPoints.push(p[1])
-  //       }
-  //       // polygonPoints.push(0)
-  //       // polygonPoints.push(0)
-  //       graphics.drawPolygon(polygonPoints)
-  //
-  //
-  //       //offset points to origin
-  //       var newIslandPoints = []
-  //
-  //       for(var i = 0; i < islandPoints.length; i++){
-  //         var point = islandPoints[islandPoints.length-i]
-  //         // point.x -= region.pos[0]
-  //         // point.y -= region.pos[1]
-  //         newIslandPoints.push(point)
-  //       }
-  //
-  //
-  //       var islandShape = new p2.Convex({vertices: islandPoints, material: tileMaterial})
-  //       var islandBody = new p2.Body({mass: 0, position: [0,0]})
-  //       // islandBody.fromPolygon(islandPoints)
-  //       islandBody.addShape(islandShape)
-  //       this.world.addBody(islandBody)
-  //     }
-  //     // graphics.endFill();
-  //   }
-  // }
 }
-
 
 function updatePhysics(d){
   world.step(fixedTimeStep, d, maxSubSteps)
-  // for(var i = 0; i < allplayers.length; i++){
-  //   var player = allplayers[i]
-  //   if(player.body){
-  //     // console.log(JSON.stringify(player.body.interpolatedPosition))
-  //     // player.display.position.x = player.body.interpolatedPosition[0]//player.body.position[0]
-  //     // player.display.position.y = player.body.interpolatedPosition[1]-player.height/2//player.body.position[1]-player.height/2
-  //     // basicText.text = player.display.position.x+" "+player.view.position.x//player.body.position[0]+" "+player.body.position[1]
-  //   }
-  // }
 }

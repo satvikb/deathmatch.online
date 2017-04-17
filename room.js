@@ -5,98 +5,8 @@ var Maps = constants.Maps
 var p2 = constants.p2
 var utils = require('./util.js').utils
 
-var hull = require('./hull/hull.js')
-
 function getRandomInt(min, max) {
     return Math.floor(Math.random() * (max - min + 1)) + min;
-}
-
-var MapIslandCreator = function(){
-
-  // this.createJigsaw = function(){
-  //   for(var x = 0; x )
-  //
-  // }
-
-  var MapRegion = function(pos, size){
-    this.pos = pos
-    this.size = size
-
-    this.createdIsland = false
-    this.islandPoints = []
-
-    this.createIsland = function(){
-      var islandAABB = [this.pos[0] + this.size[0]*0.1, this.pos[1] + this.size[1]*0.1, this.size[0] * 0.8, this.size[1] * 0.8]
-
-      var numPoints = 10
-      var points = []
-
-      for(var v = 0; v < numPoints; v++){
-        var point = [getRandomInt(islandAABB[0], islandAABB[0]+islandAABB[2]), getRandomInt(islandAABB[1], islandAABB[1]+islandAABB[3])]
-        points.push(point)
-      }
-      var newPoints = hull(points, 1000)
-
-      this.islandPoints = newPoints
-      this.createdIsland = true
-    }
-  }
-
-  this.createMap = function(){
-    var regions = this.createRegions()
-    return regions
-  }
-
-  this.createRegions = function(){
-    var numPiecesX = 5
-    var pieceWidth = utils.size[0]/numPiecesX
-
-    var regions = []
-
-    for(var x = 0; x < numPiecesX; x++){
-      var numPiecesY = 4//getRandomInt(3, 7)
-      regions.push([])
-
-      function getHeights(num, totalHeight){
-        var heights = []
-
-        var sumHeight = 0
-        for(var i = 0; i < num; i++){
-          var height = getRandomInt((totalHeight/num)*0.5, (totalHeight/num)*1.5)
-          sumHeight += height
-
-          if(sumHeight > totalHeight){
-            height -= sumHeight-totalHeight
-          }
-
-          heights.push(height)
-        }
-
-        if(sumHeight < totalHeight){
-          heights[num] -= (totalHeight-sumHeight)
-        }
-
-        return heights;
-      }
-
-      var prevY = 0
-      var heights = getHeights(numPiecesY, utils.size[1])
-
-      for(var y = 0; y < numPiecesY; y++){
-        var height = heights[y]
-        var region = new MapRegion([x*pieceWidth, prevY], [pieceWidth, height])
-
-        if(getRandomInt(0, 100) < 30){
-          region.createIsland()
-        }
-
-        regions[x][y] = region
-        prevY += height
-      }
-    }
-
-    return regions
-  }
 }
 
 var RoomHandler = function(io){
@@ -107,16 +17,12 @@ var RoomHandler = function(io){
   this.findOpenRoom = function(id){
     for(var i = 0; i < this.rooms.length; i++){
       var room = this.rooms[i]
-      // var room = io.nsps["/"].adapter.rooms[rooms[i].name];
-      // console.log("Room: "+room+" "+rooms[i]+" "+rooms[i].name+" "+JSON.stringify(io.nsps["/"].adapter.rooms))
 
       if(room.players.length < this.MAX_PER_ROOM){
         return this.rooms[i];
       }
     }
 
-    //TODO Create new rooms based on new players
-    // console.log("NOT ENOUGH SPACE IN ROOM")
     var room = new Room(utils.randomString(10), io)
     this.rooms.push(room)
 
@@ -160,10 +66,8 @@ var Room = function(name, io){
   this.world.setGlobalStiffness(1e8)
   // this.world.solver.relation = 0.9
 
-
   this.groundSize = [utils.size[0], 1]
   this.groundPos = [this.groundSize[0]/2, this.groundSize[1]/2]
-
 
   // this.world.addContactMaterial(MapConstants.groundPlayerCM);
   // this.world.addContactMaterial(MapConstants.tilePlayerCM);
@@ -176,36 +80,27 @@ var Room = function(name, io){
     var groundBodyB = new p2.Body({
       mass: 0, position: [utils.size[0]/2, -thickness/2]
     });
-
     var groundShapeB = new p2.Box({width: utils.size[0], height: thickness, material: MapConstants.groundMaterial});
     groundBodyB.addShape(groundShapeB);
     this.world.addBody(groundBodyB);
 
-
-
     var groundBodyL = new p2.Body({
       mass: 0, position: [-thickness/2, utils.size[1]/2]
     });
-
     var groundShapeL = new p2.Box({width: thickness, height: utils.size[1], material: MapConstants.groundMaterial});
     groundBodyL.addShape(groundShapeL);
     this.world.addBody(groundBodyL);
 
-
     var groundBodyT = new p2.Body({
       mass: 0, position: [utils.size[0]/2, utils.size[1]+thickness/2]
     });
-
     var groundShapeT = new p2.Box({width: utils.size[0]/2, height: thickness, material: MapConstants.groundMaterial});
     groundBodyT.addShape(groundShapeT);
     this.world.addBody(groundBodyT);
 
-
-
     var groundBodyR = new p2.Body({
       mass: 0, position: [utils.size[0]+thickness/2, utils.size[1]/2]
     });
-
     var groundShapeR = new p2.Box({width: thickness, height: utils.size[1], material: MapConstants.groundMaterial});
     groundBodyR.addShape(groundShapeR);
     this.world.addBody(groundBodyR);
@@ -213,16 +108,12 @@ var Room = function(name, io){
 
 
   this.createMap = function(){
-    // console.log("created map "+Maps.madeMaps)
     for(var x = 0; x < utils.mapSize[0]; x++){
       this.map.push([])
       for(var y = 0; y < utils.mapSize[1]; y++){
-        this.map[x][utils.mapSize[1]-y] = Maps.defaultMap[y][x]//getRandomInt(0, 100) < 30 ? 1 : 0
+        this.map[x][utils.mapSize[1]-y] = Maps.defaultMap[y][x]
       }
     }
-
-    // this.regions = new MapIslandCreator().createMap()
-    // this.map = this.regions
   }
 
   this.createTileBodies = function(){
@@ -243,36 +134,6 @@ var Room = function(name, io){
         }
       }
     }
-
-
-    // for(var x = 0; x < this.regions.length; x++){
-    //   for(var y = this.regions[x].length-1; y >= 0; y--){
-    //     var region = this.regions[x][y]
-    //     var islandPoints = region.islandPoints
-    //
-    //     if(region.createdIsland == true){
-    //
-    //
-    //       //offset points to origin
-    //       var newIslandPoints = []
-    //
-    //       for(var i = 0; i < islandPoints.length; i++){
-    //         var point = islandPoints[islandPoints.length-i]
-    //         // point.x -= region.pos[0]
-    //         // point.y -= region.pos[1]
-    //         newIslandPoints.push(point)
-    //       }
-    //
-    //
-    //       var islandShape = new p2.Convex({vertices: islandPoints, material: MapConstants.tileMaterial})
-    //       var islandBody = new p2.Body({mass: 0, position: [0, 0]})
-    //       // islandBody.fromPolygon(islandPoints)
-    //       // console.log(""+JSON.stringify(islandPoints))
-    //       islandBody.addShape(islandShape)
-    //       this.world.addBody(islandBody)
-    //     }
-    //   }
-    // }
   }
 
   this.createBoundaries()
@@ -306,17 +167,13 @@ var Room = function(name, io){
       if(dir){
         if(shootLeft){
           if(player.gunLeft){
-            if(player.gunLeft.shoot(player, player.body.position, dir) == true){
-              // player.shootLeftFrame = true
-            }
+            player.gunLeft.shoot(player, player.body.position, dir)
           }
         }
 
         if(shootRight){
           if(player.gunRight){
-            if(player.gunRight.shoot(player, player.body.position, dir) == true){
-              // player.shootRightFrame = true
-            }
+            player.gunRight.shoot(player, player.body.position, dir)
           }
         }
       }
@@ -340,8 +197,6 @@ var Room = function(name, io){
       this.world.step(this.fixedTimeStep, d, this.maxSubSteps)
       this.updateBullets(d)
 
-      // this.updateLeaderboard()
-
       if(this.timeLeft < 0){
         this.endRound()
       }
@@ -352,18 +207,6 @@ var Room = function(name, io){
       }
     }
   }
-  //
-  // this.updateLeaderboard = function(){
-  //   // TODO Don't send if the leaderboard did not change
-  //   this.players.sort(this.leaderboard.sortScore)
-  //   var data = this.leaderboard.getData(this.players)
-  //
-  //   for(var i = 0; i < this.players.length; i++){
-  //     var player = this.players[i]
-  //     // player.socket.emit("leaderboard", data)
-  //   }
-  //
-  // }
 
   this.startCountdown = function(){
     this.updateCountdown = true
