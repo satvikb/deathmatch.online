@@ -61,6 +61,7 @@ function onSocketConnection(client) {
 
       var player = new Player(client.id, clientId, nickname, client, room, getRandomInt(0, 1000), 70)
       player.gunLeft = CloneGun(Guns["Pistol"])
+      player.gunRight = CloneGun(Guns["Machine Gun"])
 
       client.join(room.name)
 

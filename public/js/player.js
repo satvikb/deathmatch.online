@@ -32,8 +32,8 @@ function Player(clientId, nickname, x, y, gunLeftId, gunRightId){
   this.armRightLayer = new PIXI.DisplayGroup(1, true)
   this.armLeftLayer = new PIXI.DisplayGroup(-1, true)
 
-  this.nicknameView = new PIXI.Text(nickname, {fill: 0xffffff, align: "center"})
-  this.nicknameView.x = 0
+  this.nicknameView = new PIXI.Text(nickname, {fill: 0xffffff, fontSize: 15, align: "center"})
+  this.nicknameView.x = -this.width/2
   this.nicknameView.y = this.height*1.5
   this.nicknameView.anchor.x = 0
   this.nicknameView.anchor.y = 0
