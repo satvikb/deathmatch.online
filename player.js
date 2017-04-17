@@ -98,7 +98,7 @@ var Player = function(socketId, clientId, nickname, socket, room, x, y){
   this.kill = function(){
     if(room){
       room.removePlayer(this)
-      io.sockets.connected[this.socketId].disconnect()
+      this.socket.disconnect()
     }
   }
 
