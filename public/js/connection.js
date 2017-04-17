@@ -11,12 +11,8 @@ function socketEventHandlers(){
 
   socket.on("jg", joingame)
 
-  // socket.on("score", gotScore)
-  // socket.on("leaderboard", updateLeaderboard)
-
   socket.on("np", newplayer)
   socket.on("rp", removeplayer)
-  // setupLocalPlayer({id: "awewe", x: 300, y: 300})
 }
 
 function joingame(data){
@@ -28,23 +24,14 @@ function joingame(data){
 }
 
 //Client connected to page, not game
-function socketconnect(data){
-
-}
+function socketconnect(data){}
 
 function newplayer(data){
   createNewPlayer(data)
 }
 
 function removeplayer(data){
-  removePlayerFromScene({id: data.id})
-}
-
-function gotScore(data){
-  var newScore = data.score
-  var change = data.add
-
-  //TODO Show text or something for score changes e.g. showing where a hit is with score text "+5"
+  removePlayerFromScene(data)
 }
 
 function update(data){
@@ -56,60 +43,46 @@ function update(data){
   timerText.text = ""+Math.round(secondRoundLeft * 100) / 100
   timerBar.setProgress(roundProgress)
 
-
   updateLeaderboard(d.gs[1])
 
   for(var i = 0; i < d.op.length; i++){
     var pd = d.op[i]
-    var player = getPlayerById(pd[0])
+    var otherPlayer = getPlayerById(pd[0])
 
-    // var meta = playerData.m
     var pos = [pd[1], pd[2]]
     var dir = [pd[3], pd[4]]
     var ph = pd[5] //player health (prop)
 
-    if(player){
-      player.body.position[0] = pos[0]
-      player.body.position[1] = pos[1]
-      player.body.previousPosition[0] = pos[0]
-      player.body.previousPosition[1] = pos[1]
+    if(otherPlayer){
+      otherPlayer.body.position[0] = pos[0]
+      otherPlayer.body.position[1] = pos[1]
+      otherPlayer.body.previousPosition[0] = pos[0]
+      otherPlayer.body.previousPosition[1] = pos[1]
 
-      player.display.position.x = player.body.position[0]//player.body.position[0]
-      player.display.position.y = player.body.position[1]-player.height/2//player.body.position[1]-player.height/2
+      otherPlayer.display.position.x = otherPlayer.body.position[0]
+      otherPlayer.display.position.y = otherPlayer.body.position[1]-otherPlayer.height/2
 
-      player.healthBar.setProgress(ph)//outer.width = (playerData.health.current/playerData.health.max)*player.healthBarWidth;//healthBar.width
+      otherPlayer.healthBar.setProgress(ph)
+      otherPlayer.setArmRotation(dir[0], dir[1])
 
-      player.setArmRotation(dir[0], dir[1])
       if(dir[0] < 0){
-        player.switchDirection(true)
-      }else(
-        player.switchDirection(false)
-      )
-    }
+        otherPlayer.switchDirection(true)
+      }else{
+        otherPlayer.switchDirection(false)
+      }
 
-    //TODO Merge left gun bullets and right gun bullets
-    //TODO Show bullet shots from the client by broadcasting a shoot message from each client
-    // var bulletsLeft = playerData.bulletsLeftGun
-    // if(bulletsLeft){
-    //   for(var b = 0; b < bulletsLeft.length; b++){
-    //     var bullet = bulletsLeft[b]
-    //     var from = [bullet[0], bullet[1]]
-    //     var to = [bullet[2], bullet[3]]
-    //     // graphics.position.set()
-    //     bulletGraphics.lineStyle(bullet[4], bullet[5]).moveTo(from[0], from[1]).lineTo(to[0], to[1])
-    //   }
-    // }
-    //
-    // var bulletsRight = playerData.bulletsRightGun
-    // if(bulletsRight){
-    //   for(var b = 0; b < bulletsRight.length; b++){
-    //     var bullet = bulletsRight[b]
-    //     var from = [bullet[0], bullet[1]]
-    //     var to = [bullet[2], bullet[3]]
-    //     // graphics.position.set()
-    //     bulletGraphics.lineStyle(bullet[4], bullet[5]).moveTo(from[0], from[1]).lineTo(to[0], to[1])
-    //   }
-    // }
+      if(otherPlayer.gunLeft){
+        if(pd[6] == 0){
+          addBullet(otherPlayer, otherPlayer.gunLeft)
+        }
+      }
+
+      if(otherPlayer.gunRight){
+        if(pd[7] == 0){
+          addBullet(otherPlayer, otherPlayer.gunRight)
+        }
+      }
+    }
   }
 
   var tpd = d.p
@@ -124,17 +97,37 @@ function update(data){
     player.body.previousPosition[0] = pos[0]
     player.body.previousPosition[1] = pos[1]
 
-    player.display.position.x = player.body.position[0]//player.body.position[0]
-    player.display.position.y = player.body.position[1]-player.height/2//player.body.position[1]-player.height/2
+    player.display.position.x = player.body.position[0]
+    player.display.position.y = player.body.position[1]-player.height/2
 
-    player.healthBar.setProgress(ph)//outer.width = (playerData.health.current/playerData.health.max)*player.healthBarWidth;//healthBar.width
-
+    player.healthBar.setProgress(ph)
     player.setArmRotation(dir[0], dir[1])
+
     if(dir[0] < 0){
       player.switchDirection(true)
-    }else(
+    }else{
       player.switchDirection(false)
-    )
+    }
+
+    if(player.gunLeft){
+      if(tpd[6] == 0){
+        addBullet(player, player.gunLeft)
+      }
+    }
+
+    if(player.gunRight){
+      if(tpd[7] == 0){
+        addBullet(player, player.gunRight)
+      }
+    }
+  }
+
+  var bullets = bulletData
+  if(bullets){
+    for(var b = 0; b < bullets.length; b++){
+      var bullet = bullets[b]
+      bulletGraphics.lineStyle(bullet.thickness, bullet.color).moveTo(bullet.displayFrom[0], bullet.displayFrom[1]).lineTo(bullet.displayTo[0], bullet.displayTo[1])
+    }
   }
 
   if(d.gl){
@@ -160,8 +153,6 @@ function update(data){
 }
 
 function updateLeaderboard(data){
-  // console.log("LB: "+data)
-
   for(var i = 0; i < data.length; i++){
     if(i < leaderboardTexts.length){
       var leaderboardData = data[i]

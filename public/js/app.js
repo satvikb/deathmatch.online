@@ -233,6 +233,11 @@ function gameLoop(){
   time = Date.now()
 }
 
+function bloop(){
+  stepBullets()
+  setTimeout(bloop, 1/60)
+}
+
 //bool to int
 function bToI(b){
   if(b == true){

@@ -16,7 +16,7 @@ var io = require("socket.io").listen(server, {origins:origins})
 var utils = require("./util.js").utils
 var ConstantsJS = require("./constants.js")
 var PlayerJS = require("./player.js")
-var RoomJS = require("./room.js")//"./room.js")
+var RoomJS = require("./room.js")
 var ShootJS = require("./shoot.js")
 var IDJS = require("./id.js")
 
@@ -30,7 +30,6 @@ Guns()
 
 var Player = PlayerJS.Player
 
-// var Room = RoomJS.Room
 var RoomHandler = new RoomJS.RoomHandler()
 
 var ShootHandler = ShootJS.ShootHandler
@@ -48,8 +47,6 @@ var setEventHandlers = function() {
 };
 
 function onSocketConnection(client) {
-  // util.log("Client has connected: "+client.id);
-
   client.on("jg", function(data){
     //create player
 
@@ -63,12 +60,12 @@ function onSocketConnection(client) {
       var clientId = IDHandler.generateID()
 
       var player = new Player(client.id, clientId, nickname, client, room, getRandomInt(0, 1000), 70)
-      player.gunLeft = CloneGun(Guns.pistol)
-      
-      // console.log("Joining to "+room.name )
+      player.gunLeft = CloneGun(Guns["Pistol"])
+
       client.join(room.name)
 
-      var playerData = {id: player.clientId, nickname: nickname, x: player.getPos()[0], y: player.getPos()[1], map: room.map}//, regions: room.regions}
+      //TODO Make efficient by using arrays instead of keys
+      var playerData = {id: player.clientId, nickname: nickname, x: player.getPos()[0], y: player.getPos()[1], map: room.map, gunL: player.getGunLeftId(), gunR: player.getGunRightId()}
       client.emit("jg", playerData)
 
       //Tell everyone else in the room of the new player
@@ -76,8 +73,7 @@ function onSocketConnection(client) {
       //Tell the new player about existing players
       for(var i = 0; i < room.players.length; i++){
         var existingPlayer = room.players[i]
-        var existingData = {id: existingPlayer.clientId, nickname: existingPlayer.nickname, x: existingPlayer.getPos()[0], y: existingPlayer.getPos()[1]}
-        // console.log("telling "+client.id+" about "+existingPlayer.id)
+        var existingData = {id: existingPlayer.clientId, nickname: existingPlayer.nickname, x: existingPlayer.getPos()[0], y: existingPlayer.getPos()[1], gunL: existingPlayer.getGunLeftId(), gunR: existingPlayer.getGunRightId()}
         client.emit("np", existingData)
       }
 
@@ -92,7 +88,7 @@ function onSocketConnection(client) {
     client.on("disconnect", function(){
       if(room){
         room.removePlayer(player)
-        client.broadcast.to(room.name).emit("rp", {id: client.clientId})
+        client.broadcast.to(room.name).emit("rp", {id: player.clientId})
       }
     })
   })
@@ -119,46 +115,12 @@ function sendUpdate(){
       var player = room.players[i]
       player.sendUpdate()
     }
-    // var roomUpdateData = {}
-    //
-    // roomUpdateData.l = room.leaderboard.getData(room.players.sort(room.leaderboard.sortScore)
-    //
-    // roomUpdateData.p = []
-    // for(var i = 0; i < room.players.length; i++){
-    //   var player = room.players[i]
-    //   var playerData = {}
-    //   playerData.id = player.clientId
-    //
-    //   var pos = player.getPos()
-    //   var dir = player.inputs.direction
-    //   var propHealth = player.health.currentHealth/player.health.maxHealth
-    //   var timeLeft = room.timeLeft
-    //   var roundProgress = room.timeLeft/room.roundTime
-    //
-    //   playerData.m = [rd(pos[0]), rd(pos[1]), rd(dir[0]), rd(dir[1]), rd(propHealth), rd(timeLeft), rd(roundProgress)]
-    //
-    //   if(player.gunLeft){
-    //     var ammoLeftLeftGun = player.gunLeft.ammo.currentAmmo
-    //     var ammoMaxLeftGun = player.gunLeft.ammo.maxAmmo // TODO Do not send max ammo every time, it is not going to change
-    //
-    //     //gun left data
-    //     playerData.gl = [player.gunLeft.id, ammoLeftLeftGun]//{name: player.gunLeft.name, left: ammoLeftLeftGun, max: ammoMaxLeftGun} //TODO Send only this data to individual client that needs it, not to all
-    //     // playerData.bulletsLeftGun = player.gunLeft.shootHandler.getBulletRayData()
-    //   }
-    //
-    //   if(player.gunRight){
-    //     var ammoLeftRightGun = player.gunRight.ammo.currentAmmo
-    //     var ammoMaxRightGun = player.gunRight.ammo.maxAmmo
-    //
-    //     //gun right data
-    //     playerData.gr = [player.gunRight.id, ammoLeftRightGun]//{name: player.gunRight.name, left: ammoLeftRightGun, max: ammoMaxRightGun}
-    //     // playerData.bulletsRightGun = player.gunRight.shootHandler.getBulletRayData()
-    //   }
-    //
-    //   roomUpdateData.p.push(playerData)
-    // }
-    //
-    // io.sockets.in(room.name).emit('update', roomUpdateData)
+
+    //TODO optimize, remove for loop
+    for(var i = 0; i < room.players.length; i++){
+      var player = room.players[i]
+      player.resetFrame()
+    }
   }
 }
 
@@ -177,7 +139,6 @@ function updateRooms(d){
 
 init();
 update();
-
 
 function getRandomInt(min, max) {
     return Math.floor(Math.random() * (max - min + 1)) + min;

@@ -1,6 +1,7 @@
 var constants = require('./constants.js')
 var p2 = constants.p2
 var utils = require("./util.js").utils
+var fs = require('fs')
 
 var ShootHandler = function(gun){
   this.gun = gun
@@ -54,7 +55,6 @@ var ShootHandler = function(gun){
       var boundSize = [utils.size[0]*0.05, utils.size[1]*0.05]
 
       if(bX > (utils.size[0]+boundSize[0]) || bX < (-boundSize[0]) || bY > (utils.size[1]+boundSize[1]) || bY < (-boundSize[1])){
-        // console.log("OOB "+bX+" "+bY)
         //Out of bouunds
         bulletsToRemove.push(bullet)
       }
@@ -67,7 +67,6 @@ var ShootHandler = function(gun){
     for(var b = 0; b < bulletsToRemove.length; b++){
       var bul = bulletsToRemove[b]
       this.bulletData.splice(this.bulletData.indexOf(bul), 1);
-      // console.log("removing bullet")
     }
     bulletsToRemove = []
   }
@@ -129,7 +128,6 @@ var BulletData = function(player, gun, from, toRay, toDisplay, direction, thickn
     var hitPoint = p2.vec2.create()
     result.getHitPoint(hitPoint, this.ray)
     if(result.body && result.body != this.player.body){
-      // console.log("Bullet hit "+hitPoint[0]+" "+hitPoint[1]+" "+result.getHitDistance(this.ray)+" "+result.body)
       this.remove = true
 
       if(result.body.isPlayer == true){
@@ -154,7 +152,7 @@ var BulletData = function(player, gun, from, toRay, toDisplay, direction, thickn
   travelSpeed - distance each bullet travels every step (px?)
   maxAmmo - maximum ammo gun can have. init's currentAmmo to this. (int)
   bulletDamage - damage each bullet does (int) TODO Should be max damage when implelemting damageCurve
-  TODO damageCurve - math function to determine how much damage each bullet does based on bulletDamage. default: y = bulletDamage
+  TODO damageCurve - math function to determine how much damage each bullet does, based on bulletDamage (e.g. take into account distance). default: y = bulletDamage
   reloadSpeed - time to reload each bullet (ms)
   thickness - how thick each bullet is (px?) TODO Raycast multiple to achieve real thickness.
 */
@@ -175,14 +173,13 @@ function Gun(id, name, laserLength, shootSpeed, travelSpeed, maxAmmo, bulletDama
   this.bulletDamage = bulletDamage
   this.thickness = thickness
 
-
   this.shootHandler = new ShootHandler(this)
 
   this.shootTime = Date.now()
-
   this.reloadTime = Date.now()
-
   this.reloadCooldown = 1000 //Wait this long after shooting to start reloading
+
+  this.shootFrame = false
 
   this.shoot = function(player, start, direction){
     if(Date.now()-this.shootTime > this.shootSpeed){
@@ -190,18 +187,18 @@ function Gun(id, name, laserLength, shootSpeed, travelSpeed, maxAmmo, bulletDama
         this.shootHandler.addBullet(player, start, direction)
         this.ammo.currentAmmo -= 1
         this.shootTime = Date.now()
+        this.shootFrame = true
       }
     }
   }
 
   this.step = function(){
     this.shootHandler.step()
-    // console.log("step")
+
     if(Date.now()-this.shootTime > this.reloadCooldown){
       if(Date.now()-this.reloadTime > this.ammo.reloadSpeed){
         if(this.ammo.currentAmmo < this.ammo.maxAmmo){
           this.ammo.currentAmmo += 1
-          // this.ammo.currentAmmo = this.ammo.maxAmmo
           this.reloadTime = Date.now()
         }
       }
@@ -219,21 +216,19 @@ var Guns = function(){
   if(Guns.madeGuns == undefined){
     Guns.madeGuns = true
 
-    // function Gun(id, name, laserLength, shootSpeed, travelSpeed, maxAmmo, bulletDamage, reloadSpeed, thickness){
-    // this.gunLeft = new Gun(0, "name", 5, 50, 1, 100, 1, 200, 3) //TODO Gun handler class with constants
-
     Guns.none = null
-    Guns.pistol = new Gun(     0,     "Pistol",      5,  150, 0.8, 16,  0.5, 500,  2)
-    Guns.machineGun = new Gun( 1,     "Machine gun", 5,  50,  1,   100, 1,   200,  3)
-    Guns.shotgun = new Gun(    2,     "Shotgun",     15, 500, 3,   12,  8,   2000, 6)
+
+    var gunsData = JSON.parse(fs.readFileSync('public/data/guns.json', 'utf8'))["guns"]
+    for(var i = 0; i < gunsData.length; i++){
+      var d = gunsData[i]
+      Guns[d.name] = new Gun(d.id, d.name, d.laserLength, d.shootSpeed, d.travelSpeed, d.maxAmmo, d.bulletDamage, d.reloadSpeed, d.thickness)
+    }
   }
 }
 
 var CloneGun = function(gun){
-  // var Gun = function(id, name, laserLength, shootSpeed, travelSpeed, maxAmmo, bulletDamage, reloadSpeed, thickness){
   return new Gun(gun.id, gun.name, gun.laserLength, gun.shootSpeed, gun.travelSpeed, gun.ammo.maxAmmo, gun.bulletDamage, gun.ammo.reloadSpeed, gun.thickness)
 }
-
 
 exports.ShootHandler = ShootHandler
 exports.BulletData = BulletData

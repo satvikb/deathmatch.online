@@ -3,6 +3,7 @@ var autoDetectRenderer = PIXI.autoDetectRenderer;
 var TextureCache = PIXI.utils.TextureCache;
 var Texture = PIXI.Texture;
 var Sprite = PIXI.Sprite;
+var JsonLoader = PIXI.JsonLoader;
 var loader = PIXI.loader;
 var resources = PIXI.loader.resources;
 
@@ -14,6 +15,7 @@ var spritesheet = "textures/data.json"
 var files = [spritesheet]
 
 var id;
+var gunJson;
 
 function loadProgress(loader, resource){
 
@@ -21,8 +23,16 @@ function loadProgress(loader, resource){
 
 function loadFiles(){
   id = PIXI.loader.resources["textures/data.json"].textures;
-  init()
-  initConnection()
 
-  gameLoop()
+  PIXI.loader.add("guns", "data/guns.json");
+  PIXI.loader.load(function(loader, resources){
+    gunJson = resources.guns["data"]
+
+    initGuns()
+    init()
+    initConnection()
+
+    gameLoop()
+    bloop()
+  })
 }

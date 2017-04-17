@@ -1,0 +1,37 @@
+{
+  "guns": [
+    {
+      "id": 0,
+      "name": "Pistol",
+      "laserLength": 5,
+      "shootSpeed": 150,
+      "travelSpeed": 2,
+      "maxAmmo": 16,
+      "bulletDamage": 0.5,
+      "reloadSpeed": 500,
+      "thickness": 2
+    },
+    {
+      "id": 1,
+      "name": "Machine Gun",
+      "laserLength": 5,
+      "shootSpeed": 50,
+      "travelSpeed": 1,
+      "maxAmmo": 100,
+      "bulletDamage": 1,
+      "reloadSpeed": 200,
+      "thickness": 3
+    },
+    {
+      "id": 2,
+      "name": "Shotgun",
+      "laserLength": 15,
+      "shootSpeed": 500,
+      "travelSpeed": 3,
+      "maxAmmo": 12,
+      "bulletDamage": 8,
+      "reloadSpeed": 2000,
+      "thickness": 6
+    }
+  ]
+}

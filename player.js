@@ -116,13 +116,13 @@ var Player = function(socketId, clientId, nickname, socket, room, x, y){
 
       if(otherPlayer.clientId != this.clientId){
         var pos = otherPlayer.getPos()
-        // if(pos[0] != otherPlayer.oldPosition[0] || pos[1] != otherPlayer.oldPosition[1]){
-        //   console.log("change pos "+pos[0]+" "+pos[1]+" "+otherPlayer.oldPosition[0]+" "+otherPlayer.oldPosition[1])
-        // }
         var dir = [otherPlayer.inputs[5], otherPlayer.inputs[6]]
         var propHealth = otherPlayer.health.currentHealth/otherPlayer.health.maxHealth
 
-        otherPlayerData.push([otherPlayer.clientId, rd(pos[0]), rd(pos[1]), rd(dir[0]), rd(dir[1]), rd(propHealth)])
+        var sl = bToI(otherPlayer.gunLeft ? otherPlayer.gunLeft.shootFrame : false)
+        var sr = bToI(otherPlayer.gunRight ? otherPlayer.gunRight.shootFrame : false)
+
+        otherPlayerData.push([otherPlayer.clientId, rd(pos[0]), rd(pos[1]), rd(dir[0]), rd(dir[1]), rd(propHealth), sl, sr])
       }
     }
     packetData.op = otherPlayerData
@@ -132,7 +132,10 @@ var Player = function(socketId, clientId, nickname, socket, room, x, y){
     var dir = [this.inputs[5], this.inputs[6]]
     var propHealth = this.health.currentHealth/this.health.maxHealth
 
-    var thisPlayerData = [this.clientId, rd(pos[0]), rd(pos[1]), rd(dir[0]), rd(dir[1]), rd(propHealth)]
+    var sl = bToI(this.gunLeft ? this.gunLeft.shootFrame : false)
+    var sr = bToI(this.gunRight ? this.gunRight.shootFrame : false)
+
+    var thisPlayerData = [this.clientId, rd(pos[0]), rd(pos[1]), rd(dir[0]), rd(dir[1]), rd(propHealth), sl, sr]
     packetData.p = thisPlayerData
 
     if(this.gunLeft){
@@ -140,7 +143,7 @@ var Player = function(socketId, clientId, nickname, socket, room, x, y){
       var ammoMaxLeftGun = this.gunLeft.ammo.maxAmmo // TODO Do not send max ammo every time, it is not going to change
 
       //gun left data
-      packetData.gl = [this.gunLeft.id, ammoLeftLeftGun]//{name: player.gunLeft.name, left: ammoLeftLeftGun, max: ammoMaxLeftGun} //TODO Send only this data to individual client that needs it, not to all
+      packetData.gl = [this.gunLeft.id, ammoLeftLeftGun]
     }
 
     if(this.gunRight){
@@ -148,15 +151,50 @@ var Player = function(socketId, clientId, nickname, socket, room, x, y){
       var ammoMaxRightGun = this.gunRight.ammo.maxAmmo
 
       //gun right data
-      packetData.gr = [this.gunRight.id, ammoLeftRightGun]//{name: player.gunRight.name, left: ammoLeftRightGun, max: ammoMaxRightGun}
+      packetData.gr = [this.gunRight.id, ammoLeftRightGun]
     }
 
     this.socket.emit("u", packetData)
   }
 
+  this.resetFrame = function(){
+    if(this.gunLeft){
+      this.gunLeft.shootFrame = false
+    }
+
+    if(this.gunRight){
+      this.gunRight.shootFrame = false
+    }
+  }
+
+  this.getGunLeftId = function(){
+    if(this.gunLeft){
+      return this.gunLeft.id
+    }else{
+      return -1;
+    }
+  }
+
+  this.getGunRightId = function(){
+    if(this.gunRight){
+      return this.gunRight.id
+    }else{
+      return -1;
+    }
+  }
+
   // round num
   function rd(num){
     return parseFloat(num.toFixed(2))
+  }
+
+  //bool to int
+  function bToI(b){
+    if(b == true){
+      return 0
+    }else{
+      return 1
+    }
   }
 
   this.createBody(50, x+this.width/2, y-this.height/2, this.width, this.height)

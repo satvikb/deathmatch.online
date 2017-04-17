@@ -1,7 +1,13 @@
-function Player(clientId, nickname, x, y){
+function Player(clientId, nickname, x, y, gunLeftId, gunRightId){
   this.clientId = clientId
   this.nickname = nickname
   this.localPlayer = false
+
+  this.gunLeftId = gunLeftId
+  this.gunRightId = gunRightId
+
+  this.gunLeft = CloneGun(GetGunFromId(gunLeftId))
+  this.gunRight = CloneGun(GetGunFromId(gunRightId))
 
   this.movespeed = 150
   this.jumpheight = 550
@@ -138,6 +144,8 @@ function Player(clientId, nickname, x, y){
   }
 
   this.setArmRotation = function(dirX, dirY){
+    // this.direction = [dirX, dirY]
+
     var rot = Math.atan2(dirY, dirX)
 
     this.armLeft.rotation = rot+Math.PI/2 //TODO Figure out why we need to add pi/2
@@ -145,7 +153,6 @@ function Player(clientId, nickname, x, y){
   }
 
   this.update = function(d){
-    // console.log('V '+this.body.velocity[0])
     this.view.animationSpeed = (Math.abs(this.body.velocity[0]) / (this.movespeed*10))
   }
 
