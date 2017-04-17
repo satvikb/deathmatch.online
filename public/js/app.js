@@ -224,7 +224,7 @@ function gameLoop(){
     }
 
     updatePhysics(delta)
-    stepBullets()
+    // stepBullets()
 
     renderer.render(stage)
   }else if(curretScene == 0){
@@ -232,6 +232,12 @@ function gameLoop(){
   }
   // setTimeout(gameLoop, 1/60)
   time = Date.now()
+}
+
+function bloop(){
+  stepBullets()
+
+  setTimeout(bloop, 1/60)
 }
 
 //bool to int

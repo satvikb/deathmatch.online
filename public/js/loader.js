@@ -35,5 +35,6 @@ function loadFiles(){
     initConnection()
 
     gameLoop()
+    bloop()
   })
 }
