@@ -32,6 +32,17 @@
       "bulletDamage": 8,
       "reloadSpeed": 2000,
       "thickness": 6
+    },
+    {
+      "id": 3,
+      "name": "SUPER GUN",
+      "laserLength": 30,
+      "shootSpeed": 50,
+      "travelSpeed": 3,
+      "maxAmmo": 500,
+      "bulletDamage": 10,
+      "reloadSpeed": 20,
+      "thickness": 6
     }
   ]
 }
