@@ -24,7 +24,7 @@ function Gun(id, name, laserLength, shootSpeed, travelSpeed, maxAmmo, bulletDama
   this.travelSpeed = travelSpeed
   this.bulletDamage = bulletDamage
   this.thickness = thickness
-  this.reloadCooldown = reloadCooldown
+  this.reloadCooldown = reloadCooldown || 1000
 }
 
 var CloneGun = function(gun){

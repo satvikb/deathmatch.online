@@ -158,7 +158,7 @@ var BulletData = function(player, gun, from, toRay, toDisplay, direction, thickn
   reloadSpeed - time to reload each bullet (ms)
   thickness - how thick each bullet is (px?) TODO Raycast multiple to achieve real thickness.
 */
-function Gun(id, name, laserLength, shootSpeed, travelSpeed, maxAmmo, bulletDamage, reloadSpeed, thickness, reloadCooldown = 1000){
+function Gun(id, name, laserLength, shootSpeed, travelSpeed, maxAmmo, bulletDamage, reloadSpeed, thickness, reloadCooldown){
   this.id = id
   this.name = name
 
@@ -179,7 +179,7 @@ function Gun(id, name, laserLength, shootSpeed, travelSpeed, maxAmmo, bulletDama
 
   this.shootTime = Date.now()
   this.reloadTime = Date.now()
-  this.reloadCooldown = reloadCooldown //Wait this long after shooting to start reloading
+  this.reloadCooldown = reloadCooldown || 1000//Wait this long after shooting to start reloading
 
   this.shootFrame = false
 
