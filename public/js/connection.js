@@ -172,6 +172,8 @@ function updateLeaderboard(data){
       }else{
         leaderboardTexts[i].text = ""
       }
+    }else{
+      leaderboardTexts[i].text = ""
     }
   }
 
