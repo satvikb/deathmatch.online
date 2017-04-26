@@ -1,6 +1,6 @@
-var world = new p2.World({gravity: [0, -500]})
+var world = new p2.World({gravity: [0, -1500]})
 world.defaultContactMaterial.relaxation = 0.5
-world.defaultContactMaterial.friction = 0.4
+world.defaultContactMaterial.friction = 0.2
 
 // world.setGlobalStiffness(1e5)
 world.islandSplit = true

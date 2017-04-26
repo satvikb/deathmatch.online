@@ -158,7 +158,7 @@ var BulletData = function(player, gun, from, toRay, toDisplay, direction, thickn
   reloadSpeed - time to reload each bullet (ms)
   thickness - how thick each bullet is (px?) TODO Raycast multiple to achieve real thickness.
 */
-function Gun(id, name, laserLength, shootSpeed, travelSpeed, maxAmmo, bulletDamage, reloadSpeed, thickness){
+function Gun(id, name, laserLength, shootSpeed, travelSpeed, maxAmmo, bulletDamage, reloadSpeed, thickness, reloadCooldown = 1000){
   this.id = id
   this.name = name
 
@@ -179,7 +179,7 @@ function Gun(id, name, laserLength, shootSpeed, travelSpeed, maxAmmo, bulletDama
 
   this.shootTime = Date.now()
   this.reloadTime = Date.now()
-  this.reloadCooldown = 1000 //Wait this long after shooting to start reloading
+  this.reloadCooldown = reloadCooldown //Wait this long after shooting to start reloading
 
   this.shootFrame = false
 
@@ -223,13 +223,13 @@ var Guns = function(){
     var gunsData = JSON.parse(fs.readFileSync('public/data/guns.json', 'utf8'))["guns"]
     for(var i = 0; i < gunsData.length; i++){
       var d = gunsData[i]
-      Guns[d.name] = new Gun(d.id, d.name, d.laserLength, d.shootSpeed, d.travelSpeed, d.maxAmmo, d.bulletDamage, d.reloadSpeed, d.thickness)
+      Guns[d.name] = new Gun(d.id, d.name, d.laserLength, d.shootSpeed, d.travelSpeed, d.maxAmmo, d.bulletDamage, d.reloadSpeed, d.thickness, d.reloadCooldown)
     }
   }
 }
 
 var CloneGun = function(gun){
-  return new Gun(gun.id, gun.name, gun.laserLength, gun.shootSpeed, gun.travelSpeed, gun.ammo.maxAmmo, gun.bulletDamage, gun.ammo.reloadSpeed, gun.thickness)
+  return new Gun(gun.id, gun.name, gun.laserLength, gun.shootSpeed, gun.travelSpeed, gun.ammo.maxAmmo, gun.bulletDamage, gun.ammo.reloadSpeed, gun.thickness, gun.reloadCooldown)
 }
 
 exports.ShootHandler = ShootHandler

@@ -9,6 +9,7 @@
       "maxAmmo": 16,
       "bulletDamage": 0.5,
       "reloadSpeed": 500,
+      "reloadCooldown": 1000,
       "thickness": 2
     },
     {
@@ -20,6 +21,7 @@
       "maxAmmo": 100,
       "bulletDamage": 1,
       "reloadSpeed": 200,
+      "reloadCooldown": 1000,
       "thickness": 3
     },
     {
@@ -31,6 +33,7 @@
       "maxAmmo": 12,
       "bulletDamage": 8,
       "reloadSpeed": 2000,
+      "reloadCooldown": 1000,
       "thickness": 6
     },
     {
@@ -42,6 +45,7 @@
       "maxAmmo": 500,
       "bulletDamage": 10,
       "reloadSpeed": 20,
+      "reloadCooldown": 1000,
       "thickness": 6
     }
   ]

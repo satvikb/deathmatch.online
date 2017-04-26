@@ -6,11 +6,11 @@ function initGuns(){
   var data = gunJson["guns"]
   for(var i = 0; i < data.length; i++){
     var d = data[i]
-    Guns[d.name] = new Gun(d.id, d.name, d.laserLength, d.shootSpeed, d.travelSpeed, d.maxAmmo, d.bulletDamage, d.reloadSpeed, d.thickness)
+    Guns[d.name] = new Gun(d.id, d.name, d.laserLength, d.shootSpeed, d.travelSpeed, d.maxAmmo, d.bulletDamage, d.reloadSpeed, d.thickness, d.reloadCooldown)
   }
 }
 
-function Gun(id, name, laserLength, shootSpeed, travelSpeed, maxAmmo, bulletDamage, reloadSpeed, thickness){
+function Gun(id, name, laserLength, shootSpeed, travelSpeed, maxAmmo, bulletDamage, reloadSpeed, thickness, reloadCooldown){
   this.id = id
   this.name = name
 
@@ -24,11 +24,12 @@ function Gun(id, name, laserLength, shootSpeed, travelSpeed, maxAmmo, bulletDama
   this.travelSpeed = travelSpeed
   this.bulletDamage = bulletDamage
   this.thickness = thickness
+  this.reloadCooldown = reloadCooldown
 }
 
 var CloneGun = function(gun){
   if(gun){
-    return new Gun(gun.id, gun.name, gun.laserLength, gun.shootSpeed, gun.travelSpeed, gun.ammo.maxAmmo, gun.bulletDamage, gun.ammo.reloadSpeed, gun.thickness)
+    return new Gun(gun.id, gun.name, gun.laserLength, gun.shootSpeed, gun.travelSpeed, gun.ammo.maxAmmo, gun.bulletDamage, gun.ammo.reloadSpeed, gun.thickness, gun.reloadCooldown)
   }else{
     return Guns.none
   }

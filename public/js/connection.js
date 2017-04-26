@@ -154,18 +154,28 @@ function update(data){
 }
 
 function updateLeaderboard(data){
-  for(var i = 0; i < data.length; i++){
-    if(i < leaderboardTexts.length){
-      var leaderboardData = data[i]
-      var player = getPlayerById(leaderboardData[0])
+  var currentPlayerInLeaderboard = false
+  for(var i = 0; i < leaderboardTexts.length; i++){
+    var leaderboardData = data[i]
+    if(leaderboardData){
+      var id = leaderboardData[0]
+      var score = leaderboardData[1]
+
+      var player = getPlayerById(id)
 
       if(player){
-        leaderboardTexts[i].text = ""+player.nickname+" "+leaderboardData[1]
+        if(player.clientId == localPlayer.clientId){
+          currentPlayerInLeaderboard = true
+        }
+
+        leaderboardTexts[i].text = player.nickname+" "+score
       }else{
         leaderboardTexts[i].text = ""
       }
-    }else{
-      return;
     }
+  }
+
+  if(currentPlayerInLeaderboard == false){
+    //TODO Add seperate score for current player
   }
 }

@@ -52,9 +52,9 @@ var Room = function(name){
   this.roundEndTime
   this.timeLeft
 
-  this.world = new p2.World({gravity: [0, -500]})
+  this.world = new p2.World({gravity: [0, -1500]})
   this.world.defaultContactMaterial.relaxation = 0.5
-  this.world.defaultContactMaterial.friction = 0.4
+  this.world.defaultContactMaterial.friction = 0.2
 
   this.world.solver.frictionIterations = 10
 
