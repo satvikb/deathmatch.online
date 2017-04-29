@@ -1,8 +1,15 @@
 var socket;
 
+var roundLength;
+var countdownTime;
+
 function initConnection(){
   socket = io.connect("http://deathmatch.online")
   socketEventHandlers()
+
+  roundLength = gameData.gamedata["roundLength"]
+  countdownTime = gameData.gamedata["countdownLength"]
+
 }
 
 function socketEventHandlers(){
@@ -33,9 +40,6 @@ function newplayer(data){
 function removeplayer(data){
   removePlayerFromScene(data)
 }
-
-var roundLength = gameData.gamedata["roundLength"]
-var countdownTime = gameData.gamedata["countdownLength"]
 
 function update(data){
   var d = data
