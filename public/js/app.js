@@ -122,6 +122,8 @@ function setupGameUI(){
   leaderboardTitleText.scale.x = 0.5
   leaderboard.addChild(leaderboardTitleText)
 
+  console.log("1__"+JSON.stringify(gameData)+"__"+JSON.stringify(gameData.gamedata))
+
   // setup leaderboard
   for(var i = 1; i < gameData.gamedata["maxPerRoom"]+1 || 4+1; i++){
     var text = new PIXI.Text("", {fill: 0xffffff, align: "left", fontSize: 52})
@@ -160,6 +162,8 @@ function setupGameUI(){
   newRoundCountdown.anchor.y = 0
   newRoundCountdown.scale.y = -1
   roundIntermission.addChild(newRoundCountdown)
+
+  console.log("2__"+JSON.stringify(gameData)+"__"+JSON.stringify(gameData.gamedata))
 
   for(var i = 1; i < gameData.gamedata["maxPerRoom"]+1 || 4+1; i++){
     if(i < 6){ //Max for leaderboard
