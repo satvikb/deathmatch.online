@@ -36,6 +36,7 @@ function load(){
 function init(){
   canvas = document.getElementById("gamecanvas")
   renderer = PIXI.autoDetectRenderer(size[0], size[1], {view: canvas});
+  renderer.backgroundCOlor = 0x1e1e1e
 
   menu = new Container();
   menu.scale.y = -1
@@ -90,12 +91,13 @@ function setupGameUI(){
   timerBar.display.position.set(0, size[1])
   hud.addChild(timerBar.display)
 
-  timerText = new PIXI.Text('', {fontSize: 30,fill: 0xffffff})
+  timerText = new PIXI.Text('', {fontSize: 60,fill: 0xffffff})
   timerText.x = size[0]/2
   timerText.y = size[1]
   timerText.anchor.x = 0.5
   timerText.anchor.y = -0.25
-  timerText.scale.y = -1
+  timerText.scale.y = -0.5
+  timerText.scale.x = 0.5
   hud.addChild(timerText)
 
   scoreText = new PIXI.Text('', {fill: 0xffffff})
@@ -108,22 +110,24 @@ function setupGameUI(){
 
   var leaderboardTextWidth = size[0]*0.1
 
-  var leaderboardTitleText = new PIXI.Text("leaderboard", {fill: 0xffffff, align: "left"})
+  var leaderboardTitleText = new PIXI.Text("leaderboard", {fill: 0xffffff, align: "left", fontSize:52})
   leaderboardTitleText.x = size[0]-leaderboardTextWidth/2
   leaderboardTitleText.y = size[1]
   leaderboardTitleText.anchor.x = 0.5
   leaderboardTitleText.anchor.y = -0.25
-  leaderboardTitleText.scale.y = -1
+  leaderboardTitleText.scale.y = -0.5
+  leaderboardTitleText.scale.x = 0.5
   leaderboard.addChild(leaderboardTitleText)
 
   // setup leaderboard
   for(var i = 1; i < 4; i++){
-    var text = new PIXI.Text("", {fill: 0xffffff, align: "left"})
+    var text = new PIXI.Text("", {fill: 0xffffff, align: "left", fontSize: 52})
     text.x = size[0]-leaderboardTextWidth
     text.y = size[1]-(text.height*i)
     text.anchor.x = 0
     text.anchor.y = -0.25
-    text.scale.y = -1
+    text.scale.y = -0.5
+    text.scale.x = 0.5
     leaderboardTexts.push(text)
     leaderboard.addChild(text)
   }
@@ -134,7 +138,7 @@ function setupGameUI(){
   roundIntermission.addChild(newRoundBar.display)
 
   // var newRoundCountdownWidth = size[0]*0.3
-  newRoundCountdown = new PIXI.Text("Starting in", {fill: 0xffffff, align: "center", fontSize: 45})
+  newRoundCountdown = new PIXI.Text("Starting in", {fill: 0xffffff, align: "center", fontSize: 50})
   newRoundCountdown.x = size[0]/2
   newRoundCountdown.y = size[1]/2
   newRoundCountdown.anchor.x = 0.5
@@ -174,8 +178,8 @@ function setupLobby(){
   var playTextFontSize = 32
   var playText = new PIXI.Text("Play", {fill: 0xFFFFFF, fontSize: playTextFontSize})
   playText.anchor.x = playText.anchor.y = 0.5
-  playText.scale.x = 8/playTextFontSize
-  playText.scale.y = 8/playTextFontSize
+  playText.scale.x = 16/playTextFontSize
+  playText.scale.y = 16/playTextFontSize
   // playText.x = -playButton.width/2/playButton.scale.x
   // playText.y = playButton.height/2/playButton.scale.y
   playButton.addChild(playText)
