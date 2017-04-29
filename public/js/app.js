@@ -39,7 +39,7 @@ function load(){
 function init(){
   canvas = document.getElementById("gamecanvas")
   renderer = PIXI.autoDetectRenderer(size[0], size[1], {view: canvas});
-  renderer.backgroundCOlor = 0x1e1e1e
+  renderer.backgroundColor = 0x1e1e1e
 
   menu = new Container();
   menu.scale.y = -1
@@ -122,8 +122,6 @@ function setupGameUI(){
   leaderboardTitleText.scale.x = 0.5
   leaderboard.addChild(leaderboardTitleText)
 
-  console.log("1__"+JSON.stringify(gameData)+"__"+JSON.stringify(gameData.gamedata))
-
   // setup leaderboard
   for(var i = 1; i < gameData.gamedata["maxPerRoom"]+1; i++){
     var text = new PIXI.Text("", {fill: 0xffffff, align: "left", fontSize: 52})
@@ -162,8 +160,6 @@ function setupGameUI(){
   newRoundCountdown.anchor.y = 0
   newRoundCountdown.scale.y = -1
   roundIntermission.addChild(newRoundCountdown)
-
-  console.log("2__"+JSON.stringify(gameData)+"__"+JSON.stringify(gameData.gamedata))
 
   for(var i = 1; i < gameData.gamedata["maxPerRoom"]+1; i++){
     if(i < 6+1){ //Max for leaderboard
@@ -208,11 +204,11 @@ function setupLobby(){
     playText.position.y = 0
   })
 
-  var playTextFontSize = 32
+  // var playTextFontSize = 32
   var playText = new PIXI.Text("Play", {fill: 0xFFFFFF, fontSize: 52})
   playText.anchor.x = playText.anchor.y = 0.5
-  playText.scale.x = 1
-  playText.scale.y = 1
+  playText.scale.x = 0.3
+  playText.scale.y = 0.3
   // playText.x = -playButton.width/2/playButton.scale.x
   // playText.y = playButton.height/2/playButton.scale.y
   playButton.addChild(playText)
