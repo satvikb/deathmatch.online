@@ -32,7 +32,7 @@ function loadFiles(){
   PIXI.loader.load(function(loader, resources){
     gunJson = resources.guns["data"]
     gameDataJson = resources.gamedata["data"]["data"]
-    console.log("game data "+JSON.stringify(gameDataJson))
+
     gameData.metadata = gameDataJson["metadata"]
     gameData.gamedata = gameDataJson["gamedata"]
 

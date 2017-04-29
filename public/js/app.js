@@ -128,8 +128,9 @@ function setupGameUI(){
     leaderboard.addChild(text)
   }
 
-  newRoundBar = new Bar(size[0], size[1]*0.01)
+  newRoundBar = new Bar(size[0]/2, size[1]*0.01)
   newRoundBar.display.position.set(0, size[1]*(2/3))
+  newRoundBar.dispaly.anchor.x = 0.5
   roundIntermission.addChild(newRoundBar.display)
 
   // var newRoundCountdownWidth = size[0]*0.3
@@ -196,13 +197,13 @@ function setupLobby(){
   menu.addChild(nicknameField)
 
 
-  var versionText = new PIXI.Text("beta v0.1", {fill: 0xFFFFFF})
+  var versionText = new PIXI.Text(gameData.metadata["version"], {fill: 0xFFFFFF, fontSize: 12})
   versionText.anchor.x = 0
   versionText.anchor.y = 1
   versionText.position.x = 0
   versionText.position.y = 0
-  versionText.scale.x = 2
-  versionText.scale.y = -2
+  versionText.scale.x = 1
+  versionText.scale.y = -1
 
   menu.addChild(versionText)
   menu.addChild(titleText)

@@ -7,8 +7,8 @@ function initConnection(){
   socket = io.connect("http://deathmatch.online")
   socketEventHandlers()
 
-  roundLength = gameData.gamedata["roundLength"]
-  countdownTime = gameData.gamedata["countdownLength"]
+  roundLength = gameData.gamedata["roundLength"]/1000
+  countdownTime = gameData.gamedata["countdownLength"]/1000
 
 }
 
@@ -51,8 +51,7 @@ function update(data){
 
   if(!countingDown){
     leaderboard.visible = true
-    gunLeftBar.visible = gunRightBar.visible = true
-    timerText.visible = timerBar.visible = true
+    tileMap.visible = hud.visible = true
     roundIntermission.visible = false
 
     timerText.text = ""+Math.round(secondRoundLeft * 100) / 100
@@ -174,10 +173,9 @@ function update(data){
     //round intermission
     //TODO also hide player health bars
     leaderboard.visible = false
-    gunLeftBar.visible = gunRightBar.visible = false
-    timerText.visible = timerBar.visible = false
+    tileMap.visible = hud.visible = false
     roundIntermission.visible = true
-    newRoundCountdown.text = "Starting in "+Math.round(secondRoundLeft * 100) / 100
+    newRoundCountdown.text = "Starting round in "+Math.round(secondRoundLeft * 100) / 100
     newRoundBar.setProgress(roundProgress)
   }
 }
