@@ -25,7 +25,7 @@ var Bar = function(width, height, options){
   this.display.outer = this.outerBar
 
   this.text = new PIXI.Text("", {fill: textColor, fontSize: 52})
-  this.text.scale.y = this.scale.x = 0.5
+  this.text.scale.y = this.text.scale.x = 0.5
   this.text.height = height
   this.display.addChild(this.text)
 
