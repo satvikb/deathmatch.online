@@ -26,12 +26,13 @@ var Maps = ConstantsJS.Maps()
 var Guns = ShootJS.Guns
 var CloneGun = ShootJS.CloneGun
 var IDHandler = new IDJS.IDHandler()
-var GameData = GameDataJS.GameData
 
 Guns()
-GameData()
 
 var Player = PlayerJS.Player
+
+var GameData = GameDataJS.GameData
+GameData()
 
 var RoomHandler = new RoomJS.RoomHandler()
 
