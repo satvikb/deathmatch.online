@@ -105,52 +105,57 @@ var Player = function(socketId, clientId, nickname, socket, room, x, y){
     var packetData = {}
 
     var leaderboard = this.room.leaderboard.getData(this.room.players.sort(this.room.leaderboard.sortScore))
-    var roundProgress = this.room.timeLeft/this.room.roundTime
+    var countingDown = this.room.updateCountdown
+    var roundProgress = countingDown == true ? (Date.now - this.room.countdownTime)/this.room.startingIn : (this.room.timeLeft/this.room.roundTime)
 
-    packetData.gs = [parseFloat(roundProgress.toFixed(3)), leaderboard]
+    packetData.gs = [bToI(countingDown), parseFloat(roundProgress.toFixed(3)), leaderboard]
 
-    var otherPlayerData = []
-    for(var i = 0; i < this.room.players.length; i++){
-      var otherPlayer = this.room.players[i]
+    if(countingDown == true){
+      var otherPlayerData = []
+      for(var i = 0; i < this.room.players.length; i++){
+        var otherPlayer = this.room.players[i]
 
-      if(otherPlayer.clientId != this.clientId){
-        var pos = otherPlayer.getPos()
-        var dir = [otherPlayer.inputs[5], otherPlayer.inputs[6]]
-        var propHealth = otherPlayer.health.currentHealth/otherPlayer.health.maxHealth
+        if(otherPlayer.clientId != this.clientId){
+          var pos = otherPlayer.getPos()
+          var dir = [otherPlayer.inputs[5], otherPlayer.inputs[6]]
+          var propHealth = otherPlayer.health.currentHealth/otherPlayer.health.maxHealth
 
-        var sl = bToI(otherPlayer.gunLeft ? otherPlayer.gunLeft.shootFrame : false)
-        var sr = bToI(otherPlayer.gunRight ? otherPlayer.gunRight.shootFrame : false)
+          var sl = bToI(otherPlayer.gunLeft ? otherPlayer.gunLeft.shootFrame : false)
+          var sr = bToI(otherPlayer.gunRight ? otherPlayer.gunRight.shootFrame : false)
 
-        otherPlayerData.push([otherPlayer.clientId, rd(pos[0]), rd(pos[1]), rd(dir[0]), rd(dir[1]), rd(propHealth), sl, sr])
+          otherPlayerData.push([otherPlayer.clientId, rd(pos[0]), rd(pos[1]), rd(dir[0]), rd(dir[1]), rd(propHealth), sl, sr])
+        }
       }
-    }
-    packetData.op = otherPlayerData
+      packetData.op = otherPlayerData
 
-    //TODO test for changes
-    var pos = this.getPos()
-    var dir = [this.inputs[5], this.inputs[6]]
-    var propHealth = this.health.currentHealth/this.health.maxHealth
+      //TODO test for changes
+      var pos = this.getPos()
+      var dir = [this.inputs[5], this.inputs[6]]
+      var propHealth = this.health.currentHealth/this.health.maxHealth
 
-    var sl = bToI(this.gunLeft ? this.gunLeft.shootFrame : false)
-    var sr = bToI(this.gunRight ? this.gunRight.shootFrame : false)
+      var sl = bToI(this.gunLeft ? this.gunLeft.shootFrame : false)
+      var sr = bToI(this.gunRight ? this.gunRight.shootFrame : false)
 
-    var thisPlayerData = [this.clientId, rd(pos[0]), rd(pos[1]), rd(dir[0]), rd(dir[1]), rd(propHealth), sl, sr]
-    packetData.p = thisPlayerData
+      var thisPlayerData = [this.clientId, rd(pos[0]), rd(pos[1]), rd(dir[0]), rd(dir[1]), rd(propHealth), sl, sr]
+      packetData.p = thisPlayerData
 
-    if(this.gunLeft){
-      var ammoLeftLeftGun = this.gunLeft.ammo.currentAmmo
-      var ammoMaxLeftGun = this.gunLeft.ammo.maxAmmo // TODO Do not send max ammo every time, it is not going to change
+      if(this.gunLeft){
+        var ammoLeftLeftGun = this.gunLeft.ammo.currentAmmo
+        var ammoMaxLeftGun = this.gunLeft.ammo.maxAmmo // TODO Do not send max ammo every time, it is not going to change
 
-      //gun left data
-      packetData.gl = [this.gunLeft.id, ammoLeftLeftGun]
-    }
+        //gun left data
+        packetData.gl = [this.gunLeft.id, ammoLeftLeftGun]
+      }
 
-    if(this.gunRight){
-      var ammoLeftRightGun = this.gunRight.ammo.currentAmmo
-      var ammoMaxRightGun = this.gunRight.ammo.maxAmmo
+      if(this.gunRight){
+        var ammoLeftRightGun = this.gunRight.ammo.currentAmmo
+        var ammoMaxRightGun = this.gunRight.ammo.maxAmmo
 
-      //gun right data
-      packetData.gr = [this.gunRight.id, ammoLeftRightGun]
+        //gun right data
+        packetData.gr = [this.gunRight.id, ammoLeftRightGun]
+      }
+    }else{
+      //send any update data while in round intermission
     }
 
     this.socket.emit("u", packetData)

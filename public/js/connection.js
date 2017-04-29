@@ -34,123 +34,142 @@ function removeplayer(data){
   removePlayerFromScene(data)
 }
 
+var roundLength = 60
+var countdownTime = 3
+
 function update(data){
   var d = data
   bulletGraphics.clear()
 
-  var roundProgress = d.gs[0]
-  var secondRoundLeft = roundProgress*60
-  timerText.text = ""+Math.round(secondRoundLeft * 100) / 100
-  timerBar.setProgress(roundProgress)
+  var countingDown = d.gs[0] == 0
+  var roundProgress = d.gs[1]
+  var secondRoundLeft = roundProgress*(countingDown == true ? countdownTime : roundLength)
 
-  updateLeaderboard(d.gs[1])
+  if(!countingDown){
+    leaderboard.visible = true
+    gunLeftBar.visible = gunRightBar.visible = true
+    timerText.visible = timerBar.visible = true
+    roundIntermission.visible = false
 
-  for(var i = 0; i < d.op.length; i++){
-    var pd = d.op[i]
-    var otherPlayer = getPlayerById(pd[0])
+    timerText.text = ""+Math.round(secondRoundLeft * 100) / 100
+    timerBar.setProgress(roundProgress)
 
-    var pos = [pd[1], pd[2]]
-    var dir = [pd[3], pd[4]]
-    var ph = pd[5] //player health (prop)
+    updateLeaderboard(d.gs[2])
 
-    if(otherPlayer){
-      otherPlayer.body.position[0] = pos[0]
-      otherPlayer.body.position[1] = pos[1]
-      otherPlayer.body.previousPosition[0] = pos[0]
-      otherPlayer.body.previousPosition[1] = pos[1]
+    for(var i = 0; i < d.op.length; i++){
+      var pd = d.op[i]
+      var otherPlayer = getPlayerById(pd[0])
 
-      otherPlayer.display.position.x = otherPlayer.body.position[0]
-      otherPlayer.display.position.y = otherPlayer.body.position[1]-otherPlayer.height/2
+      var pos = [pd[1], pd[2]]
+      var dir = [pd[3], pd[4]]
+      var ph = pd[5] //player health (prop)
 
-      otherPlayer.healthBar.setProgress(ph)
-      otherPlayer.direction = [dir[0], dir[1]]
-      otherPlayer.setArmRotation(dir[0], dir[1])
+      if(otherPlayer){
+        otherPlayer.body.position[0] = pos[0]
+        otherPlayer.body.position[1] = pos[1]
+        otherPlayer.body.previousPosition[0] = pos[0]
+        otherPlayer.body.previousPosition[1] = pos[1]
+
+        otherPlayer.display.position.x = otherPlayer.body.position[0]
+        otherPlayer.display.position.y = otherPlayer.body.position[1]-otherPlayer.height/2
+
+        otherPlayer.healthBar.setProgress(ph)
+        otherPlayer.direction = [dir[0], dir[1]]
+        otherPlayer.setArmRotation(dir[0], dir[1])
+
+        if(dir[0] < 0){
+          otherPlayer.switchDirection(true)
+        }else{
+          otherPlayer.switchDirection(false)
+        }
+
+        if(otherPlayer.gunLeft){
+          if(pd[6] == 0){
+            addBullet(otherPlayer, otherPlayer.gunLeft)
+          }
+        }
+
+        if(otherPlayer.gunRight){
+          if(pd[7] == 0){
+            addBullet(otherPlayer, otherPlayer.gunRight)
+          }
+        }
+      }
+    }
+
+    var tpd = d.p
+    var player = localPlayer
+    var pos = [tpd[1], tpd[2]]
+    var dir = [tpd[3], tpd[4]]
+    var ph = tpd[5] //player health (prop)
+
+    if(player){
+      player.body.position[0] = pos[0]
+      player.body.position[1] = pos[1]
+      player.body.previousPosition[0] = pos[0]
+      player.body.previousPosition[1] = pos[1]
+
+      player.display.position.x = player.body.position[0]
+      player.display.position.y = player.body.position[1]-player.height/2
+
+      player.healthBar.setProgress(ph)
+      player.setArmRotation(dir[0], dir[1])
 
       if(dir[0] < 0){
-        otherPlayer.switchDirection(true)
+        player.switchDirection(true)
       }else{
-        otherPlayer.switchDirection(false)
+        player.switchDirection(false)
       }
 
-      if(otherPlayer.gunLeft){
-        if(pd[6] == 0){
-          addBullet(otherPlayer, otherPlayer.gunLeft)
+      if(player.gunLeft){
+        if(tpd[6] == 0){
+          addBullet(player, player.gunLeft)
         }
       }
 
-      if(otherPlayer.gunRight){
-        if(pd[7] == 0){
-          addBullet(otherPlayer, otherPlayer.gunRight)
+      if(player.gunRight){
+        if(tpd[7] == 0){
+          addBullet(player, player.gunRight)
         }
       }
     }
-  }
 
-  var tpd = d.p
-  var player = localPlayer
-  var pos = [tpd[1], tpd[2]]
-  var dir = [tpd[3], tpd[4]]
-  var ph = tpd[5] //player health (prop)
+    var bullets = bulletData
+    if(bullets){
+      for(var b = 0; b < bullets.length; b++){
+        var bullet = bullets[b]
+        bulletGraphics.lineStyle(bullet.thickness, bullet.color).moveTo(bullet.displayFrom[0], bullet.displayFrom[1]).lineTo(bullet.displayTo[0], bullet.displayTo[1])
+      }
+    }
 
-  if(player){
-    player.body.position[0] = pos[0]
-    player.body.position[1] = pos[1]
-    player.body.previousPosition[0] = pos[0]
-    player.body.previousPosition[1] = pos[1]
+    if(d.gl){
+      var gun = GetGunFromId(d.gl[0])
 
-    player.display.position.x = player.body.position[0]
-    player.display.position.y = player.body.position[1]-player.height/2
-
-    player.healthBar.setProgress(ph)
-    player.setArmRotation(dir[0], dir[1])
-
-    if(dir[0] < 0){
-      player.switchDirection(true)
+      gunLeftBar.show()
+      gunLeftBar.text.text = gun.name+": "+d.gl[1]+" / "+gun.ammo.maxAmmo
+      gunLeftBar.setProgress(d.gl[1]/gun.ammo.maxAmmo)
     }else{
-      player.switchDirection(false)
+      gunLeftBar.hide()
     }
 
-    if(player.gunLeft){
-      if(tpd[6] == 0){
-        addBullet(player, player.gunLeft)
-      }
+    if(d.gr){
+      var gun = GetGunFromId(d.gr[0])
+
+      gunRightBar.show()
+      gunRightBar.text.text = gun.name+": "+d.gr[1]+" / "+gun.ammo.maxAmmo
+      gunRightBar.setProgress(d.gr[1]/gun.ammo.maxAmmo)
+    }else{
+      gunRightBar.hide()
     }
-
-    if(player.gunRight){
-      if(tpd[7] == 0){
-        addBullet(player, player.gunRight)
-      }
-    }
-  }
-
-  var bullets = bulletData
-  if(bullets){
-    for(var b = 0; b < bullets.length; b++){
-      var bullet = bullets[b]
-      bulletGraphics.lineStyle(bullet.thickness, bullet.color).moveTo(bullet.displayFrom[0], bullet.displayFrom[1]).lineTo(bullet.displayTo[0], bullet.displayTo[1])
-    }
-  }
-
-  if(d.gl){
-    var gun = GetGunFromId(d.gl[0])
-
-    gunLeftBar.show()
-    gunLeftBar.text.text = gun.name+": "+d.gl[1]+" / "+gun.ammo.maxAmmo
-    gunLeftBar.setProgress(d.gl[1]/gun.ammo.maxAmmo)
   }else{
-    gunLeftBar.hide()
+    //round intermission
+    //TODO also hide player health bars
+    leaderboard.visible = false
+    gunLeftBar.visible = gunRightBar.visible = false
+    timerText.visible = timerBar.visible = false
+    roundIntermission.visible = true
+    newRoundCountdown.text = "Starting in "+secondRoundLeft
   }
-
-  if(d.gr){
-    var gun = GetGunFromId(d.gr[0])
-
-    gunRightBar.show()
-    gunRightBar.text.text = gun.name+": "+d.gr[1]+" / "+gun.ammo.maxAmmo
-    gunRightBar.setProgress(d.gr[1]/gun.ammo.maxAmmo)
-  }else{
-    gunRightBar.hide()
-  }
-
 }
 
 function updateLeaderboard(data){

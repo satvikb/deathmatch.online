@@ -17,6 +17,10 @@ var gunRightBar;
 var timerText;
 var scoreText;
 
+var roundIntermission;
+var newRoundCountdown;
+// var roundLeaderboard;
+
 var graphics;
 
 var nicknameField;
@@ -51,6 +55,10 @@ function init(){
 }
 
 function setupGameUI(){
+  roundIntermission = new Container()
+  roundIntermission.visible = false
+  stage.addChile(roundIntermission)
+
   graphics = new PIXI.Graphics()
   stage.addChild(graphics)
 
@@ -118,6 +126,15 @@ function setupGameUI(){
     leaderboardTexts.push(text)
     leaderboard.addChild(text)
   }
+
+  // var newRoundCountdownWidth = size[0]*0.3
+  newRoundCountdown = new PIXI.Text("Starting in", {fill: 0xffffff, align: "center"})
+  newRoundCountdown.x = size[0]/2
+  newRoundCountdown.y = size[1]/2
+  newRoundCountdown.anchor.x = 0.5
+  newRoundCountdown.anchor.y = 0
+  newRoundCountdown.scale.y = -1
+  roundIntermission.addChild(newRoundCountdown)
 }
 
 
