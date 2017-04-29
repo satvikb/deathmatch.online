@@ -176,6 +176,7 @@ function update(data){
     tileMap.visible = hud.visible = false
     roundIntermission.visible = true
     newRoundCountdown.text = "Starting round in "+Math.floor(secondRoundLeft)
+    updateIntermissionLeaderboard(d.gs[2])
     newRoundBar.setProgress(roundProgress)
   }
 }
@@ -201,6 +202,36 @@ function updateLeaderboard(data){
       }
     }else{
       leaderboardTexts[i].text = ""
+    }
+  }
+
+  if(currentPlayerInLeaderboard == false){
+    //TODO Add seperate score for current player
+  }
+}
+
+
+function updateIntermissionLeaderboard(data){
+  var currentPlayerInLeaderboard = false
+  for(var i = 0; i < roundIntermissionLeaderboardTexts.length; i++){
+    var leaderboardData = data[i]
+    if(leaderboardData){
+      var id = leaderboardData[0]
+      var score = leaderboardData[1]
+
+      var player = getPlayerById(id)
+
+      if(player){
+        if(player.clientId == localPlayer.clientId){
+          currentPlayerInLeaderboard = true
+        }
+
+        roundIntermissionLeaderboardTexts[i].text = player.nickname+" "+score
+      }else{
+        roundIntermissionLeaderboardTexts[i].text = ""
+      }
+    }else{
+      roundIntermissionLeaderboardTexts[i].text = ""
     }
   }
 

@@ -146,7 +146,7 @@ function setupGameUI(){
 
   var roundIntermissionLeaderboardTitleText = new PIXI.Text("Leaderboard", {fill: 0xffffff, align: "left", fontSize:52})
   roundIntermissionLeaderboardTitleText.x = size[0]/2
-  roundIntermissionLeaderboardTitleText.y = (size[1]/2)
+  roundIntermissionLeaderboardTitleText.y = (size[1])*(0.6)
   roundIntermissionLeaderboardTitleText.anchor.x = 0.5
   roundIntermissionLeaderboardTitleText.anchor.y = -0.5
   roundIntermissionLeaderboardTitleText.scale.y = -0.5
