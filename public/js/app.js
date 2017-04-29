@@ -134,7 +134,7 @@ function setupGameUI(){
   roundIntermission.addChild(newRoundBar.display)
 
   // var newRoundCountdownWidth = size[0]*0.3
-  newRoundCountdown = new PIXI.Text("Starting in", {fill: 0xffffff, align: "center"})
+  newRoundCountdown = new PIXI.Text("Starting in", {fill: 0xffffff, align: "center", fontSize: 45})
   newRoundCountdown.x = size[0]/2
   newRoundCountdown.y = size[1]/2
   newRoundCountdown.anchor.x = 0.5
@@ -171,7 +171,7 @@ function setupLobby(){
     playText.position.y = 0
   })
 
-  var playTextFontSize = 24
+  var playTextFontSize = 32
   var playText = new PIXI.Text("Play", {fill: 0xFFFFFF, fontSize: playTextFontSize})
   playText.anchor.x = playText.anchor.y = 0.5
   playText.scale.x = 8/playTextFontSize
@@ -180,13 +180,13 @@ function setupLobby(){
   // playText.y = playButton.height/2/playButton.scale.y
   playButton.addChild(playText)
 
-  var titleText = new PIXI.Text("deathmatch.online", {fill: 0xFFFFFF})
+  var titleText = new PIXI.Text("deathmatch.online", {fill: 0xFFFFFF, fontSize: 100})
   titleText.anchor.x = 0.5
   titleText.anchor.y = -0.5
   titleText.position.x = size[0]/2
   titleText.position.y = size[1]
-  titleText.scale.x = 5
-  titleText.scale.y = -5
+  titleText.scale.x = 1
+  titleText.scale.y = -1
 
   nicknameField = new PixiTextInput("", {fontSize: 44})
   nicknameField.width = size[0]*0.2
@@ -197,7 +197,7 @@ function setupLobby(){
   menu.addChild(nicknameField)
 
 
-  var versionText = new PIXI.Text(gameData.metadata["version"], {fill: 0xFFFFFF, fontSize: 12})
+  var versionText = new PIXI.Text(gameData.metadata["version"], {fill: 0xFFFFFF, fontSize: 20})
   versionText.anchor.x = 0
   versionText.anchor.y = 1
   versionText.position.x = 0

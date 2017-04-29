@@ -175,7 +175,7 @@ function update(data){
     leaderboard.visible = false
     tileMap.visible = hud.visible = false
     roundIntermission.visible = true
-    newRoundCountdown.text = "Starting round in "+Math.round(secondRoundLeft * 100) / 100
+    newRoundCountdown.text = "Starting round in "+Int(Math.floor(secondRoundLeft))
     newRoundBar.setProgress(roundProgress)
   }
 }
