@@ -106,7 +106,7 @@ var Player = function(socketId, clientId, nickname, socket, room, x, y){
 
     var leaderboard = this.room.leaderboard.getData(this.room.players.sort(this.room.leaderboard.sortScore))
     var countingDown = this.room.updateCountdown
-    var roundProgress = countingDown == true ? (Date.now - this.room.countdownTime)/this.room.startingIn : (this.room.timeLeft/this.room.roundTime)
+    var roundProgress = countingDown == true ? (Date.now() - this.room.countdownTime)/this.room.startingIn : (this.room.timeLeft/this.room.roundTime)
 
     packetData.gs = [bToI(countingDown), parseFloat(roundProgress.toFixed(3)), leaderboard]
 

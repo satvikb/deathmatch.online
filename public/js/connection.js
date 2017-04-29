@@ -56,80 +56,85 @@ function update(data){
 
     updateLeaderboard(d.gs[2])
 
-    for(var i = 0; i < d.op.length; i++){
-      var pd = d.op[i]
-      var otherPlayer = getPlayerById(pd[0])
+    if(d.op){
+      for(var i = 0; i < d.op.length; i++){
+        var pd = d.op[i]
+        var otherPlayer = getPlayerById(pd[0])
 
-      var pos = [pd[1], pd[2]]
-      var dir = [pd[3], pd[4]]
-      var ph = pd[5] //player health (prop)
+        var pos = [pd[1], pd[2]]
+        var dir = [pd[3], pd[4]]
+        var ph = pd[5] //player health (prop)
 
-      if(otherPlayer){
-        otherPlayer.body.position[0] = pos[0]
-        otherPlayer.body.position[1] = pos[1]
-        otherPlayer.body.previousPosition[0] = pos[0]
-        otherPlayer.body.previousPosition[1] = pos[1]
+        if(otherPlayer){
+          otherPlayer.body.position[0] = pos[0]
+          otherPlayer.body.position[1] = pos[1]
+          otherPlayer.body.previousPosition[0] = pos[0]
+          otherPlayer.body.previousPosition[1] = pos[1]
 
-        otherPlayer.display.position.x = otherPlayer.body.position[0]
-        otherPlayer.display.position.y = otherPlayer.body.position[1]-otherPlayer.height/2
+          otherPlayer.display.position.x = otherPlayer.body.position[0]
+          otherPlayer.display.position.y = otherPlayer.body.position[1]-otherPlayer.height/2
 
-        otherPlayer.healthBar.setProgress(ph)
-        otherPlayer.direction = [dir[0], dir[1]]
-        otherPlayer.setArmRotation(dir[0], dir[1])
+          otherPlayer.healthBar.setProgress(ph)
+          otherPlayer.direction = [dir[0], dir[1]]
+          otherPlayer.setArmRotation(dir[0], dir[1])
 
-        if(dir[0] < 0){
-          otherPlayer.switchDirection(true)
-        }else{
-          otherPlayer.switchDirection(false)
-        }
-
-        if(otherPlayer.gunLeft){
-          if(pd[6] == 0){
-            addBullet(otherPlayer, otherPlayer.gunLeft)
+          if(dir[0] < 0){
+            otherPlayer.switchDirection(true)
+          }else{
+            otherPlayer.switchDirection(false)
           }
-        }
 
-        if(otherPlayer.gunRight){
-          if(pd[7] == 0){
-            addBullet(otherPlayer, otherPlayer.gunRight)
+          if(otherPlayer.gunLeft){
+            if(pd[6] == 0){
+              addBullet(otherPlayer, otherPlayer.gunLeft)
+            }
+          }
+
+          if(otherPlayer.gunRight){
+            if(pd[7] == 0){
+              addBullet(otherPlayer, otherPlayer.gunRight)
+            }
           }
         }
       }
     }
 
     var tpd = d.p
-    var player = localPlayer
-    var pos = [tpd[1], tpd[2]]
-    var dir = [tpd[3], tpd[4]]
-    var ph = tpd[5] //player health (prop)
 
-    if(player){
-      player.body.position[0] = pos[0]
-      player.body.position[1] = pos[1]
-      player.body.previousPosition[0] = pos[0]
-      player.body.previousPosition[1] = pos[1]
+    if(tpd){
+      var player = localPlayer
+      var pos = [tpd[1], tpd[2]]
+      var dir = [tpd[3], tpd[4]]
+      var ph = tpd[5] //player health (prop)
 
-      player.display.position.x = player.body.position[0]
-      player.display.position.y = player.body.position[1]-player.height/2
+      if(player){
+        player.body.position[0] = pos[0]
+        player.body.position[1] = pos[1]
+        player.body.previousPosition[0] = pos[0]
+        player.body.previousPosition[1] = pos[1]
 
-      player.healthBar.setProgress(ph)
-      player.setArmRotation(dir[0], dir[1])
+        player.display.position.x = player.body.position[0]
+        player.display.position.y = player.body.position[1]-player.height/2
 
-      if(dir[0] < 0){
-        player.switchDirection(true)
-      }else{
-        player.switchDirection(false)
-      }
+        player.healthBar.setProgress(ph)
+        player.setArmRotation(dir[0], dir[1])
 
-      if(player.gunLeft){
-        if(tpd[6] == 0){
-          addBullet(player, player.gunLeft)
+        if(dir[0] < 0){
+          player.switchDirection(true)
+        }else{
+          player.switchDirection(false)
         }
-      }
 
-      if(player.gunRight){
-        if(tpd[7] == 0){
-          addBullet(player, player.gunRight)
+        if(player.gunLeft){
+          if(tpd[6] == 0){
+            addBullet(player, player.gunLeft)
+          }
+        }
+
+        if(player.gunRight){
+          if(tpd[7] == 0){
+            addBullet(player, player.gunRight)
+          }
         }
       }
     }
