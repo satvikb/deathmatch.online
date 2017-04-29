@@ -193,7 +193,6 @@ var Room = function(name){
 
   this.updateRound = function(d){
     if(this.roundStarted){
-      this.resetPlayers()
       this.timeLeft = this.roundTime-(Date.now() - this.roundStartTime)
 
       this.world.step(this.fixedTimeStep, d, this.maxSubSteps)
@@ -204,6 +203,7 @@ var Room = function(name){
       }
     }else if(this.updateCountdown){
       if(Date.now() - this.countdownTime > this.startingIn){
+        this.resetPlayers()
         this.startRound()
         this.updateCountdown = false
       }
