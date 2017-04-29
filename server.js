@@ -26,8 +26,10 @@ var Maps = ConstantsJS.Maps()
 var Guns = ShootJS.Guns
 var CloneGun = ShootJS.CloneGun
 var IDHandler = new IDJS.IDHandler()
+var GameData = GameDataJS.GameData
 
 Guns()
+GameData()
 
 var Player = PlayerJS.Player
 
@@ -36,9 +38,6 @@ var RoomHandler = new RoomJS.RoomHandler()
 var ShootHandler = ShootJS.ShootHandler
 var BulletData = ShootJS.BulletData
 var Gun = ShootJS.Gun
-
-var GameData = GameDataJS.GameData
-GameData()
 
 function init(){
   console.log("T "+GameData.gamedata["roundLength"])
