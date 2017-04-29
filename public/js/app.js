@@ -57,7 +57,7 @@ function init(){
 function setupGameUI(){
   roundIntermission = new Container()
   roundIntermission.visible = false
-  stage.addChile(roundIntermission)
+  stage.addChild(roundIntermission)
 
   graphics = new PIXI.Graphics()
   stage.addChild(graphics)
