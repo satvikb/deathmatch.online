@@ -129,8 +129,8 @@ function setupGameUI(){
   }
 
   newRoundBar = new Bar(size[0]/2, size[1]*0.01)
-  newRoundBar.display.position.set(0, size[1]*(2/3))
-  newRoundBar.dispaly.anchor.x = 0.5
+  newRoundBar.display.position.set(size[0]/4, size[1]*(2/3))
+  // newRoundBar.dispaly.anchor.x = 0.5
   roundIntermission.addChild(newRoundBar.display)
 
   // var newRoundCountdownWidth = size[0]*0.3

@@ -5,7 +5,6 @@ var Bar = function(width, height, options){
   this.width = width
 
   this.display = new PIXI.Container()
-  // this.display.position.set(0, 0)
   this.display.scale.y = -1
 
   var innerColor = options.innerColor || 0xFF0000
