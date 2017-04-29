@@ -20,6 +20,9 @@ var scoreText;
 var roundIntermission;
 var newRoundCountdown;
 var newRoundBar;
+var roundIntermissionLeaderboard;
+var roundIntermissionLeaderboardTexts = [];
+
 // var roundLeaderboard;
 
 var graphics;
@@ -95,7 +98,7 @@ function setupGameUI(){
   timerText.x = size[0]/2
   timerText.y = size[1]
   timerText.anchor.x = 0.5
-  timerText.anchor.y = -0.25
+  timerText.anchor.y = -0.5
   timerText.scale.y = -0.5
   timerText.scale.x = 0.5
   hud.addChild(timerText)
@@ -120,7 +123,7 @@ function setupGameUI(){
   leaderboard.addChild(leaderboardTitleText)
 
   // setup leaderboard
-  for(var i = 1; i < 4; i++){
+  for(var i = 1; i < gameData.gamedata["maxPerRoom"]+1 || 4+1; i++){
     var text = new PIXI.Text("", {fill: 0xffffff, align: "left", fontSize: 52})
     text.x = size[0]-leaderboardTextWidth
     text.y = size[1]-(text.height*i)
@@ -133,18 +136,44 @@ function setupGameUI(){
   }
 
   newRoundBar = new Bar(size[0]/2, size[1]*0.01)
-  newRoundBar.display.position.set(size[0]/4, size[1]*(2/3))
+  newRoundBar.display.position.set(size[0]/4, size[1]*(3/4))
   // newRoundBar.dispaly.anchor.x = 0.5
   roundIntermission.addChild(newRoundBar.display)
 
-  // var newRoundCountdownWidth = size[0]*0.3
+  roundIntermissionLeaderboard = new Container()
+  roundIntermission.addChild(roundIntermissionLeaderboard)
+
+
+  var roundIntermissionLeaderboardTitleText = new PIXI.Text("leaderboard", {fill: 0xffffff, align: "left", fontSize:52})
+  roundIntermissionLeaderboardTitleText.x = size[0]/2
+  roundIntermissionLeaderboardTitleText.y = (size[1]/2)
+  roundIntermissionLeaderboardTitleText.anchor.x = 0.5
+  roundIntermissionLeaderboardTitleText.anchor.y = -0.5
+  roundIntermissionLeaderboardTitleText.scale.y = -0.5
+  roundIntermissionLeaderboardTitleText.scale.x = 0.5
+  roundIntermissionLeaderboard.addChild(roundIntermissionLeaderboardTitleText)
+
   newRoundCountdown = new PIXI.Text("Starting in", {fill: 0xffffff, align: "center", fontSize: 50})
   newRoundCountdown.x = size[0]/2
-  newRoundCountdown.y = size[1]/2
+  newRoundCountdown.y = size[1]/4
   newRoundCountdown.anchor.x = 0.5
   newRoundCountdown.anchor.y = 0
   newRoundCountdown.scale.y = -1
   roundIntermission.addChild(newRoundCountdown)
+
+  for(var i = 1; i < gameData.gamedata["maxPerRoom"]+1 || 4+1; i++){
+    if(i < 6){ //Max for leaderboard
+      var text = new PIXI.Text("", {fill: 0xffffff, align: "center", fontSize: 52})
+      text.x = size[0]/2
+      text.y = (size[1]/2)-(text.height*i)
+      text.anchor.x = 0.5
+      text.anchor.y = -0.5
+      text.scale.y = -0.5
+      text.scale.x = 0.5
+      roundIntermissionLeaderboardTexts.push(text)
+      roundIntermissionLeaderboard.addChild(text)
+    }
+  }
 }
 
 
@@ -176,10 +205,10 @@ function setupLobby(){
   })
 
   var playTextFontSize = 32
-  var playText = new PIXI.Text("Play", {fill: 0xFFFFFF, fontSize: playTextFontSize})
+  var playText = new PIXI.Text("Play", {fill: 0xFFFFFF, fontSize: 52})
   playText.anchor.x = playText.anchor.y = 0.5
-  playText.scale.x = 16/playTextFontSize
-  playText.scale.y = 16/playTextFontSize
+  playText.scale.x = 1
+  playText.scale.y = 1
   // playText.x = -playButton.width/2/playButton.scale.x
   // playText.y = playButton.height/2/playButton.scale.y
   playButton.addChild(playText)

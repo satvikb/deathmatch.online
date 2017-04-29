@@ -2,7 +2,8 @@
   "data": {
     "gamedata": {
       "roundLength": 60000,
-      "countdownLength": 10000
+      "countdownLength": 10000,
+      "maxPerRoom": 4
     },
     "metadata": {
       "version": "alpha v0.015"

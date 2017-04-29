@@ -13,7 +13,7 @@ function getRandomInt(min, max) {
 var RoomHandler = function(){
   this.rooms = []
 
-  this.MAX_PER_ROOM = 4
+  this.MAX_PER_ROOM = GameData.gamedata["maxPerRoom"] || 4
 
   this.findOpenRoom = function(id){
     for(var i = 0; i < this.rooms.length; i++){
@@ -41,8 +41,8 @@ var Room = function(name){
   this.map = []
   this.regions = []
 
-  this.roundTime = GameData.gamedata["roundLength"]
-  this.startingIn = GameData.gamedata["countdownLength"]
+  this.roundTime = GameData.gamedata["roundLength"] || 60*1000
+  this.startingIn = GameData.gamedata["countdownLength"] || 3*1000
 
   this.updateCountdown = false
   this.countdownTime
