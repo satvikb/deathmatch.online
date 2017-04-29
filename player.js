@@ -106,11 +106,11 @@ var Player = function(socketId, clientId, nickname, socket, room, x, y){
 
     var leaderboard = this.room.leaderboard.getData(this.room.players.sort(this.room.leaderboard.sortScore))
     var countingDown = this.room.updateCountdown
-    var roundProgress = countingDown == true ? (Date.now() - this.room.countdownTime)/this.room.startingIn : (this.room.timeLeft/this.room.roundTime)
+    var roundProgress = countingDown == true ? 1.0-((Date.now() - this.room.countdownTime)/this.room.startingIn) : (this.room.timeLeft/this.room.roundTime)
 
     packetData.gs = [bToI(countingDown), parseFloat(roundProgress.toFixed(3)), leaderboard]
 
-    if(countingDown == true){
+    // if(countingDown == true){
       var otherPlayerData = []
       for(var i = 0; i < this.room.players.length; i++){
         var otherPlayer = this.room.players[i]
@@ -154,9 +154,9 @@ var Player = function(socketId, clientId, nickname, socket, room, x, y){
         //gun right data
         packetData.gr = [this.gunRight.id, ammoLeftRightGun]
       }
-    }else{
-      //send any update data while in round intermission
-    }
+    // }else{
+    //   //send any update data while in round intermission
+    // }
 
     this.socket.emit("u", packetData)
   }
