@@ -53,11 +53,11 @@ var Room = function(name){
   this.roundEndTime
   this.timeLeft
 
-  this.world = new p2.World({gravity: [0, -1500]})
-  this.world.defaultContactMaterial.relaxation = 0.5
-  this.world.defaultContactMaterial.friction = 0.2
+  this.world = new p2.World({gravity: [0, -75]})
+  this.world.defaultContactMaterial.relaxation = 1.8
+  this.world.defaultContactMaterial.friction = 0.3
 
-  this.world.solver.frictionIterations = 10
+  this.world.solver.frictionIterations = undefined;
 
   this.world.islandSplit = true
   this.world.sleepMode = p2.World.ISLAND_SLEEPING
@@ -65,13 +65,9 @@ var Room = function(name){
   this.world.solver.iterations = 20
   this.world.solver.tolerance = 0.01
   this.world.setGlobalStiffness(1e8)
-  // this.world.solver.relation = 0.9
 
   this.groundSize = [utils.size[0], 1]
   this.groundPos = [this.groundSize[0]/2, this.groundSize[1]/2]
-
-  // this.world.addContactMaterial(MapConstants.groundPlayerCM);
-  // this.world.addContactMaterial(MapConstants.tilePlayerCM);
 
   this.createBoundaries = function(){
     var thickness = 30

@@ -1,12 +1,12 @@
-var world = new p2.World({gravity: [0, -1500]})
-world.defaultContactMaterial.relaxation = 0.5
-world.defaultContactMaterial.friction = 0.2
+var world = new p2.World({gravity: [0, -75]})
+world.defaultContactMaterial.relaxation = 1.8
+world.defaultContactMaterial.friction = 0.3
 
 // world.setGlobalStiffness(1e5)
 world.islandSplit = true
 world.sleepMode = p2.World.ISLAND_SLEEPING
 
-world.solver.frictionIterations = 10
+world.solver.frictionIterations = undefined
 
 world.solver.iterations = 20
 world.solver.tolerance = 0.01
@@ -19,21 +19,9 @@ var regions = []
 var fixedTimeStep = 1/60; // seconds
 var maxSubSteps = 10; // Max sub steps to catch up with the wall clock
 
-
 var groundMaterial = new p2.Material();
 var playerMaterial = new p2.Material();
 var tileMaterial = new p2.Material();
-
-var groundPlayerCM = new p2.ContactMaterial(groundMaterial, playerMaterial,{
- friction : 0,
- relaxation: 0.9,
-});
-
-var tilePlayerCM = new p2.ContactMaterial(tileMaterial, playerMaterial, {
-  friction: 0.5,
-  relaxation: 3,
-  // stiffness: 1e8,
-})
 
 function setupWorld(){
   world.on('postStep', function(event){
@@ -53,9 +41,6 @@ function setupWorld(){
       }
     }
   })
-
-  // world.addContactMaterial(groundPlayerCM);
-  // world.addContactMaterial(tilePlayerCM);
 
   createBoundaries()
   createMap()

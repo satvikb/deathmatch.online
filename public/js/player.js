@@ -176,7 +176,7 @@ function Player(clientId, nickname, x, y, gunLeftId, gunRightId){
     return false;
   }
 
-  this.createBody(50, x+this.width/2, y-this.height/2, this.width, this.height)
+  this.createBody(1, x+this.width/2, y-this.height/2, this.width, this.height)
 }
 
 function normDir(dir){
