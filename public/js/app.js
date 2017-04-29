@@ -161,8 +161,8 @@ function setupGameUI(){
   newRoundCountdown.scale.y = -1
   roundIntermission.addChild(newRoundCountdown)
 
-  for(var i = 1; i < gameData.gamedata["maxPerRoom"]+1; i++){
-    if(i < 6+1){ //Max for leaderboard
+  for(var i = 0; i < gameData.gamedata["maxPerRoom"]; i++){
+    if(i < 6){ //Max for leaderboard
       var text = new PIXI.Text("", {fill: 0xffffff, align: "center", fontSize: 52})
       text.x = size[0]/2
       text.y = (size[1]/2)-(text.height*i)
