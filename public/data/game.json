@@ -1,0 +1,11 @@
+{
+  "data": {
+    "gamedata": {
+      "roundLength": 60000,
+      "countdownLength": 3000
+    },
+    "metadata": {
+      "version": "v0.01"
+    }
+  }
+}

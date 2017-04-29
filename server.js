@@ -19,6 +19,7 @@ var PlayerJS = require("./player.js")
 var RoomJS = require("./room.js")
 var ShootJS = require("./shoot.js")
 var IDJS = require("./id.js")
+var GameDataJS = require("./gamedata.js")
 
 var MapConstants = ConstantsJS.MapConstants()
 var Maps = ConstantsJS.Maps()
@@ -36,7 +37,11 @@ var ShootHandler = ShootJS.ShootHandler
 var BulletData = ShootJS.BulletData
 var Gun = ShootJS.Gun
 
+var GameData = GameDataJS.GameData
+GameData()
+
 function init(){
+  console.log("T "+GameData.gamedata["roundLength"])
   setEventHandlers();
 
   server.listen(port);

@@ -19,6 +19,7 @@ var scoreText;
 
 var roundIntermission;
 var newRoundCountdown;
+var newRoundBar;
 // var roundLeaderboard;
 
 var graphics;
@@ -126,6 +127,10 @@ function setupGameUI(){
     leaderboardTexts.push(text)
     leaderboard.addChild(text)
   }
+
+  newRoundBar = new Bar(size[0], size[1]*0.01)
+  newRoundBar.display.position.set(0, size[1]*(2/3))
+  roundIntermission.addChild(newRoundBar.display)
 
   // var newRoundCountdownWidth = size[0]*0.3
   newRoundCountdown = new PIXI.Text("Starting in", {fill: 0xffffff, align: "center"})

@@ -15,6 +15,9 @@ var files = [spritesheet]
 
 var id;
 var gunJson;
+var gameDataJson;
+
+var gameData = {}
 
 function loadProgress(loader, resource){
 
@@ -24,9 +27,15 @@ function loadFiles(){
   id = PIXI.loader.resources["textures/data.json"].textures;
 
   PIXI.loader.add("guns", "data/guns.json");
+  PIXI.loader.add("gamedata", "data/game.json");
+
   PIXI.loader.load(function(loader, resources){
     gunJson = resources.guns["data"]
+    gameDataJson = resources.gameData["data"]["data"]
 
+    gameData.metadata = gameDataJson["metadata"]
+    gameData.gamedata = gameDataJson["gamedata"]
+    
     initGuns()
     init()
     initConnection()

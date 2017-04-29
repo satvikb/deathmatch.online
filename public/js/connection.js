@@ -34,8 +34,8 @@ function removeplayer(data){
   removePlayerFromScene(data)
 }
 
-var roundLength = 60
-var countdownTime = 3
+var roundLength = gameData.gamedata["roundLength"]
+var countdownTime = gameData.gamedata["countdownLength"]
 
 function update(data){
   var d = data
@@ -173,7 +173,8 @@ function update(data){
     gunLeftBar.visible = gunRightBar.visible = false
     timerText.visible = timerBar.visible = false
     roundIntermission.visible = true
-    newRoundCountdown.text = "Starting in "+secondRoundLeft
+    newRoundCountdown.text = "Starting in "+Math.round(secondRoundLeft * 100) / 100
+    newRoundBar.setProgress(roundProgress)
   }
 }
 

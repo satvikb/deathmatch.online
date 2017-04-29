@@ -1,5 +1,6 @@
 var constants = require('./constants.js')
 var Leaderboard = require('./leaderboard.js').Leaderboard
+var GameData = require("./gamedata.js").GameData
 var MapConstants = constants.MapConstants
 var Maps = constants.Maps
 var p2 = constants.p2
@@ -40,8 +41,8 @@ var Room = function(name){
   this.map = []
   this.regions = []
 
-  this.roundTime = 60*1000
-  this.startingIn = 3*1000
+  this.roundTime = GameData.gamedata["roundLength"]
+  this.startingIn = GameData.gamedata["countdownLength"]
 
   this.updateCountdown = false
   this.countdownTime
