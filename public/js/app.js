@@ -125,7 +125,7 @@ function setupGameUI(){
   console.log("1__"+JSON.stringify(gameData)+"__"+JSON.stringify(gameData.gamedata))
 
   // setup leaderboard
-  for(var i = 1; i < gameData.gamedata["maxPerRoom"]+1 || 4+1; i++){
+  for(var i = 1; i < gameData.gamedata["maxPerRoom"]+1; i++){
     var text = new PIXI.Text("", {fill: 0xffffff, align: "left", fontSize: 52})
     text.x = size[0]-leaderboardTextWidth
     text.y = size[1]-(text.height*i)
@@ -146,7 +146,7 @@ function setupGameUI(){
   roundIntermission.addChild(roundIntermissionLeaderboard)
 
 
-  var roundIntermissionLeaderboardTitleText = new PIXI.Text("leaderboard", {fill: 0xffffff, align: "left", fontSize:52})
+  var roundIntermissionLeaderboardTitleText = new PIXI.Text("Leaderboard", {fill: 0xffffff, align: "left", fontSize:52})
   roundIntermissionLeaderboardTitleText.x = size[0]/2
   roundIntermissionLeaderboardTitleText.y = (size[1]/2)
   roundIntermissionLeaderboardTitleText.anchor.x = 0.5
@@ -165,8 +165,8 @@ function setupGameUI(){
 
   console.log("2__"+JSON.stringify(gameData)+"__"+JSON.stringify(gameData.gamedata))
 
-  for(var i = 1; i < gameData.gamedata["maxPerRoom"]+1 || 4+1; i++){
-    if(i < 6){ //Max for leaderboard
+  for(var i = 1; i < gameData.gamedata["maxPerRoom"]+1; i++){
+    if(i < 6+1){ //Max for leaderboard
       var text = new PIXI.Text("", {fill: 0xffffff, align: "center", fontSize: 52})
       text.x = size[0]/2
       text.y = (size[1]/2)-(text.height*i)
