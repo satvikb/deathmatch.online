@@ -1,4 +1,4 @@
-var world = new p2.World({gravity: [0, -75]})
+var world = new p2.World({gravity: [0, -1500]})
 world.defaultContactMaterial.relaxation = 1.8
 world.defaultContactMaterial.friction = 0.3
 
@@ -13,8 +13,9 @@ world.solver.tolerance = 0.01
 world.setGlobalStiffness(1e8)
 // world.solver.relaxation = 0.9
 
-var map = []
-var regions = []
+var map = Maps.none
+// var regions = []
+var tilemapBody = new p2.Body({mass: 0})
 
 var fixedTimeStep = 1/60; // seconds
 var maxSubSteps = 10; // Max sub steps to catch up with the wall clock
@@ -43,7 +44,7 @@ function setupWorld(){
   })
 
   createBoundaries()
-  createMap()
+  leadMap(0)
 }
 
 function createBoundaries(){
@@ -91,32 +92,43 @@ function createBoundaries(){
   world.addBody(groundBodyR);
 }
 
-function createMap(){
-  var tileWidth = size[0]/mapSize[0]
-  var tileHeight = size[1]/mapSize[1]
+function loadMap(id){
+  var newMap = GetMapFromId(id)
 
-  for(var x = 0; x < map.length; x++){
-    for(var y = map[x].length-1; y >= 0; y--){
-      var tile = map[x][y]
-      var offset = [tileWidth/2, -tileHeight/2]
-      var pos = [(x*tileWidth)+offset[0], (y*tileHeight)+offset[1]]
+  if(newMap){
+    var mapData = newMap.data
+    var tileWidth = size[0]/mapSize[0]
+    var tileHeight = size[1]/mapSize[1]
 
-      if(tile == 1){
-        var tileShape = new p2.Box({width: tileWidth, height: tileHeight, material: tileMaterial})
-        var tileBody = new p2.Body({mass: 0, position: pos})
-        tileBody.addShape(tileShape)
-        this.world.addBody(tileBody)
+    // remove current physics bodies
+    this.world.removeBody(tilemapBody)
+    this.tilemapBody = new p2.Body({mass: 0})
 
-        //TODO Use different textures
-        var tile = new PIXI.Sprite(PIXI.Texture.fromImage("tile_center.png"))
-        tile.position.x = pos[0]
-        tile.position.y = pos[1]
-        tile.anchor.x = tile.anchor.y = 0.5
-        tile.scale.x = tileWidth/8 //TODO Use dynamic tile pixel sizes (8 is tile image width)
-        tile.scale.y = tileHeight/8
-        tileMap.addChild(tile)
+    for(var x = 0; x < mapData.length; x++){
+      for(var y = mapData[x].length-1; y >= 0; y--){
+        var tile = mapData[x][y]
+        var offset = [tileWidth/2, -tileHeight/2]
+        var pos = [(x*tileWidth)+offset[0], (y*tileHeight)+offset[1]]
+
+        if(tile == 1){
+          var tileShape = new p2.Box({width: tileWidth, height: tileHeight, material: tileMaterial}, pos)
+          // var tileBody = new p2.Body({mass: 0, position: pos})
+          tilemapBody.addShape(tileShape)
+
+          //TODO Use different textures
+          var tile = new PIXI.Sprite(PIXI.Texture.fromImage("tile_center.png"))
+          tile.position.x = pos[0]
+          tile.position.y = pos[1]
+          tile.anchor.x = tile.anchor.y = 0.5
+          tile.scale.x = tileWidth/8 //TODO Use dynamic tile pixel sizes (8 is tile image width)
+          tile.scale.y = tileHeight/8
+          tileMap.addChild(tile)
+        }
       }
     }
+    this.world.addBody(tilemapBody)
+  }else{
+    console.log("NO MAP!")
   }
 }
 

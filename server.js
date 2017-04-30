@@ -20,6 +20,7 @@ var RoomJS = require("./room.js")
 var ShootJS = require("./shoot.js")
 var IDJS = require("./id.js")
 var GameDataJS = require("./gamedata.js")
+var MapDataJS = require("./mapdata.js")
 
 var MapConstants = ConstantsJS.MapConstants()
 var Maps = ConstantsJS.Maps()
@@ -30,9 +31,14 @@ var IDHandler = new IDJS.IDHandler()
 Guns()
 
 var Player = PlayerJS.Player
+var Map = MapDataJS.Map
+var GetMapFromId = MapDataJS.GetMapFromId
 
 var GameData = GameDataJS.GameData
 GameData()
+
+var MapData = MapDataJS.MapData
+MapData()
 
 var RoomHandler = new RoomJS.RoomHandler()
 
@@ -45,6 +51,8 @@ function init(){
   setEventHandlers();
 
   server.listen(port);
+  var fadsadfas = RoomHandler.findOpenRoom()
+
 }
 
 var setEventHandlers = function() {
@@ -52,10 +60,11 @@ var setEventHandlers = function() {
 };
 
 function onSocketConnection(client) {
+
   client.on("jg", function(data){
     //create player
 
-    var room = RoomHandler.findOpenRoom(client.id)
+    var room = RoomHandler.findOpenRoom()
     if(room){
       var nickname = data.nickname
       if(nickname == ""){

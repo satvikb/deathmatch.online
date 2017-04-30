@@ -16,6 +16,7 @@ var files = [spritesheet]
 var id;
 var gunJson;
 var gameDataJson;
+var mapsJson;
 
 var gameData = {}
 
@@ -28,14 +29,17 @@ function loadFiles(){
 
   PIXI.loader.add("guns", "data/guns.json");
   PIXI.loader.add("gamedata", "data/game.json");
+  PIXI.loader.add("maps", "data/maps.json");
 
   PIXI.loader.load(function(loader, resources){
     gunJson = resources.guns["data"]
+    mapsJson = resources.maps["data"]
     gameDataJson = resources.gamedata["data"]["data"]
 
     gameData.metadata = gameDataJson["metadata"]
     gameData.gamedata = gameDataJson["gamedata"]
 
+    initMaps()
     initGuns()
     init()
     initConnection()

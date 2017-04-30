@@ -6,6 +6,11 @@ var Maps = constants.Maps
 var p2 = constants.p2
 var utils = require('./util.js').utils
 
+var MapDataJS = require("./mapdata.js")
+var GetMapFromId = MapDataJS.GetMapFromId
+var Map = MapDataJS.Map
+var MapData = MapDataJS.MapData
+
 function getRandomInt(min, max) {
     return Math.floor(Math.random() * (max - min + 1)) + min;
 }
@@ -15,7 +20,7 @@ var RoomHandler = function(){
 
   this.MAX_PER_ROOM = GameData.gamedata["maxPerRoom"] || 4
 
-  this.findOpenRoom = function(id){
+  this.findOpenRoom = function(){
     for(var i = 0; i < this.rooms.length; i++){
       var room = this.rooms[i]
 
@@ -38,8 +43,8 @@ var Room = function(name){
   this.players = []
   this.leaderboard = new Leaderboard()
 
-  this.map = []
-  this.regions = []
+  this.map = MapData.none
+  // this.regions = []
 
   this.roundTime = GameData.gamedata["roundLength"] || 60*1000
   this.startingIn = GameData.gamedata["countdownLength"] || 3*1000
@@ -53,7 +58,7 @@ var Room = function(name){
   this.roundEndTime
   this.timeLeft
 
-  this.world = new p2.World({gravity: [0, -75]})
+  this.world = new p2.World({gravity: [0, -1500]})
   this.world.defaultContactMaterial.relaxation = 1.8
   this.world.defaultContactMaterial.friction = 0.3
 
@@ -65,6 +70,8 @@ var Room = function(name){
   this.world.solver.iterations = 20
   this.world.solver.tolerance = 0.01
   this.world.setGlobalStiffness(1e8)
+
+  this.tilemapBody = new p2.Body({mass: 0})
 
   this.groundSize = [utils.size[0], 1]
   this.groundPos = [this.groundSize[0]/2, this.groundSize[1]/2]
@@ -103,16 +110,6 @@ var Room = function(name){
     this.world.addBody(groundBodyR);
   }
 
-
-  this.createMap = function(){
-    for(var x = 0; x < utils.mapSize[0]; x++){
-      this.map.push([])
-      for(var y = 0; y < utils.mapSize[1]; y++){
-        this.map[x][utils.mapSize[1]-y] = Maps.defaultMap[y][x]
-      }
-    }
-  }
-
   this.createTileBodies = function(){
     var tileWidth = utils.size[0]/utils.mapSize[0]
     var tileHeight = utils.size[1]/utils.mapSize[1]
@@ -133,9 +130,51 @@ var Room = function(name){
     }
   }
 
+  this.loadMap = function(d){
+    var id = d
+    if(d == undefined){
+      id = 0
+    }
+
+    var newMap = GetMapFromId(id)
+    // console.log("LOAD "+id+" "+newMap.id)
+
+    if(newMap){
+      this.map = null
+      // change current map variable to map
+      this.map = newMap
+
+      // remove current physics bodies
+      this.world.removeBody(this.tilemapBody)
+      this.tilemapBody = new p2.Body({mass: 0})
+
+      // add new physics bodies
+      var mapData = newMap.data
+
+      var tileWidth = utils.size[0]/utils.mapSize[0]
+      var tileHeight = utils.size[1]/utils.mapSize[1]
+
+      for(var x = 0; x < mapData.length; x++){
+        for(var y = 0; y < mapData[x].length; y++){
+          var tile = mapData[x][y]
+          var offset = [tileWidth/2, -tileHeight/2]
+          var pos = [(x*tileWidth)+offset[0], (y*tileHeight)+offset[1]]
+
+          if(tile == 1){
+            var tileShape = new p2.Box({width: tileWidth, height: tileHeight, material: constants.tileMaterial}, pos)
+            this.tilemapBody.addShape(tileShape)
+          }
+        }
+      }
+      this.world.addBody(this.tilemapBody)
+
+    }else{
+      console.log("No map!")
+    }
+  }
+
   this.createBoundaries()
-  this.createMap()
-  this.createTileBodies()
+  this.loadMap(0)
 
   this.world.on('postStep', function(event){
     for(var i = 0; i < that.players.length; i++){
