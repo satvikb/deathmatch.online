@@ -94,15 +94,16 @@ function createBoundaries(){
 
 function loadMap(id){
   var newMap = GetMapFromId(id)
-
+  map = newMap
   if(newMap){
     var mapData = newMap.data
     var tileWidth = size[0]/mapSize[0]
     var tileHeight = size[1]/mapSize[1]
+    console.log("new map "+newMap+" "+mapData[0][0]+" "+newMap.name+" "+mapData.length+" "+mapData[0].length)
 
     // remove current physics bodies
-    this.world.removeBody(tilemapBody)
-    this.tilemapBody = new p2.Body({mass: 0})
+    world.removeBody(tilemapBody)
+    tilemapBody = new p2.Body({mass: 0})
 
     for(var x = 0; x < mapData.length; x++){
       for(var y = mapData[x].length-1; y >= 0; y--){
@@ -126,7 +127,7 @@ function loadMap(id){
         }
       }
     }
-    this.world.addBody(tilemapBody)
+    world.addBody(tilemapBody)
   }else{
     console.log("NO MAP!")
   }
