@@ -13,7 +13,7 @@ world.solver.tolerance = 0.01
 world.setGlobalStiffness(1e8)
 // world.solver.relaxation = 0.9
 
-var map = Maprds.none
+var map = Maps.none
 // var regions = []
 var tilemapBody = new p2.Body({mass: 0})
 
