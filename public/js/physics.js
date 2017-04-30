@@ -105,8 +105,8 @@ function loadMap(id){
     world.removeBody(tilemapBody)
     tilemapBody = new p2.Body({mass: 0})
 
-    for(var x = 0; x < mapData.length; x++){
-      for(var y = mapData[x].length-1; y >= 0; y--){
+    for(var x = 0; x < newMap.width; x++){
+      for(var y = newMap.height-1; y >= 0; y--){
         var tile = mapData[x][y]
         var offset = [tileWidth/2, -tileHeight/2]
         var pos = [(x*tileWidth)+offset[0], (y*tileHeight)+offset[1]]
