@@ -25,6 +25,20 @@ function Map(id, name, data){
   this.width = data[0].length
 }
 
+function flipMap(mapInfo){
+  var newMap = mapInfo
+  var map = []
+
+  for(var x = 0; x < mapInfo.width; x++){
+    map.push([])
+    for(var y = 0; y < mapInfo.height; y++){
+      map[x][mapInfo.height-y] = mapInfo.data[y][x]
+    }
+  }
+  newMap.data = map
+  return newMap
+}
+
 function GetMapFromId(id){
   // console.log("id "+id)
   for(var nid in MapData){
@@ -32,7 +46,7 @@ function GetMapFromId(id){
     if(map){
       if(map.id == id){
         // console.log(nid+" equals "+id)
-        return map
+        return flipMap(map)
       }
     }
   }

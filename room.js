@@ -154,12 +154,11 @@ var Room = function(name){
       var tileWidth = utils.size[0]/utils.mapSize[0]
       var tileHeight = utils.size[1]/utils.mapSize[1]
 
-      for(var y = 0; y < mapData.length; y++){
-        for(var x = 0; x < mapData[y].length; x++){
-          var nY = mapData.length-1-y
-          var tile = mapData[nY][x]
+      for(var x = 0; x < mapData.length; x++){
+        for(var y = 0; y < mapData[x].length; y++){
+          var tile = mapData[x][y]
           var offset = [tileWidth/2, -tileHeight/2]
-          var pos = [(x*tileWidth)+offset[0], (nY*tileHeight)+offset[1]]
+          var pos = [(x*tileWidth)+offset[0], (y*tileHeight)+offset[1]]
 
           if(tile == 1){
             var tileShape = new p2.Box({width: tileWidth, height: tileHeight, material: constants.tileMaterial})
