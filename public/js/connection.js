@@ -20,6 +20,8 @@ function socketEventHandlers(){
 
   socket.on("np", newplayer)
   socket.on("rp", removeplayer)
+
+  socket.on("m", createNewMap)
 }
 
 function joingame(data){
@@ -39,6 +41,11 @@ function newplayer(data){
 
 function removeplayer(data){
   removePlayerFromScene(data)
+}
+
+function createNewMap(data){
+  currentMapId = data[0]
+  loadMap(data[0])
 }
 
 function update(data){

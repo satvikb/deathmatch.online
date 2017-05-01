@@ -174,7 +174,6 @@ var Room = function(name){
   }
 
   this.createBoundaries()
-  this.loadMap(0)
 
   this.world.on('postStep', function(event){
     for(var i = 0; i < that.players.length; i++){
@@ -246,12 +245,21 @@ var Room = function(name){
   }
 
   this.startCountdown = function(){
+    var newMapId = 1
+    this.loadMap(newMapId)
+    for(var p in this.players){
+      p.socket.emit("m", [newMapId])
+    }
+
     this.updateCountdown = true
     this.countdownTime = Date.now()
     this.countdownEndTime = Date.now()+this.startingIn
   }
 
   this.endRound = function(){
+
+
+
     this.roundStarted = false
     this.startCountdown()
   }

@@ -1,4 +1,5 @@
 var Maps = {}
+var currentMapId = 0
 
 function initMaps(){
   Maps.none = null
