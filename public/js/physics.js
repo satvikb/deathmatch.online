@@ -107,9 +107,10 @@ function loadMap(id){
 
     for(var y = 0; y < mapData.length; y++){
       for(var x = 0; x < mapData[0].length; x++){
-        var tile = mapData[y][x]
+        var nY = mapData.length-1-y
+        var tile = mapData[nY][x]
         var offset = [tileWidth/2, -tileHeight/2]
-        var pos = [(x*tileWidth)+offset[0], (y*tileHeight)+offset[1]]
+        var pos = [(x*tileWidth)+offset[0], (nY*tileHeight)+offset[1]]
 
         if(tile == 1){
           var tileShape = new p2.Box({width: tileWidth, height: tileHeight, material: tileMaterial})
