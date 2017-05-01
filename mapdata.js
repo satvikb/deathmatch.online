@@ -26,7 +26,7 @@ function Map(id, name, data){
 }
 
 function flipMap(mapInfo){
-  var newMap = mapInfo
+  var newMap = new Map(mapInfo.id, mapInfo.name, mapInfo.data)
   var map = []
 
   for(var x = 0; x < mapInfo.width; x++){

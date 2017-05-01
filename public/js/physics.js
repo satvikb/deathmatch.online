@@ -1,4 +1,4 @@
-var world = new p2.World({gravity: [0, -1500]})
+var world = new p2.World({gravity: [0, -1000]})
 world.defaultContactMaterial.relaxation = 1.8
 world.defaultContactMaterial.friction = 0.3
 

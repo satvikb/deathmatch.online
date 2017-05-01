@@ -58,7 +58,7 @@ var Room = function(name){
   this.roundEndTime
   this.timeLeft
 
-  this.world = new p2.World({gravity: [0, -1500]})
+  this.world = new p2.World({gravity: [0, -1000]})
   this.world.defaultContactMaterial.relaxation = 1.8
   this.world.defaultContactMaterial.friction = 0.3
 
@@ -110,25 +110,25 @@ var Room = function(name){
     this.world.addBody(groundBodyR);
   }
 
-  this.createTileBodies = function(){
-    var tileWidth = utils.size[0]/utils.mapSize[0]
-    var tileHeight = utils.size[1]/utils.mapSize[1]
-
-    for(var x = 0; x < this.map.length; x++){
-      for(var y = 0; y < this.map[x].length; y++){
-        var tile = this.map[x][y]
-        var offset = [tileWidth/2, -tileHeight/2]
-        var pos = [(x*tileWidth)+offset[0], (y*tileHeight)+offset[1]]
-
-        if(tile == 1){
-          var tileShape = new p2.Box({width: tileWidth, height: tileHeight, material: constants.tileMaterial})
-          var tileBody = new p2.Body({mass: 0, position: pos})
-          tileBody.addShape(tileShape)
-          this.world.addBody(tileBody)
-        }
-      }
-    }
-  }
+  // this.createTileBodies = function(){
+  //   var tileWidth = utils.size[0]/utils.mapSize[0]
+  //   var tileHeight = utils.size[1]/utils.mapSize[1]
+  //
+  //   for(var x = 0; x < this.map.length; x++){
+  //     for(var y = 0; y < this.map[x].length; y++){
+  //       var tile = this.map[x][y]
+  //       var offset = [tileWidth/2, -tileHeight/2]
+  //       var pos = [(x*tileWidth)+offset[0], (y*tileHeight)+offset[1]]
+  //
+  //       if(tile == 1){
+  //         var tileShape = new p2.Box({width: tileWidth, height: tileHeight, material: constants.tileMaterial})
+  //         var tileBody = new p2.Body({mass: 0, position: pos})
+  //         tileBody.addShape(tileShape)
+  //         this.world.addBody(tileBody)
+  //       }
+  //     }
+  //   }
+  // }
 
   this.loadMap = function(d){
     var id = d
