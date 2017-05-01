@@ -41,18 +41,22 @@ function flipMap(mapInfo){
 
 function GetMapFromId(id){
   // console.log("id "+id)
-  for(var nid in MapData){
-    var map = MapData[nid]
-    if(map){
-      if(map.id == id){
-        // console.log(nid+" equals "+id)
-        return flipMap(map)
-      }
-    }
-  }
+  // for(var nid in MapData){
+  //   var map = MapData[nid]
+  //   if(map){
+  //     if(map.id == id){
+  //       // console.log(nid+" equals "+id)
+  //       return flipMap(map)
+  //     }
+  //   }
+  // }
   // console.log("none "+id+" "+Maps.none.id)
+  var map = MapData[id]
+  if(map){
+    return flipMap(map)
+  }
 
-  return Maps[0] //Maps.none
+  return flipMap(Maps[0]) //Maps.none
 }
 
 exports.MapData = MapData

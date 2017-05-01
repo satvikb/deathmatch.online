@@ -34,13 +34,19 @@ function flipMap(mapInfo){
 }
 
 function GetMapFromId(id){
-  for(var id in Maps){
-    var map = Maps[id]
-    if(map){
-      if(map.id == id){
-        return flipMap(map)
-      }
-    }
+  var map = Maps[id]
+
+  if(map){
+    return flipMap(map)
   }
-  return Maps[0]//Maps.none
+  // for(var id in Maps){
+  //   var map = Maps[id]
+  //   if(map){
+  //     if(map.id == id){
+  //       return flipMap(map)
+  //     }
+  //   }
+  // }
+  console.log("none")
+  return flipMap(Maps[0])//Maps.none
 }
