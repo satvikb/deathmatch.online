@@ -92,7 +92,13 @@ function createBoundaries(){
   world.addBody(groundBodyR);
 }
 
-function loadMap(id){
+function loadMap(d){
+  var id = d
+  if(d == undefined){
+    console.log("fsdsdafsdf")
+    id = 0
+  }
+
   var newMap = GetMapFromId(id)
   map = newMap
   if(newMap){
@@ -104,6 +110,10 @@ function loadMap(id){
     // remove current physics bodies
     world.removeBody(tilemapBody)
     tilemapBody = new p2.Body({mass: 0})
+
+    for(var i = 0; i < tileMap.children.length; i++){
+      tileMap.removeChild(tileMap.children[i])
+    }
 
     for(var x = 0; x < mapData.length; x++){
       for(var y = 0; y < mapData[x].length; y++){

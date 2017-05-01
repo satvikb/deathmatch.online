@@ -32,7 +32,7 @@ function flipMap(mapInfo){
   for(var x = 0; x < mapInfo.width; x++){
     map.push([])
     for(var y = 0; y < mapInfo.height; y++){
-      map[x][mapInfo.height-y] = mapInfo.data[y][x]
+      map[x][mapInfo.height-1-y] = mapInfo.data[y][x]
     }
   }
   newMap.data = map

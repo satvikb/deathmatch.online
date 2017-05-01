@@ -44,6 +44,7 @@ function removeplayer(data){
 }
 
 function createNewMap(data){
+  console.log("create new map "+JSON.stringify(data))
   currentMapId = data[0]
   loadMap(data[0])
 }

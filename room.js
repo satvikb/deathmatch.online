@@ -133,6 +133,7 @@ var Room = function(name){
   this.loadMap = function(d){
     var id = d
     if(d == undefined){
+      console.log("undef!!")
       id = 0
     }
 
@@ -247,6 +248,7 @@ var Room = function(name){
   this.startCountdown = function(){
     var newMapId = 1
     this.loadMap(newMapId)
+    console.log("starting intermission "+newMapId)
     for(var p = 0; p < this.players.length; p++){
       var player = this.players[p]
       if(player){
