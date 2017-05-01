@@ -247,8 +247,11 @@ var Room = function(name){
   this.startCountdown = function(){
     var newMapId = 1
     this.loadMap(newMapId)
-    for(var p in this.players){
-      p.socket.emit("m", [newMapId])
+    for(var p = 0; p < this.players.length; p++){
+      var player = this.players[p]
+      if(player){
+        player.socket.emit("m", [newMapId])
+      }
     }
 
     this.updateCountdown = true

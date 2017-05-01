@@ -52,7 +52,7 @@ function GetMapFromId(id){
   }
   // console.log("none "+id+" "+Maps.none.id)
 
-  return Maps.none
+  return Maps[0] //Maps.none
 }
 
 exports.MapData = MapData

@@ -42,5 +42,5 @@ function GetMapFromId(id){
       }
     }
   }
-  return Maps.none
+  return Maps[0]//Maps.none
 }
