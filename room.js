@@ -161,8 +161,8 @@ var Room = function(name){
           var pos = [(x*tileWidth)+offset[0], (y*tileHeight)+offset[1]]
 
           if(tile == 1){
-            var tileShape = new p2.Box({width: tileWidth, height: tileHeight, material: constants.tileMaterial}, pos)
-            this.tilemapBody.addShape(tileShape)
+            var tileShape = new p2.Box({width: tileWidth, height: tileHeight, material: constants.tileMaterial})
+            this.tilemapBody.addShape(tileShape, pos)
           }
         }
       }

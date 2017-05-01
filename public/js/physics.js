@@ -105,16 +105,16 @@ function loadMap(id){
     world.removeBody(tilemapBody)
     tilemapBody = new p2.Body({mass: 0})
 
-    for(var y = mapData.length-1; y > 0; y--){
+    for(var y = 0; y < mapData.length; y++){
       for(var x = 0; x < mapData[0].length; x++){
         var tile = mapData[y][x]
         var offset = [tileWidth/2, -tileHeight/2]
         var pos = [(x*tileWidth)+offset[0], (y*tileHeight)+offset[1]]
 
         if(tile == 1){
-          var tileShape = new p2.Box({width: tileWidth, height: tileHeight, material: tileMaterial}, pos)
+          var tileShape = new p2.Box({width: tileWidth, height: tileHeight, material: tileMaterial})
           // var tileBody = new p2.Body({mass: 0, position: pos})
-          tilemapBody.addShape(tileShape)
+          tilemapBody.addShape(tileShape, pos)
 
           //TODO Use different textures
           var tile = new PIXI.Sprite(PIXI.Texture.fromImage("tile_center.png"))
