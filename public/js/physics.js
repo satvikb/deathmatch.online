@@ -94,7 +94,6 @@ function createBoundaries(){
 function loadMap(d){
   var id = d
   if(d == undefined){
-    console.log("fsdsdafsdf")
     id = 0
   }
 
@@ -110,6 +109,7 @@ function loadMap(d){
     world.removeBody(tilemapBody)
     tilemapBody = new p2.Body({mass: 0})
 
+    // TODO not all are being removed for some reason
     for(var i = 0; i < tileMap.children.length; i++){
       tileMap.removeChild(tileMap.children[i])
     }

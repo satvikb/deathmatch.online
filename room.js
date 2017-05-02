@@ -133,7 +133,6 @@ var Room = function(name){
   this.loadMap = function(d){
     var id = d
     if(d == undefined){
-      console.log("undef!!")
       id = 0
     }
 
@@ -246,9 +245,14 @@ var Room = function(name){
   }
 
   this.startCountdown = function(){
+    /*
+    TODO Put this in a better place
+    (eg if a player joins in the middle of a round
+    (should not be possible in the future), or joins in the middle of
+    the countdown the player does not receive this messasge)
+    */
     var newMapId = getRandomInt(0, 1)
     this.loadMap(newMapId)
-    console.log("starting intermission "+newMapId)
     for(var p = 0; p < this.players.length; p++){
       var player = this.players[p]
       if(player){
@@ -262,8 +266,6 @@ var Room = function(name){
   }
 
   this.endRound = function(){
-
-
 
     this.roundStarted = false
     this.startCountdown()
