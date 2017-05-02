@@ -246,7 +246,7 @@ var Room = function(name){
   }
 
   this.startCountdown = function(){
-    var newMapId = 1
+    var newMapId = getRandomInt(0, 1)
     this.loadMap(newMapId)
     console.log("starting intermission "+newMapId)
     for(var p = 0; p < this.players.length; p++){

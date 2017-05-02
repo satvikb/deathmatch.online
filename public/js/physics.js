@@ -44,7 +44,6 @@ function setupWorld(){
   })
 
   createBoundaries()
-  loadMap(0)
 }
 
 function createBoundaries(){
