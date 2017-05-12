@@ -44,6 +44,7 @@ var Room = function(name){
   this.leaderboard = new Leaderboard()
 
   this.map = MapData.none
+  this.mapId = 0
   // this.regions = []
 
   this.roundTime = GameData.gamedata["roundLength"] || 60*1000
@@ -251,8 +252,8 @@ var Room = function(name){
     (should not be possible in the future), or joins in the middle of
     the countdown the player does not receive this messasge)
     */
-    var newMapId = getRandomInt(0, 1)
-    this.loadMap(newMapId)
+    this.mapId = getRandomInt(0, 1)
+    this.loadMap(this.mapId)
     for(var p = 0; p < this.players.length; p++){
       var player = this.players[p]
       if(player){
