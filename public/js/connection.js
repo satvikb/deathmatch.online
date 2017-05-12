@@ -29,6 +29,7 @@ function joingame(data){
   curretScene = 1
   currentMapId = data.map
   map = GetMapFromId(currentMapId)
+  createNewMap([currentMapId])
   setupWorld()
   setupLocalPlayer(data)
 }
