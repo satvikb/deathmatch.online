@@ -257,7 +257,7 @@ var Room = function(name){
     for(var p = 0; p < this.players.length; p++){
       var player = this.players[p]
       if(player){
-        player.socket.emit("m", [newMapId])
+        player.socket.emit("m", [this.mapId])
       }
     }
 

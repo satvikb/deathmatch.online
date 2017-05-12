@@ -25,7 +25,7 @@ function socketEventHandlers(){
 }
 
 function joingame(data){
-  console.log("ID "+data.id)
+  console.log("ID "+data.id+" "+data.map)
   curretScene = 1
   currentMapId = data.map
   map = GetMapFromId(currentMapId)
