@@ -117,6 +117,10 @@ function loadMap(d){
       console.log('removing '+i)
     }
 
+    stage.removeChild(tileMap)
+    tileMap = new Container()
+    stage.addChild(tileMap)
+    
     for(var x = 0; x < mapData.length; x++){
       for(var y = 0; y < mapData[x].length; y++){
         var tile = mapData[x][y]
@@ -248,13 +252,15 @@ function loadMap(d){
             return [texture, rotation]
           }
 
+          rotation = (rotation*Math.PI)/180
+
           var tileData = getTileTexForPos()
 
           //TODO Use different textures
           var tile = new PIXI.Sprite(tileData[0])
           tile.position.x = pos[0]
           tile.position.y = pos[1]
-          tile.rotation = tileData[1]*(Math.PI/180)
+          tile.rotation = tileData[1]
           tile.anchor.x = tile.anchor.y = 0.5
           tile.scale.x = tileWidth/tilePixelWidth //TODO Use dynamic tile pixel sizes (8 is tile image width)
           tile.scale.y = tileHeight/tilePixelHeight

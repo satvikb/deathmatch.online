@@ -33,8 +33,8 @@ function Player(clientId, nickname, x, y, gunLeftId, gunRightId){
   this.display.addChild(this.healthBar.display)
 
   this.bodyLayer = new PIXI.DisplayGroup(0, false)
-  this.armRightLayer = new PIXI.DisplayGroup(1, true)
-  this.armLeftLayer = new PIXI.DisplayGroup(-1, true)
+  this.gunRightLayer = new PIXI.DisplayGroup(1, true)
+  this.gunLeftLayer = new PIXI.DisplayGroup(-1, true)
 
   this.nicknameView = new PIXI.Text(nickname, {fill: 0xffffff, fontSize: 15, align: "center"})
   this.nicknameView.x = -this.width/2
@@ -60,27 +60,27 @@ function Player(clientId, nickname, x, y, gunLeftId, gunRightId){
 
   this.armScale = (6/16)
 
-  this.armLeft = new PIXI.Sprite(PIXI.Texture.fromImage("arm.png"))//.fromImage("arm.png")
+  this.gunLeftTex = new PIXI.Sprite(PIXI.Texture.fromImage("gun_0.png"))//.fromImage("arm.png")
   // this.armLeft.texture.baseTexture.scaleMode = PIXI.SCALE_MODES.LINEAR;
-  this.armLeft.anchor.x = 0.5
-  this.armLeft.anchor.y = 0
-  this.armLeft.scale.y = -this.armScale
-  this.armLeft.scale.x = this.armScale
-  this.armLeft.position.y = this.armY
-  this.armLeft.displayGroup = this.armLeftLayer
-  this.armLeftLayer.zOrder = -1
-  // this.display.addChild(this.armLeft)
+  this.gunLeftTex.anchor.x = 0.5
+  this.gunLeftTex.anchor.y = 0
+  this.gunLeftTex.scale.y = -this.armScale
+  this.gunLeftTex.scale.x = this.armScale
+  this.gunLeftTex.position.y = this.armY
+  this.gunLeftTex.displayGroup = this.gunLeftLayer
+  this.gunLeftLayer.zOrder = -1
+  this.display.addChild(this.gunLeftTex)
 
-  this.armRight = new PIXI.Sprite(PIXI.Texture.fromImage("arm.png"))
+  this.gunRightTex = new PIXI.Sprite(PIXI.Texture.fromImage("gun_1.png"))
   // this.armRight.texture.baseTexture.scaleMode = PIXI.SCALE_MODES.LINEAR;
-  this.armRight.anchor.x = 0.5
-  this.armRight.anchor.y = 0
-  this.armRight.scale.y = -this.armScale
-  this.armRight.scale.x = this.armScale
-  this.armRight.position.y = this.armY
-  this.armRight.displayGroup = this.armRightLayer
-  this.armRightLayer.zOrder = 100
-  // this.display.addChild(this.armRight)
+  this.gunRightTex.anchor.x = 0.5
+  this.gunRightTex.anchor.y = 0
+  this.gunRightTex.scale.y = -this.armScale
+  this.gunRightTex.scale.x = this.armScale
+  this.gunRightTex.position.y = this.armY
+  this.gunRightTex.displayGroup = this.gunRightLayer
+  this.gunRightLayer.zOrder = 100
+  this.display.addChild(this.gunRightTex)
 
   this.view.play()
 
@@ -135,23 +135,23 @@ function Player(clientId, nickname, x, y, gunLeftId, gunRightId){
 
   this.switchDirection = function(left){
     if(left){
-      this.view.scale.x = 3
-      this.armLeft.scale.x = this.armScale
-      this.armLeftLayer.zOrder = 4
-      this.armLeft.position.y = this.armYBack
-
-      this.armRight.scale.x = this.armScale
-      this.armRightLayer.zOrder = -4
-      this.armRight.position.y = this.armY
-    }else{
       this.view.scale.x = -3
-      this.armLeft.scale.x = -this.armScale
-      this.armLeftLayer.zOrder = -4
-      this.armLeft.position.y = this.armYBack
+      this.gunLeftTex.scale.x = -this.armScale
+      this.gunLeftLayer.zOrder = 4
+      this.gunLeftTex.position.y = this.armYBack
 
-      this.armRight.scale.x = -this.armScale
-      this.armRightLayer.zOrder = 4
-      this.armRight.position.y = this.armY
+      this.gunRightTex.scale.x = -this.armScale
+      this.gunRightLayer.zOrder = -4
+      this.gunRightTex.position.y = this.armY
+    }else{
+      this.view.scale.x = 3
+      this.gunLeftTex.scale.x = this.armScale
+      this.gunLeftLayer.zOrder = -4
+      this.gunLeftTex.position.y = this.armYBack
+
+      this.gunRightTex.scale.x = this.armScale
+      this.gunRightLayer.zOrder = 4
+      this.gunRightTex.position.y = this.armY
     }
   }
 
@@ -160,8 +160,8 @@ function Player(clientId, nickname, x, y, gunLeftId, gunRightId){
 
     var rot = Math.atan2(dirY, dirX)
 
-    this.armLeft.rotation = rot+Math.PI/2 //TODO Figure out why we need to add pi/2
-    this.armRight.rotation = rot+Math.PI/2
+    this.gunLeftTex.rotation = rot+Math.PI/2 //TODO Figure out why we need to add pi/2
+    this.gunRightTex.rotation = rot+Math.PI/2
   }
 
   this.update = function(d){
