@@ -184,22 +184,22 @@ function loadMap(d){
 
 
             if(!left && !right && !top && bottom){
-              texture = ti(3)
+              texture = tI(3)
               rotation = 0
             }
 
             if(left && !right && !top && !bottom){
-              texture = ti(3)
+              texture = tI(3)
               rotation = 90
             }
 
             if(!left && !right && top && !bottom){
-              texture = ti(3)
+              texture = tI(3)
               rotation = 180
             }
 
             if(!left && right && !top && !bottom){
-              texture = ti(3)
+              texture = tI(3)
               rotation = 270
             }
 
