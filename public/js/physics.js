@@ -120,7 +120,7 @@ function loadMap(d){
     stage.removeChild(tileMap)
     tileMap = new Container()
     stage.addChild(tileMap)
-    
+
     for(var x = 0; x < mapData.length; x++){
       for(var y = 0; y < mapData[x].length; y++){
         var tile = mapData[x][y]
@@ -249,10 +249,10 @@ function loadMap(d){
               rotation = 270
             }
 
+            rotation = (rotation*Math.PI)/180
+
             return [texture, rotation]
           }
-
-          rotation = (rotation*Math.PI)/180
 
           var tileData = getTileTexForPos()
 
