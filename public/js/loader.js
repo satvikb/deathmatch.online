@@ -38,6 +38,7 @@ function loadFiles(){
 
     gameData.metadata = gameDataJson["metadata"]
     gameData.gamedata = gameDataJson["gamedata"]
+    gameData.texturedata = gameDataJson["texturedata"]
 
     initMaps()
     initGuns()

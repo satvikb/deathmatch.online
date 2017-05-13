@@ -6,7 +6,17 @@
       "maxPerRoom": 4
     },
     "metadata": {
-      "version": "alpha v0.015"
+      "version": "alpha v0.021"
+    },
+    "texturedata":{
+      "player":{
+        "width":16,
+        "height":32
+      },
+      "tile":{
+        "width":8,
+        "height":8
+      }
     }
   }
 }

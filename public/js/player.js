@@ -12,14 +12,18 @@ function Player(clientId, nickname, x, y, gunLeftId, gunRightId){
   this.movespeed = 150
   this.jumpheight = 550
 
-  this.width = 48
-  this.height = 48
+  this.sizeMultiplier = 3
+  this.width = gameData.texturedata["player"]["width"]*this.sizeMultiplier
+  this.height = gameData.texturedata["player"]["height"]*this.sizeMultiplier
 
   this.animationFrames = [
     PIXI.Texture.fromImage("player_0.png"),
     PIXI.Texture.fromImage("player_1.png"),
     PIXI.Texture.fromFrame("player_2.png"),
-    PIXI.Texture.fromFrame("player_3.png")
+    PIXI.Texture.fromFrame("player_3.png"),
+    PIXI.Texture.fromFrame("player_4.png"),
+    PIXI.Texture.fromFrame("player_5.png"),
+    PIXI.Texture.fromFrame("player_6.png")
   ]
 
   this.display = new PIXI.Container()
@@ -65,7 +69,7 @@ function Player(clientId, nickname, x, y, gunLeftId, gunRightId){
   this.armLeft.position.y = this.armY
   this.armLeft.displayGroup = this.armLeftLayer
   this.armLeftLayer.zOrder = -1
-  this.display.addChild(this.armLeft)
+  // this.display.addChild(this.armLeft)
 
   this.armRight = new PIXI.Sprite(PIXI.Texture.fromImage("arm.png"))
   // this.armRight.texture.baseTexture.scaleMode = PIXI.SCALE_MODES.LINEAR;
@@ -76,7 +80,7 @@ function Player(clientId, nickname, x, y, gunLeftId, gunRightId){
   this.armRight.position.y = this.armY
   this.armRight.displayGroup = this.armRightLayer
   this.armRightLayer.zOrder = 100
-  this.display.addChild(this.armRight)
+  // this.display.addChild(this.armRight)
 
   this.view.play()
 

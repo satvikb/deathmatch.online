@@ -1,5 +1,6 @@
 var p2 = require('./constants.js').p2
 var MapConstants = require("./constants.js").MapConstants
+var GameData = require("./gamedata.js").GameData
 
 var Player = function(socketId, clientId, nickname, socket, room, x, y){
   this.socketId = socketId
@@ -9,8 +10,9 @@ var Player = function(socketId, clientId, nickname, socket, room, x, y){
   this.socket = socket
   this.room = room
 
-  this.width = 48
-  this.height = 48
+  this.sizeMultiplier = 3
+  this.width = GameData.texturedata["player"]["width"]*this.sizeMultiplier
+  this.height = GameData.texturedata["player"]["height"]*this.sizeMultiplier
 
   this.gunLeft
   this.gunRight

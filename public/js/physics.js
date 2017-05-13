@@ -103,6 +103,8 @@ function loadMap(d){
     var mapData = newMap.data
     var tileWidth = size[0]/mapSize[0]
     var tileHeight = size[1]/mapSize[1]
+    var tilePixelWidth = gameData.texturedata.["tile"]["width"]
+    var tilePixelHeight = gameData.texturedata.["tile"]["height"]
     console.log("new map "+newMap+" "+mapData[0][0]+" "+newMap.name+" "+mapData.length+" "+mapData[0].length)
 
     // remove current physics bodies
@@ -112,6 +114,7 @@ function loadMap(d){
     // TODO not all are being removed for some reason
     for(var i = 0; i < tileMap.children.length; i++){
       tileMap.removeChild(tileMap.children[i])
+      console.log('removing '+i)
     }
 
     for(var x = 0; x < mapData.length; x++){
@@ -125,13 +128,136 @@ function loadMap(d){
           // var tileBody = new p2.Body({mass: 0, position: pos})
           tilemapBody.addShape(tileShape, pos)
 
+          function getTileTexForPos(){
+            function getTile(nx,ny){
+              if(nx>=0&&nx<=mapData.length-1&&ny>=0&&ny<=mapData[x].length-1){
+                return mapData[nx][ny]
+              }else{
+                return 0
+              }
+            }
+            //TODO Maybe the axis are inversed for y/x?
+            var left = getTile(x-1, y) != 0
+            var right = getTile(x+1, y) != 0
+            var top = getTile(x, y+1) != 0
+            var bottom = getTile(x, y-1) != 0
+
+            /*
+            0 = all borders
+            1 = u-border
+            2 = pipe border
+            3 = side border
+            4 = no border
+            */
+            // var tileType = 0 //aka num of filled tiles around
+            // if(left != 0){tileType++}
+
+            //texture from id
+            function tI(id){
+              return PIXI.Texture.fromImage("tiles_"+id+".png")
+            }
+
+            var texture;
+            var rotation = 0;
+
+            //TODO fix rotations. right now 90 degrees to clockwise
+            //TODO return every if statement
+            if(left && right && top && bottom){
+              texture = tI(0)
+            }
+
+
+            if(!left && !right && !top && !bottom){
+              texture = tI(1)
+            }
+
+
+            if(!left && !right && top && bottom){
+              texture = tI(2)
+              rotation = 0
+            }
+
+            if(left && right && !top && !bottom){
+              texture = tI(2)
+              rotation = 90
+            }
+
+
+            if(!left && !right && !top && bottom){
+              texture = ti(3)
+              rotation = 0
+            }
+
+            if(left && !right && !top && !bottom){
+              texture = ti(3)
+              rotation = 90
+            }
+
+            if(!left && !right && top && !bottom){
+              texture = ti(3)
+              rotation = 180
+            }
+
+            if(!left && right && !top && !bottom){
+              texture = ti(3)
+              rotation = 270
+            }
+
+
+            if(left && right && !top && bottom){
+              texture = tI(4)
+              rotation = 0
+            }
+
+            if(left && !right && top && bottom){
+              texture = tI(4)
+              rotation = 90
+            }
+
+            if(left && right && top && !bottom){
+              texture = tI(4)
+              rotation = 180
+            }
+
+            if(!left && right && top && bottom){
+              texture = tI(4)
+              rotation = 270
+            }
+
+
+            if(left && !right && !top && bottom){
+              texture = tI(5)
+              rotation = 0
+            }
+
+            if(left && !right && top && bottom){
+              texture = tI(5)
+              rotation = 90
+            }
+
+            if(!left && right && top && !bottom){
+              texture = tI(5)
+              rotation = 180
+            }
+
+            if(!left && right && !top && bottom){
+              texture = tI(5)
+              rotation = 270
+            }
+
+            return [texture, rotation]
+          }
+
+          var tileData = getTileTexForPos()
+
           //TODO Use different textures
-          var tile = new PIXI.Sprite(PIXI.Texture.fromImage("tile_center.png"))
+          var tile = new PIXI.Sprite(tileData[0])
           tile.position.x = pos[0]
           tile.position.y = pos[1]
+          tile.rotation = tileData[1]*(Math.PI/180)
           tile.anchor.x = tile.anchor.y = 0.5
-          tile.scale.x = tileWidth/8 //TODO Use dynamic tile pixel sizes (8 is tile image width)
-          tile.scale.y = tileHeight/8
+          tile.scale.x = tileWidth/tilePixelWidth //TODO Use dynamic tile pixel sizes (8 is tile image width)
+          tile.scale.y = tileHeight/tilePixelHeight
           tileMap.addChild(tile)
         }
       }

@@ -8,7 +8,7 @@ var GameData = function(){
     GameData.rawdata = GameData.json["data"]
     GameData.metadata = GameData.json["data"]["metadata"]
     GameData.gamedata = GameData.json["data"]["gamedata"]
-
+    GameData.texturedata = GameData.json["data"]["texturedata"]
     console.log("Loaded data. "+GameData.metadata["version"])
   }
 }
