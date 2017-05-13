@@ -103,8 +103,8 @@ function loadMap(d){
     var mapData = newMap.data
     var tileWidth = size[0]/mapSize[0]
     var tileHeight = size[1]/mapSize[1]
-    var tilePixelWidth = gameData.texturedata.["tile"]["width"]
-    var tilePixelHeight = gameData.texturedata.["tile"]["height"]
+    var tilePixelWidth = gameData.texturedata["tile"]["width"]
+    var tilePixelHeight = gameData.texturedata["tile"]["height"]
     console.log("new map "+newMap+" "+mapData[0][0]+" "+newMap.name+" "+mapData.length+" "+mapData[0].length)
 
     // remove current physics bodies
