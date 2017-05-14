@@ -22,8 +22,7 @@ function Player(clientId, nickname, x, y, gunLeftId, gunRightId){
     PIXI.Texture.fromFrame("player_2.png"),
     PIXI.Texture.fromFrame("player_3.png"),
     PIXI.Texture.fromFrame("player_4.png"),
-    PIXI.Texture.fromFrame("player_5.png"),
-    PIXI.Texture.fromFrame("player_6.png")
+    PIXI.Texture.fromFrame("player_5.png")
   ]
 
   this.display = new PIXI.Container()

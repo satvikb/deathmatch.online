@@ -114,7 +114,7 @@ function loadMap(d){
     // TODO not all are being removed for some reason
     for(var i = 0; i < tileMap.children.length; i++){
       tileMap.removeChild(tileMap.children[i])
-      console.log('removing '+i)
+      // console.log('removing '+i)
     }
 
     stage.removeChild(tileMap)
@@ -143,8 +143,8 @@ function loadMap(d){
             //TODO Maybe the axis are inversed for y/x?
             var left = getTile(x-1, y) != 0
             var right = getTile(x+1, y) != 0
-            var top = getTile(x, y+1) != 0
-            var bottom = getTile(x, y-1) != 0
+            var top = getTile(x, y-1) != 0
+            var bottom = getTile(x, y+1) != 0
 
             /*
             0 = all borders
